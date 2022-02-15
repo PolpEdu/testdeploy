@@ -1,0 +1,11 @@
+C:\Users\Utilizador\OneDrive - Universidade de Coimbra\Documentos\NEARTESTS\near-app\contract\target\wasm32-unknown-unknown\debug\deps\sha3-ea98f671f71640b4.rmeta: C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\lib.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\paddings.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\macros.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\reader.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\state.rs
+
+C:\Users\Utilizador\OneDrive - Universidade de Coimbra\Documentos\NEARTESTS\near-app\contract\target\wasm32-unknown-unknown\debug\deps\libsha3-ea98f671f71640b4.rlib: C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\lib.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\paddings.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\macros.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\reader.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\state.rs
+
+C:\Users\Utilizador\OneDrive - Universidade de Coimbra\Documentos\NEARTESTS\near-app\contract\target\wasm32-unknown-unknown\debug\deps\sha3-ea98f671f71640b4.d: C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\lib.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\paddings.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\macros.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\reader.rs C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\state.rs
+
+C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\lib.rs:
+C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\paddings.rs:
+C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\macros.rs:
+C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\reader.rs:
+C:\Users\Utilizador\.cargo\registry\src\github.com-1ecc6299db9ec823\sha3-0.8.2\src\state.rs:
