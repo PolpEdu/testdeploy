@@ -1,1 +1,1 @@
-F:\NEARAPP\contract\target\wasm32-unknown-unknown\debug\libgreeter.rlib: F:\NEARAPP\contract\src\lib.rs
+C:\Users\Utilizador\OneDrive\ -\ Universidade\ de\ Coimbra\Documentos\NEARTESTS\near-app\contract\target\wasm32-unknown-unknown\debug\libgreeter.rlib: C:\Users\Utilizador\OneDrive\ -\ Universidade\ de\ Coimbra\Documentos\NEARTESTS\near-app\contract\src\lib.rs

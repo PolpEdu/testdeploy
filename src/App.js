@@ -122,6 +122,7 @@ export default function App() {
           // show Notification
           setShowNotification(true)
 
+          
           // remove Notification again after css animation completes
           // this allows it to be shown again next time the form is submitted
           setTimeout(() => {
@@ -176,30 +177,64 @@ export default function App() {
         <button
         onClick={async event => {
           setButtonDisabled(true)
+          
+          console.log("Starting!")
 
+                    
+          var i = 0;
+          var dict = {};
+          var min = 50;
+          var max = 50;
 
           if (window.walletConnection.isSignedIn()) {
+            setTimeout(function next() {
 
-            // window.contract is set by initContract in index.js
-            window.contract.coin_flip() //using the contract to get the greeting
-              .then(result => {
-                setWonCoinFlip(result);
-                console.log(result);
-                setButtonDisabled(true);
-                // show Notification
-                setShowNotification(true)
+
+              window.contract.resultslog() //using the contract to get the greeting
+              .then(result => {      
+                let ft = result[0];
+                console.log("it."+i + ": " +ft);
+
+                if(dict[ft] === undefined) {
+                  dict[ft] = 1;
+                } else {
+                  dict[ft] = dict[ft] + 1;
+                }
+
+
+
+                if(ft>max) {
+                  max = ft;
+                }
+                else if(ft<min) {
+                  min = ft;
+                }
+
+
+
+
+                if(i%10===0) {
+                  console.log("max: " + max);
+                  console.log("min: " + min);
+                  console.log(dict);
+                  
+                }
               })
               .catch(e => {
                 console.log(e)
-              })
+              });
+  
+              i++;
+
+              setTimeout(next, 2500);
+            
+            }, 2500);
+          
           }
 
 
 
-          setTimeout(() => {
-            setShowNotification(false)
-            setButtonDisabled(false)
-          }, 7000)
+          
         }}
         disabled={buttonDisabled}
           >test</button>
@@ -230,3 +265,7 @@ function Notification() {
     </aside>
   )
 }
+
+
+
+
