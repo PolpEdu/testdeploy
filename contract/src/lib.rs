@@ -23,14 +23,14 @@ setup_alloc!();
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Welcome {
-    records: LookupMap<String, String>,
+    game: LookupMap<String, u8>,
     seed: Vec<u8>
 }
 
 impl Default for Welcome {
   fn default() -> Self {
     Self {
-      records: LookupMap::new(b"a".to_vec()),
+      game: LookupMap::new(b"a".to_vec()),
       seed: env::random_seed(), //0-255
     }
   }
@@ -39,25 +39,24 @@ impl Default for Welcome {
 #[near_bindgen]
 impl Welcome {
 
-    /*probably delete this
-    pub fn set_greeting(&mut self, message: String) { //mutable (mut) para ser memory safe ao mudar alguma coisa
+    
+    pub fn set_number(&mut self, number: u8) { //mutable (mut) para ser memory safe ao mudar alguma coisa
         let account_id = env::signer_account_id();
 
         // Use env::log to record logs permanently to the blockchain!
-        env::log(format!("Saving greeting '{}' for account '{}'", message, account_id,).as_bytes());
+        env::log(format!("Saving number '{}' for account '{}'", number, account_id,).as_bytes());
 
-        self.records.insert(&account_id, &message);
+        self.game.insert(&account_id, &number);
     }
 
     // `match` is similar to `switch` in other languages; here we use it to default to "Hello" if
     // self.records.get(&account_id) is not yet defined.
     pub fn get_greeting(&self, account_id: String) -> String { //nao é preciso porque "mutable" porque não quero mudar nada.
-        match self.records.get(&account_id) { //switch case, se tiver alguma coisa dou return ao greeting, se nao dou return a hello
-            Some(greeting) => format!("I wrote: {}", greeting),
+        match self.game.get(&account_id) { //switch case
+            Some(greeting) => format!("{}", greeting),
             None => "Hello".to_string(),
         }
     }
-    */
 
 
 
@@ -69,6 +68,8 @@ impl Welcome {
             
         return rng.as_slice()[0] % 2 == 0; //returns true 50% of the time otherwise false
     }
+
+
 
     pub fn resultslog(&self, max: u8) -> u8 {
         assert!(max > 0);
@@ -83,5 +84,9 @@ impl Welcome {
     /* testing */ 
     pub fn get_seed(&self) -> Vec<u8> {
         return self.seed.clone();
+    }
+
+    pub fn gen_game(&self) -> u8 {
+        return 1;
     }
 }

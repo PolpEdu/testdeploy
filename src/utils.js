@@ -1,4 +1,4 @@
-import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
+import { connect, Contract, keyStores, WalletConnection, utils } from 'near-api-js'
 import getConfig from './config'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
@@ -36,4 +36,46 @@ export function login() {
   // This works by creating a new access key for the user's account and storing
   // the private key in localStorage.
   window.walletConnection.requestSignIn(nearConfig.contractName)
+}
+
+export async function transact(receiver, ammout)  {
+  console.log('Processing transaction...\nSending ' + ammout + ' NEAR to ' + receiver+ ' from ' + window.accountId);
+  //convert ammout to yoctoNear
+  const ammoutyoctoNEAR = utils.format.parseNearAmount(ammout);
+
+  try {
+   
+    // sends NEAR tokens
+    const near = await connect(Object.assign({ deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } }, nearConfig));
+    const account = await near.account(window.accountId);
+    await account.sendMoney(
+      receiver, // receiver account
+      ammoutyoctoNEAR // amount in yoctoNEAR
+    );
+    console.log('Transaction sent!');
+  } catch (e) {
+    console.log(e);
+  };
+
+
+}
+
+function NotificationError(sender, publicKey) {
+  return (
+    <aside>
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
+        {window.accountId}
+      </a>
+      {' '/* React trims whitespace around tags; insert literal space character when needed */}
+      Account [ ${sender} ] does not have permission to send tokens using key: [ ${publicKey} ]
+      {' '}
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
+        {window.contract.contractId}
+      </a>
+      <footer>
+        <div>❌ Error</div>
+        <div>Just now</div>
+      </footer>
+    </aside>
+  )
 }

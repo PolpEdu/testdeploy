@@ -1,10 +1,11 @@
 import 'regenerator-runtime/runtime'
 import React from 'react'
-import { login, logout } from './utils'
+import { login, logout, transact } from './utils'
 import './global.css'
 
 import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
+
 
 export default function App() {
   // use React Hooks to store greeting in component state
@@ -18,6 +19,9 @@ export default function App() {
 
   // check if won
   const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
+
+  // Notification
+  const [showTransaction, setshowTransaction] = React.useState(false)
 
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
@@ -177,6 +181,22 @@ export default function App() {
         <button
         onClick={async event => {
           setButtonDisabled(true)
+
+          transact("polpedu.testnet", '1.5')
+
+
+          setButtonDisabled(false)
+
+
+          // show Notification
+          setshowTransaction(true)
+
+          
+          // remove Notification again after css animation completes
+          // this allows it to be shown again next time the form is submitted
+          setTimeout(() => {
+            setshowTransaction(false)
+          }, 11000)
           
           
         }}
@@ -210,6 +230,26 @@ function Notification() {
   )
 }
 
+function NotificationTRANS(status) {
+  const urlPrefix = `https://explorer.${networkId}.near.org/accounts`
+  return (
+    <aside>
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
+        {window.accountId}
+      </a>
+      {' '/* React trims whitespace around tags; insert literal space character when needed */}
+      Transfered:
+      {' '}
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
+        {window.contract.contractId}
+      </a>
+      <footer>
+        <div>✔ Succeeded</div>
+        <div>Just now</div>
+      </footer>
+    </aside>
+  )
+}
 
 
 
