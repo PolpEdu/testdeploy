@@ -11,10 +11,13 @@ export default function App() {
   const [greeting, set_greeting] = React.useState()
 
   // when the user has not yet interacted with the form, disable the button
-  const [buttonDisabled, setButtonDisabled] = React.useState(true)
+  const [buttonDisabled, setButtonDisabled] = React.useState(false)
 
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
+
+  // check if won
+  const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
 
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
@@ -169,6 +172,37 @@ export default function App() {
         <p>
           To keep learning, check out <a target="_blank" rel="noreferrer" href="https://docs.near.org">the NEAR docs</a> or look through some <a target="_blank" rel="noreferrer" href="https://examples.near.org">example apps</a>.
         </p>
+
+        <button
+        onClick={async event => {
+          setButtonDisabled(true)
+
+
+          if (window.walletConnection.isSignedIn()) {
+
+            // window.contract is set by initContract in index.js
+            window.contract.coin_flip() //using the contract to get the greeting
+              .then(result => {
+                setWonCoinFlip(result);
+                console.log(result);
+                setButtonDisabled(true);
+                // show Notification
+                setShowNotification(true)
+              })
+              .catch(e => {
+                console.log(e)
+              })
+          }
+
+
+
+          setTimeout(() => {
+            setShowNotification(false)
+            setButtonDisabled(false)
+          }, 7000)
+        }}
+        disabled={buttonDisabled}
+          >test</button>
       </main>
       {showNotification && <Notification />}
     </>
@@ -184,7 +218,7 @@ function Notification() {
         {window.accountId}
       </a>
       {' '/* React trims whitespace around tags; insert literal space character when needed */}
-      called method: 'set_greeting' in contract:
+      called method in contract:
       {' '}
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
         {window.contract.contractId}

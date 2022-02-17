@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=F:\NEARAPP\contract\target\wasm32-unknown-unknown\debug\build\typenum-00097eea1c02f258\out\consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=F:\NEARAPP\contract\target\wasm32-unknown-unknown\debug\build\typenum-00097eea1c02f258\out\op.rs

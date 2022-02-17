@@ -24,12 +24,14 @@ setup_alloc!();
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Welcome {
     records: LookupMap<String, String>,
+    seed: Vec<u8>
 }
 
 impl Default for Welcome {
   fn default() -> Self {
     Self {
       records: LookupMap::new(b"a".to_vec()),
+      seed: env::random_seed(),
     }
   }
 }
@@ -47,26 +49,25 @@ impl Welcome {
 
     // `match` is similar to `switch` in other languages; here we use it to default to "Hello" if
     // self.records.get(&account_id) is not yet defined.
-    // Learn more: https://doc.rust-lang.org/book/ch06-02-match.html#matching-with-optiont
     pub fn get_greeting(&self, account_id: String) -> String { //nao é preciso porque "mutable" porque não quero mudar nada.
         match self.records.get(&account_id) { //switch case, se tiver alguma coisa dou return ao greeting, se nao dou return a hello
-            Some(greeting) => greeting,
+            Some(greeting) => format!("I wrote: {}", greeting),
             None => "Hello".to_string(),
         }
     }
+
+    pub fn coin_flip(&self) -> bool {
+        let rng = env::sha256(self.seed.as_slice());
+
+        env::log(format!("Random seed: {:?}", self.seed).as_bytes());
+        env::log(format!("{:?}", rng).as_bytes());
+            
+        return rng.as_slice()[0] % 2 == 0 ;
+    }
+
+
 }
 
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- *
- * To run from contract directory:
- * cargo test -- --nocapture
- *
- * From project root, to run in combination with frontend tests:
- * yarn test
- *
- */
 #[cfg(test)]
 mod tests {
     use super::*;
