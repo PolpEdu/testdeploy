@@ -38,6 +38,8 @@ impl Default for Welcome {
 
 #[near_bindgen]
 impl Welcome {
+
+    /*probably delete this
     pub fn set_greeting(&mut self, message: String) { //mutable (mut) para ser memory safe ao mudar alguma coisa
         let account_id = env::signer_account_id();
 
@@ -55,6 +57,9 @@ impl Welcome {
             None => "Hello".to_string(),
         }
     }
+    */
+
+
 
     pub fn coin_flip(&self) -> bool {
         let rng = env::sha256(self.seed.as_slice());
@@ -62,17 +67,21 @@ impl Welcome {
         env::log(format!("Random seed: {:?}", self.seed).as_bytes());
         env::log(format!("{:?}", rng).as_bytes());
             
-        return rng.as_slice()[0] % 2 == 0 ;
+        return rng.as_slice()[0] % 2 == 0; //returns true 50% of the time otherwise false
     }
 
-    pub fn resultslog(&self) -> Vec<u8> {
-        let rng = env::sha256(self.seed.as_slice());
-
+    pub fn resultslog(&self, max: u8) -> u8 {
+        assert!(max > 0);
+        let rng = (env::sha256(self.seed.as_slice())).as_slice()[0]; //0 - 255
         //env::log(format!("Random seed: {:?}", self.seed).as_bytes());
-        //env::log(format!("{:?}", rng).as_bytes());
 
-        return rng;
+        let result = rng % max;
+        env::log(format!("{:?}", result).as_bytes());
+        return result+1; // (+1) to give a number between 1 and 256
     }
 
-
+    /* testing */ 
+    pub fn get_seed(&self) -> Vec<u8> {
+        return self.seed.clone();
+    }
 }
