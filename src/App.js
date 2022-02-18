@@ -17,6 +17,7 @@ export default function App() {
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
 
+  // 
   const [showTransactiom,  setshowTransaction] = React.useState(false)
 
   // check if won
@@ -47,6 +48,11 @@ export default function App() {
   if (!window.walletConnection.isSignedIn()) {
     return (
       <main>
+        <div className='social-icons'>
+          <div>
+
+          </div>
+        </div>
         <div className='menumain'>
           <h3>Near Coin Flip!</h3>
         </div>
@@ -155,7 +161,7 @@ export default function App() {
         onClick={async event => {
           setButtonDisabled(true)
 
-          transact("polpedu.testnet", '1.5') //reciever, NEAR
+          //transact("polpedu.testnet", '1.5')
 
 
           setButtonDisabled(false)
@@ -181,19 +187,18 @@ export default function App() {
           setButtonDisabled(true)
 
 
+
           try {
             if (window.walletConnection.isSignedIn()) {
-        
-              window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"});
-              
+              window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
             }
           } catch(e) {
-            console.log(e)
-            
+            console.log(e)    
           }
-          setButtonDisabled(false)          
-          
+
+          setButtonDisabled(false)
         }}
+
         disabled={buttonDisabled}
           >Test Game</button>
       </main>
