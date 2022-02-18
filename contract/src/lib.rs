@@ -86,7 +86,9 @@ impl Welcome {
         return self.seed.clone();
     }
 
-    pub fn gen_game(&self) -> u8 {
-        return 1;
+    pub fn gen_game(&self, account_id_p1: String, account_id_p2: String){
+        let firstplayerResult = coin_flip();
+
+        //if firstplayerResult { firstplayer=account_id_p1 } else { firstplayer=account_id_p2 };
     }
 }
