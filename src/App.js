@@ -17,11 +17,10 @@ export default function App() {
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
 
+  const [showTransactiom,  setshowTransaction] = React.useState(false)
+
   // check if won
   const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
-
-  // Notification
-  const [showTransaction, setshowTransaction] = React.useState(false)
 
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
@@ -48,22 +47,8 @@ export default function App() {
   if (!window.walletConnection.isSignedIn()) {
     return (
       <main>
-        <h1>Welcome to NEAR!</h1>
-        <p>
-          To make use of the NEAR blockchain, you need to sign in. The button
-          below will sign you in using NEAR Wallet.
-        </p>
-        <p>
-          By default, when your app runs in "development" mode, it connects
-          to a test network ("testnet") wallet. This works just like the main
-          network ("mainnet") wallet, but the NEAR Tokens on testnet aren't
-          convertible to other currencies - they're just for testing!
-        </p>
-        <p>
-          Go ahead and click the button below to try it out:
-        </p>
         <p style={{ textAlign: 'center', marginTop: '2.5em' }}>
-          <button onClick={login}>Sign in</button>
+          <button onClick={login}>Select Wallet</button>
         </p>
       </main>
     )
@@ -161,28 +146,13 @@ export default function App() {
             </div>
           </fieldset>
         </form>
-        <p>
-          Look at that! A Hello World app! This greeting is stored on the NEAR blockchain. Check it out:
-        </p>
-        <ol>
-          <li>
-            Look in <code>src/App.js</code> and <code>src/utils.js</code> – you'll see <code>get_greeting</code> and <code>set_greeting</code> being called on <code>contract</code>. What's this?
-          </li>
-          <li>
-            Ultimately, this <code>contract</code> code is defined in <code>assembly/main.ts</code> – this is the source code for your <a target="_blank" rel="noreferrer" href="https://docs.near.org/docs/develop/contracts/overview">smart contract</a>.</li>
-          <li>
-            When you run <code>yarn dev</code>, the code in <code>assembly/main.ts</code> gets deployed to the NEAR testnet. You can see how this happens by looking in <code>package.json</code> at the <code>scripts</code> section to find the <code>dev</code> command.</li>
-        </ol>
         <hr />
-        <p>
-          To keep learning, check out <a target="_blank" rel="noreferrer" href="https://docs.near.org">the NEAR docs</a> or look through some <a target="_blank" rel="noreferrer" href="https://examples.near.org">example apps</a>.
-        </p>
 
         <button
         onClick={async event => {
           setButtonDisabled(true)
 
-          transact("polpedu.testnet", '1.5')
+          transact("polpedu.testnet", '1.5') //reciever, NEAR
 
 
           setButtonDisabled(false)
@@ -190,6 +160,29 @@ export default function App() {
 
           // show Notification
           setshowTransaction(true)
+
+          
+          // remove Notification again after css animation completes
+          // this allows it to be shown again next time the form is submitted
+          setTimeout(() => {
+            setshowTransaction(false)
+          }, 11000)
+          
+          
+        }}
+        disabled={buttonDisabled}
+          >test transaction</button>
+
+  <button
+        onClick={async event => {
+          setButtonDisabled(true)
+
+
+          window.contract.gen_game();
+
+          
+
+          setButtonDisabled(false)
 
           
           // remove Notification again after css animation completes
@@ -230,81 +223,58 @@ function Notification() {
   )
 }
 
-function NotificationTRANS(status) {
-  const urlPrefix = `https://explorer.${networkId}.near.org/accounts`
-  return (
-    <aside>
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
-        {window.accountId}
-      </a>
-      {' '/* React trims whitespace around tags; insert literal space character when needed */}
-      Transfered:
-      {' '}
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
-        {window.contract.contractId}
-      </a>
-      <footer>
-        <div>✔ Succeeded</div>
-        <div>Just now</div>
-      </footer>
-    </aside>
-  )
-}
-
 
 
 function rngTest() {
   console.log("Starting!")
+  var i = 0;
+  var dict = {};
+  var min = 50;
+  var max = 50;
 
-                    
-          var i = 0;
-          var dict = {};
-          var min = 50;
-          var max = 50;
-
-          if (window.walletConnection.isSignedIn()) {
-            setTimeout(function next() {
+  if (window.walletConnection.isSignedIn()) {
+    setTimeout(function next() {
 
 
-              window.contract.resultslog() //using the contract to get the greeting
-              .then(result => {      
-                let ft = result[0];
-                console.log("it."+i + ": " +ft);
+      window.contract.resultslog() //using the contract to get the greeting
+      .then(result => {      
+        let ft = result[0];
+        console.log("it."+i + ": " +ft);
 
-                if(dict[ft] === undefined) {
-                  dict[ft] = 1;
-                } else {
-                  dict[ft] = dict[ft] + 1;
-                }
+        if(dict[ft] === undefined) {
+          dict[ft] = 1;
+        } else {
+          dict[ft] = dict[ft] + 1;
+        }
 
 
 
-                if(ft>max) {
-                  max = ft;
-                }
-                else if(ft<min) {
-                  min = ft;
-                }
+        if(ft>max) {
+          max = ft;
+        }
+        else if(ft<min) {
+          min = ft;
+        }
 
 
 
 
-                if(i%10===0) {
-                  console.log("max: " + max);
-                  console.log("min: " + min);
-                  console.log(dict);
-                  
-                }
-              })
-              .catch(e => {
-                console.log(e)
-              });
-  
-              i++;
-
-              setTimeout(next, 2500);
-            
-            }, 2500);
+        if(i%10===0) {
+          console.log("max: " + max);
+          console.log("min: " + min);
+          console.log(dict);
           
-          }
+        }
+      })
+      .catch(e => {
+        console.log(e)
+      });
+
+      i++;
+
+      setTimeout(next, 2500);
+    
+    }, 2500);
+  
+  }
 }

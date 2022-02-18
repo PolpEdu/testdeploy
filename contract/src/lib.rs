@@ -81,14 +81,20 @@ impl Welcome {
         return result+1; // (+1) to give a number between 1 and 256
     }
 
+    
+    pub fn gen_game(&self, account_id_p1: String, account_id_p2: String){
+        let firstplayer_result = coin_flip();
+        env::log(format!("{:?}", firstplayer_result).as_bytes());
+        //if firstplayerResult { firstplayer=account_id_p1 } else { firstplayer=account_id_p2 };
+    }
+}
+
+#[cfg(test)]
+mod tests{
+    
     /* testing */ 
     pub fn get_seed(&self) -> Vec<u8> {
         return self.seed.clone();
     }
 
-    pub fn gen_game(&self, account_id_p1: String, account_id_p2: String){
-        let firstplayerResult = coin_flip();
-
-        //if firstplayerResult { firstplayer=account_id_p1 } else { firstplayer=account_id_p2 };
-    }
 }

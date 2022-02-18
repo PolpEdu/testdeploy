@@ -20,7 +20,7 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_greeting', 'coin_flip', 'resultslog'],
+    viewMethods: ['get_greeting', 'coin_flip', 'resultslog', 'gen_game'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['set_greeting'],
   })
@@ -40,13 +40,17 @@ export function login() {
   window.walletConnection.requestSignIn(nearConfig.contractName)
 }
 
+/*
+
+ @param receiver who, receives the NEAR
+ @param ammount of near to send
+*/
 export async function transact(receiver, ammout)  {
   console.log('Processing transaction...\nSending ' + ammout + ' NEAR to ' + receiver+ ' from ' + window.accountId);
   //convert ammout to yoctoNear
   const ammoutyoctoNEAR = utils.format.parseNearAmount(ammout);
 
   try {
-  
     await window.walletConnection.account().sendMoney(
       receiver, // receiver account
       ammoutyoctoNEAR // amount in yoctoNEAR
@@ -54,9 +58,12 @@ export async function transact(receiver, ammout)  {
     console.log('Transaction sent!');
   } catch (e) {
     console.log(e);
+    <NotificationError/>
   };
+}
 
-
+export async function game() {
+  
 }
 
 function NotificationError(sender, publicKey) {
@@ -66,13 +73,36 @@ function NotificationError(sender, publicKey) {
         {window.accountId}
       </a>
       {' '/* React trims whitespace around tags; insert literal space character when needed */}
-      Account [ ${sender} ] does not have permission to send tokens using key: [ ${publicKey} ]
+      Transaction failed.
       {' '}
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
         {window.contract.contractId}
       </a>
       <footer>
         <div>❌ Error</div>
+        <div>Just now</div>
+      </footer>
+    </aside>
+  )
+}
+
+
+
+function NotificationTRANS(status) {
+  const urlPrefix = `https://explorer.${networkId}.near.org/accounts`
+  return (
+    <aside>
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
+        {window.accountId}
+      </a>
+      {' '/* React trims whitespace around tags; insert literal space character when needed */}
+      Transfered:
+      {' '}
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
+        {window.contract.contractId}
+      </a>
+      <footer>
+        <div>✔ Succeeded</div>
         <div>Just now</div>
       </footer>
     </aside>
