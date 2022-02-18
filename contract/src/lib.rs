@@ -65,8 +65,10 @@ impl Welcome {
 
         env::log(format!("Random seed: {:?}", self.seed).as_bytes());
         env::log(format!("{:?}", rng).as_bytes());
-            
-        return rng.as_slice()[0] % 2 == 0; //returns true 50% of the time otherwise false
+
+
+        let result = rng.as_slice()[0] % 2 == 0;
+        return result; //returns true 50% of the time otherwise false
     }
 
 
@@ -82,16 +84,21 @@ impl Welcome {
     }
 
     
-    pub fn gen_game(&self, account_id_p1: String, account_id_p2: String){
-        let firstplayer_result = coin_flip();
-        env::log(format!("{:?}", firstplayer_result).as_bytes());
-        //if firstplayerResult { firstplayer=account_id_p1 } else { firstplayer=account_id_p2 };
+    pub fn gen_game(&self, account_id_p1: String, account_id_p2: String) ->String {
+        let firstplayer_result = (env::sha256(self.seed.as_slice())).as_slice()[0] % 2 == 0;
+        let firstplayer = if firstplayer_result { account_id_p1 } else { account_id_p2 };
+        env::log(format!("{:?}", firstplayer).as_bytes());
+
+
+        
+
+        return firstplayer;
     }
 }
 
 #[cfg(test)]
 mod tests{
-    
+
     /* testing */ 
     pub fn get_seed(&self) -> Vec<u8> {
         return self.seed.clone();

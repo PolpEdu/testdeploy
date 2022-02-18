@@ -28,7 +28,7 @@ export default function App() {
     () => {
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
-
+        
         // window.contract is set by initContract in index.js
         window.contract.get_greeting({ account_id: window.accountId }) //using the contract to get the greeting
           .then(greetingFromContract => {
@@ -47,6 +47,9 @@ export default function App() {
   if (!window.walletConnection.isSignedIn()) {
     return (
       <main>
+        <div className='menumain'>
+          <h3>Near Coin Flip!</h3>
+        </div>
         <p style={{ textAlign: 'center', marginTop: '2.5em' }}>
           <button onClick={login}>Select Wallet</button>
         </p>
@@ -178,23 +181,21 @@ export default function App() {
           setButtonDisabled(true)
 
 
-          window.contract.gen_game();
-
-          
-
-          setButtonDisabled(false)
-
-          
-          // remove Notification again after css animation completes
-          // this allows it to be shown again next time the form is submitted
-          setTimeout(() => {
-            setshowTransaction(false)
-          }, 11000)
-          
+          try {
+            if (window.walletConnection.isSignedIn()) {
+        
+              window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"});
+              
+            }
+          } catch(e) {
+            console.log(e)
+            
+          }
+          setButtonDisabled(false)          
           
         }}
         disabled={buttonDisabled}
-          >test</button>
+          >Test Game</button>
       </main>
       {showNotification && <Notification />}
     </>
