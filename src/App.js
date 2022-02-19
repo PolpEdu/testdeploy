@@ -3,12 +3,12 @@ import './global.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, toggleDarkMode } from './utils'
+import { logout, toggleDarkMode, convertYocto } from './utils'
 import { Twitter, Discord, Sun} from 'react-bootstrap-icons';
 
 import ParasLogo from './assets/paras-black.svg';
 
-import { NotLogged, PopupMenu } from './components/logged';
+import { NotLogged, Loading } from './components/logged';
 import getConfig from './config'
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
@@ -30,6 +30,12 @@ export default function App() {
   // check if won
   const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
 
+  // night mode
+  const [nightMode, setNightMode] = React.useState("light")
+
+  // on the top right
+  const [balance, setbalance] = React.useState("")
+
 
   //popup
   const [show, setShow] = React.useState(false);
@@ -42,7 +48,16 @@ export default function App() {
     () => {
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
-        
+        window.walletConnection.account().getAccountBalance().then(function(balance) {
+          let fullstr = convertYocto(balance.available);
+          let split = fullstr.split(".");
+          let str = split[0] + "." + split[1].substring(0,4);
+          setbalance("NEAR: "+ str); 
+        }).catch(e => {
+          console.log('There has been a problem with getting your balance: ' + e.message);
+          setbalance("Couldn't Fetch Balance") ;
+        });
+
         // window.contract is set by initContract in index.js
         window.contract.get_greeting({ account_id: window.accountId }) //using the contract to get the greeting
           .then(greetingFromContract => {
@@ -51,9 +66,9 @@ export default function App() {
       }
     },
 
-    // The second argument to useEffect tells React when to re-run the effect
-    // Use an empty array to specify "only run on first render"
-    // This works because signing into NEAR Wallet reloads the page
+    //! The second argument to useEffect tells React when to re-run the effect
+    //! Use an empty array to specify "only run on first render"
+    //! This works because signing into NEAR Wallet reloads the page
     []
   )
 
@@ -64,11 +79,9 @@ export default function App() {
             <div className='mt-3 d-flex flex-column shortcut-row'>
               <div className='d-flex flex-row mb-2 toolbar'>
 
-
                 <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
                 <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
                 <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
-
 
 
                 { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/></div>
@@ -86,6 +99,8 @@ export default function App() {
                   </>
                   }
               </div>
+              {window.walletConnection.isSignedIn()? <h6 className="mt-1 balance-text mb-0">{balance ==="" ? <Loading/> : balance}</h6>:<></>}
+
             </div>
           </div>
         </div>
@@ -209,7 +224,7 @@ export default function App() {
                 disabled={buttonDisabled}
                   >test transaction</button>
 
-          <button
+                <button
                 onClick={async event => {
                   setButtonDisabled(true)
 
@@ -236,7 +251,7 @@ export default function App() {
             
           </div>
           <h1 className="mt-2" style={{fontSize:"2.3rem"}}>RECENT PLAYS</h1>
-          <div className="accordion text-center mb-5" id="myAccordion">
+          <div className="accordion text-center mb-2" id="myAccordion">
             <h6 className="mt-3" style={{transition:"color 0.4 ease-in-out"}}>
               <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
                 <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
@@ -264,13 +279,14 @@ export default function App() {
           <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
             <div className="mt-3 d-flex flex-column">
               <div className="d-flex flex-row mb-2 toolbar">
+
                 <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toggleDarkMode}>
                   DARK <Sun className="fa-xs fas mb-1"/>
                 </button>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
       </div>
     )
 }

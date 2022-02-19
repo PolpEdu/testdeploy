@@ -26,6 +26,10 @@ export async function initContract() {
   })
 }
 
+export function convertYocto(YOCTO){
+  return utils.format.formatNearAmount(YOCTO);
+}
+
 export function logout() {
   window.walletConnection.signOut()
   // reload page

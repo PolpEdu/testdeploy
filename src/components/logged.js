@@ -11,3 +11,9 @@ export function NotLogged() {
     );
 }
 
+
+export function Loading() {
+    return (
+        <div className='spinner-border text-dark' role='status'><span className='sr-only'></span></div>
+    );
+} 
