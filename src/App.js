@@ -4,8 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react'
 import { Modal } from 'react-bootstrap';
 import { logout, toggleDarkMode } from './utils'
-import { Twitter, Discord, Sun, CaretDownFill, ExclamationTriangleFill, TrophyFill} from 'react-bootstrap-icons';
+import { Twitter, Discord, Sun} from 'react-bootstrap-icons';
 
+import ParasLogo from './assets/paras-white.svg';
 
 import { NotLogged, PopupMenu } from './components/logged';
 import getConfig from './config'
@@ -57,21 +58,21 @@ export default function App() {
   )
 
   return (
-      <div>
+      <div className='light'>
         <div className='social-icons'>
           <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
             <div className='mt-3 d-flex flex-column shortcut-row'>
               <div className='d-flex flex-row mb-2 toolbar'>
 
 
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.75rem"}}><span className="d-none d-sm-inline-flex mt-1">WHO'S PLAYIN</span><CaretDownFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.75rem"}}><span className="d-none d-sm-inline-flex mt-1">ON FIRE</span><ExclamationTriangleFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.75rem"}}><span className="d-none d-sm-inline-flex mt-1">TOP PLAYERS</span><TrophyFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1" /></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
 
 
 
                 { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/></div>
-                <Modal show={show} onHide={handleClose }>
+                <Modal show={show} onHide={handleClose}>
                     <Modal.Title className='mx-auto mt-2'>Modal heading</Modal.Title>
                     <Modal.Body>
                       <div className='d-flex flex-column'>
@@ -90,7 +91,7 @@ export default function App() {
         </div>
         <div className='text-center body-wrapper h-100vh h-100'>
           <div className='menumain'>
-           <h1><strong>Near Coin Flip!</strong></h1>
+           <h1 style={{fontSize:"3rem"}}><strong>Near Coin Flip!</strong></h1>
            <div className='maincenter text-center'>
             <img className="rounded-circle" src="https://cdn.discordapp.com/attachments/416647772943679488/938502348010029086/qr-code.png" alt="logo" width="256" height="256"/>
             { !window.walletConnection.isSignedIn() ? 
@@ -234,14 +235,20 @@ export default function App() {
             </div>
             
           </div>
-          <h2 className="mt-5">RECENT PLAYS</h2>
-          <div className="accordion text-center mb-5" id="myAccordion"><h6 className="mt-3"><a href="" target="_blank">wtf is this shit</a> | <a href="">bro i have a question.</a> | <a href="">Tutorial pls</a> | <a href="" target="_blank">TestNet Demo</a> | <a href="">Am I dumb?</a></h6></div>
+          <h1 className="mt-2" style={{fontSize:"2.3rem"}}>RECENT PLAYS</h1>
+          <div className="accordion text-center mb-5" id="myAccordion">
+            <h6 className="mt-3" style={{transition:"color 0.4 ease-in-out"}}>
+              <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
+                <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
+              </small>
+          </h6>
+          </div>
         </div>
         <div className="social-icons-bottom-right">
           <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
             <div className="text-center justify-content-center d-flex">
               <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-                <img src="https://i.imgur.com/KRuxULB.png" className="rounded mt-1 fa-nearnfts" style={{width: "36px", height: "24px"}}/>
+                <img src={ParasLogo} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' />
               </a>
               <a href="" target="_blank" rel="" className="cursor-pointer me-2">
                 <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter"/>
