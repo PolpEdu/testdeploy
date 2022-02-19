@@ -62,9 +62,10 @@ export async function transact(receiver, ammout)  {
   };
 }
 
-export async function game() {
-  
+export function toggleDarkMode() {
+  console.log("boooooo")
 }
+
 
 function NotificationError(sender, publicKey) {
   return (

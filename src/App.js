@@ -1,12 +1,15 @@
 import 'regenerator-runtime/runtime'
-import React from 'react'
-import { login, logout } from './utils'
 import './global.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react'
+import { Modal } from 'react-bootstrap';
+import { logout, toggleDarkMode } from './utils'
 import { Twitter, Discord, Sun, CaretDownFill, ExclamationTriangleFill, TrophyFill} from 'react-bootstrap-icons';
-import NearLogo from './assets/logo-white.svg';
 
+
+import { NotLogged, PopupMenu } from './components/logged';
 import getConfig from './config'
+
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 
@@ -25,6 +28,12 @@ export default function App() {
 
   // check if won
   const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
+
+
+  //popup
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
@@ -47,17 +56,34 @@ export default function App() {
     []
   )
 
-  // if not signed in, return early with sign-in prompt
-  if (!window.walletConnection.isSignedIn()) {
-    return (
+  return (
       <div>
         <div className='social-icons'>
           <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
             <div className='mt-3 d-flex flex-column shortcut-row'>
               <div className='d-flex flex-row mb-2 toolbar'>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.7rem"}}><span className="d-none d-sm-inline-flex mt-1">WHO'S PLAYIN</span><CaretDownFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.7rem"}}><span className="d-none d-sm-inline-flex mt-1">ON FIRE</span><ExclamationTriangleFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.7rem"}}><span className="d-none d-sm-inline-flex mt-1">TOP PLAYERS</span><TrophyFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1" /></button></a>
+
+
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.75rem"}}><span className="d-none d-sm-inline-flex mt-1">WHO'S PLAYIN</span><CaretDownFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.75rem"}}><span className="d-none d-sm-inline-flex mt-1">ON FIRE</span><ExclamationTriangleFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.75rem"}}><span className="d-none d-sm-inline-flex mt-1">TOP PLAYERS</span><TrophyFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1" /></button></a>
+
+
+
+                { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/></div>
+                <Modal show={show} onHide={handleClose }>
+                    <Modal.Title className='mx-auto mt-2'>Modal heading</Modal.Title>
+                    <Modal.Body>
+                      <div className='d-flex flex-column'>
+                        <span> Woohoo, you're reading this text in a modal!</span>
+                    
+                        <button className='btn p-2' onClick={handleClose}>Save</button>
+                        <button className='btn p-2' onClick={logout}>Sign Out</button>
+                      </div>
+                    </Modal.Body>
+                </Modal>
+                  </>
+                  }
               </div>
             </div>
           </div>
@@ -67,9 +93,146 @@ export default function App() {
            <h1><strong>Near Coin Flip!</strong></h1>
            <div className='maincenter text-center'>
             <img className="rounded-circle" src="https://cdn.discordapp.com/attachments/416647772943679488/938502348010029086/qr-code.png" alt="logo" width="256" height="256"/>
-            <div className="mb-3"></div>
-              <button className='wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' onClick={login}>Log In with NEAR  <img src={NearLogo} alt="Near Logo" className='nearlogo'/></button>
+            { !window.walletConnection.isSignedIn() ? 
+            <NotLogged/> : <>
+              <main>
+                <h1>
+                  <label
+                    htmlFor="greeting"
+                    style={{
+                      color: 'var(--secondary)',
+                      borderBottom: '2px solid var(--secondary)'
+                    }}
+                  >
+                    {greeting}
+                  </label>
+                  {' '/* React trims whitespace around tags; insert literal space character when needed */}
+                  {window.accountId}!
+                </h1>
+                <form onSubmit={async event => {
+                  event.preventDefault()
+
+                  // get elements from the form using their id attribute
+                  const { fieldset, greeting } = event.target.elements
+
+                  // hold onto new user-entered value from React's SynthenticEvent for use after `await` call
+                  const newGreeting = greeting.value
+
+                  // disable the form while the value gets updated on-chain
+                  fieldset.disabled = true
+
+                  try {
+                    // make an update call to the smart contract
+                    await window.contract.set_greeting({
+                      // pass the value that the user entered in the greeting field
+                      message: newGreeting
+                    })
+                  } catch (e) {
+                    alert(
+                      'Something went wrong! ' +
+                      'Maybe you need to sign out and back in? ' +
+                      'Check your browser console for more info.'
+                    )
+                    console.log(e)
+                    throw e
+                  } finally {
+                    // re-enable the form, whether the call succeeded or failed
+                    fieldset.disabled = false
+                  }
+
+                  // update local `greeting` variable to match persisted value
+                  set_greeting(newGreeting)
+
+                  // show Notification
+                  setShowNotification(true)
+
+                  
+                  // remove Notification again after css animation completes
+                  // this allows it to be shown again next time the form is submitted
+                  setTimeout(() => {
+                    setShowNotification(false)
+                  }, 11000)
+                }}>
+                  <fieldset id="fieldset">
+                    <label
+                      htmlFor="greeting"
+                      style={{
+                        display: 'block',
+                        color: 'var(--gray)',
+                        marginBottom: '0.5em'
+                      }}
+                    >
+                      Change greeting
+                    </label>
+                    <div style={{ display: 'flex' }}>
+                      <input
+                        autoComplete="off"
+                        defaultValue={greeting}
+                        id="greeting"
+                        onChange={e => setButtonDisabled(e.target.value === greeting)}
+                        style={{ flex: 1 }}
+                      />
+                      <button
+                        disabled={buttonDisabled}
+                        style={{ borderRadius: '0 5px 5px 0' }}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </fieldset>
+                </form>
+                <hr />
+
+                <button
+                onClick={async event => {
+                  setButtonDisabled(true)
+
+                  //transact("polpedu.testnet", '1.5')
+
+
+                  setButtonDisabled(false)
+
+
+                  // show Notification
+                  setshowTransaction(true)
+
+                  
+                  // remove Notification again after css animation completes
+                  // this allows it to be shown again next time the form is submitted
+                  setTimeout(() => {
+                    setshowTransaction(false)
+                  }, 11000)
+                  
+                  
+                }}
+                disabled={buttonDisabled}
+                  >test transaction</button>
+
+          <button
+                onClick={async event => {
+                  setButtonDisabled(true)
+
+
+
+                  try {
+                    if (window.walletConnection.isSignedIn()) {
+                      window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
+                    }
+                  } catch(e) {
+                    console.log(e)    
+                  }
+
+                  setButtonDisabled(false)
+                }}
+
+                disabled={buttonDisabled}
+                  >Test Game</button>
+              </main>
+              {showNotification && <Notification />}
+            </>
+            }
             </div>
+            
           </div>
           <h2 className="mt-5">RECENT PLAYS</h2>
           <div className="accordion text-center mb-5" id="myAccordion"><h6 className="mt-3"><a href="" target="_blank">wtf is this shit</a> | <a href="">bro i have a question.</a> | <a href="">Tutorial pls</a> | <a href="" target="_blank">TestNet Demo</a> | <a href="">Am I dumb?</a></h6></div>
@@ -94,12 +257,7 @@ export default function App() {
           <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
             <div className="mt-3 d-flex flex-column">
               <div className="d-flex flex-row mb-2 toolbar">
-                <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={{
-                  //toggle dark mode
-                  toggleDarkMode: () => {
-                    console.log("DARKEN")
-                  }
-                }}>
+                <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toggleDarkMode}>
                   DARK <Sun className="fa-xs fas mb-1"/>
                 </button>
                 </div>
@@ -108,150 +266,6 @@ export default function App() {
           </div>
       </div>
     )
-  }
-
-  return (
-    // use React Fragment, <>, to avoid wrapping elements in unnecessary divs
-    <>
-      <button className="link btnhover" style={{ float: 'right' }} onClick={logout}>
-        Sign out
-      </button>
-      <main>
-        <h1>
-          <label
-            htmlFor="greeting"
-            style={{
-              color: 'var(--secondary)',
-              borderBottom: '2px solid var(--secondary)'
-            }}
-          >
-            {greeting}
-          </label>
-          {' '/* React trims whitespace around tags; insert literal space character when needed */}
-          {window.accountId}!
-        </h1>
-        <form onSubmit={async event => {
-          event.preventDefault()
-
-          // get elements from the form using their id attribute
-          const { fieldset, greeting } = event.target.elements
-
-          // hold onto new user-entered value from React's SynthenticEvent for use after `await` call
-          const newGreeting = greeting.value
-
-          // disable the form while the value gets updated on-chain
-          fieldset.disabled = true
-
-          try {
-            // make an update call to the smart contract
-            await window.contract.set_greeting({
-              // pass the value that the user entered in the greeting field
-              message: newGreeting
-            })
-          } catch (e) {
-            alert(
-              'Something went wrong! ' +
-              'Maybe you need to sign out and back in? ' +
-              'Check your browser console for more info.'
-            )
-            console.log(e)
-            throw e
-          } finally {
-            // re-enable the form, whether the call succeeded or failed
-            fieldset.disabled = false
-          }
-
-          // update local `greeting` variable to match persisted value
-          set_greeting(newGreeting)
-
-          // show Notification
-          setShowNotification(true)
-
-          
-          // remove Notification again after css animation completes
-          // this allows it to be shown again next time the form is submitted
-          setTimeout(() => {
-            setShowNotification(false)
-          }, 11000)
-        }}>
-          <fieldset id="fieldset">
-            <label
-              htmlFor="greeting"
-              style={{
-                display: 'block',
-                color: 'var(--gray)',
-                marginBottom: '0.5em'
-              }}
-            >
-              Change greeting
-            </label>
-            <div style={{ display: 'flex' }}>
-              <input
-                autoComplete="off"
-                defaultValue={greeting}
-                id="greeting"
-                onChange={e => setButtonDisabled(e.target.value === greeting)}
-                style={{ flex: 1 }}
-              />
-              <button
-                disabled={buttonDisabled}
-                style={{ borderRadius: '0 5px 5px 0' }}
-              >
-                Save
-              </button>
-            </div>
-          </fieldset>
-        </form>
-        <hr />
-
-        <button
-        onClick={async event => {
-          setButtonDisabled(true)
-
-          //transact("polpedu.testnet", '1.5')
-
-
-          setButtonDisabled(false)
-
-
-          // show Notification
-          setshowTransaction(true)
-
-          
-          // remove Notification again after css animation completes
-          // this allows it to be shown again next time the form is submitted
-          setTimeout(() => {
-            setshowTransaction(false)
-          }, 11000)
-          
-          
-        }}
-        disabled={buttonDisabled}
-          >test transaction</button>
-
-  <button
-        onClick={async event => {
-          setButtonDisabled(true)
-
-
-
-          try {
-            if (window.walletConnection.isSignedIn()) {
-              window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
-            }
-          } catch(e) {
-            console.log(e)    
-          }
-
-          setButtonDisabled(false)
-        }}
-
-        disabled={buttonDisabled}
-          >Test Game</button>
-      </main>
-      {showNotification && <Notification />}
-    </>
-  )
 }
 
 // this component gets rendered by App after the form is submitted

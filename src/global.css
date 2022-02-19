@@ -40,7 +40,17 @@ body, html {
   text-align: center;
   width: 1.7rem;
 }
+.profile-picture-md .image {
+    height: 1.92em;
+    width: 1.92em;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
 
+img, svg {
+    vertical-align: middle;
+}
 a,
 .link {
   color: var(--primary);
@@ -275,4 +285,8 @@ h3 {
 
 .wallet-adapter-button-trigger {
     background-color: rgb(36,36,36);
+}
+
+.btn {
+  padding: 0.235rem 0.5rem!important;
 }
