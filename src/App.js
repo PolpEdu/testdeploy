@@ -1,7 +1,10 @@
 import 'regenerator-runtime/runtime'
 import React from 'react'
-import { login, logout, transact } from './utils'
+import { login, logout } from './utils'
 import './global.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Twitter, Discord, Sun, CaretDownFill, ExclamationTriangleFill, TrophyFill} from 'react-bootstrap-icons';
+import NearLogo from './assets/logo-white.svg';
 
 import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
@@ -47,26 +50,70 @@ export default function App() {
   // if not signed in, return early with sign-in prompt
   if (!window.walletConnection.isSignedIn()) {
     return (
-      <main>
+      <div>
         <div className='social-icons'>
-          <div>
-
+          <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
+            <div className='mt-3 d-flex flex-column shortcut-row'>
+              <div className='d-flex flex-row mb-2 toolbar'>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.7rem"}}><span className="d-none d-sm-inline-flex mt-1">WHO'S PLAYIN</span><CaretDownFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.7rem"}}><span className="d-none d-sm-inline-flex mt-1">ON FIRE</span><ExclamationTriangleFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1"/></button></a>
+                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.7rem"}}><span className="d-none d-sm-inline-flex mt-1">TOP PLAYERS</span><TrophyFill className="d-none d-sm-inline-flex fas fa-xs mb-1 ms-1" /></button></a>
+              </div>
+            </div>
           </div>
         </div>
-        <div className='menumain'>
-          <h3>Near Coin Flip!</h3>
+        <div className='text-center body-wrapper h-100vh h-100'>
+          <div className='menumain'>
+           <h1><strong>Near Coin Flip!</strong></h1>
+           <div className='maincenter text-center'>
+            <img className="rounded-circle" src="https://cdn.discordapp.com/attachments/416647772943679488/938502348010029086/qr-code.png" alt="logo" width="256" height="256"/>
+            <div className="mb-3"></div>
+              <button className='wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' onClick={login}>Log In with NEAR  <img src={NearLogo} alt="Near Logo" className='nearlogo'/></button>
+            </div>
+          </div>
+          <h2 className="mt-5">RECENT PLAYS</h2>
+          <div className="accordion text-center mb-5" id="myAccordion"><h6 className="mt-3"><a href="" target="_blank">wtf is this shit</a> | <a href="">bro i have a question.</a> | <a href="">Tutorial pls</a> | <a href="" target="_blank">TestNet Demo</a> | <a href="">Am I dumb?</a></h6></div>
         </div>
-        <p style={{ textAlign: 'center', marginTop: '2.5em' }}>
-          <button onClick={login}>Select Wallet</button>
-        </p>
-      </main>
+        <div className="social-icons-bottom-right">
+          <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
+            <div className="text-center justify-content-center d-flex">
+              <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+                <img src="https://i.imgur.com/KRuxULB.png" className="rounded mt-1 fa-nearnfts" style={{width: "36px", height: "24px"}}/>
+              </a>
+              <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+                <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter"/>
+              </a>
+              <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+                  <Discord color="#5865f2" size={31} className="rounded mt-1 fa-discord"/>
+              </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="social-icons-left">
+          <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
+            <div className="mt-3 d-flex flex-column">
+              <div className="d-flex flex-row mb-2 toolbar">
+                <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={{
+                  //toggle dark mode
+                  toggleDarkMode: () => {
+                    console.log("DARKEN")
+                  }
+                }}>
+                  DARK <Sun className="fa-xs fas mb-1"/>
+                </button>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
     )
   }
 
   return (
     // use React Fragment, <>, to avoid wrapping elements in unnecessary divs
     <>
-      <button className="link" style={{ float: 'right' }} onClick={logout}>
+      <button className="link btnhover" style={{ float: 'right' }} onClick={logout}>
         Sign out
       </button>
       <main>
