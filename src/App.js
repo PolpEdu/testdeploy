@@ -248,7 +248,7 @@ export default function App() {
           <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
             <div className="text-center justify-content-center d-flex">
               <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-                <img src={ParasLogo} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"27px"}} />
+                <img src={ParasLogo} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} />
               </a>
               <a href="" target="_blank" rel="" className="cursor-pointer me-2">
                 <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter"/>
