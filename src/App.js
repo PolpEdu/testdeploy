@@ -1,24 +1,28 @@
 import 'regenerator-runtime/runtime'
-import './global.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './global.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, toggleDarkMode, convertYocto } from './utils'
-import { Twitter, Discord, Sun} from 'react-bootstrap-icons';
-
-import ParasLogo from './assets/paras-black.svg';
-
+import { logout, convertYocto} from './utils'
 import { NotLogged, Loading } from './components/logged';
-import getConfig from './config'
 
+import ParasLogoB from './assets/paras-black.svg';
+import ParasLogoW from './assets/paras-white.svg';
+
+import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
+
+import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
+
+//import { ThemeProvider } from 'styled-components';
+
+
 
 
 export default function App() {
   // use React Hooks to store greeting in component state
   const [greeting, set_greeting] = React.useState()
 
-  // when the user has not yet interacted with the form, disable the button
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
 
   // after submitting the form, we want to show Notification
@@ -30,17 +34,25 @@ export default function App() {
   // check if won
   const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
 
-  // night mode
-  const [nightMode, setNightMode] = React.useState("light")
-
   // on the top right
   const [balance, setbalance] = React.useState("")
 
+
+  // Dark Theme
+  const [darkMode, setDarkMode] = React.useState("light")
 
   //popup
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+
+  const toogleDarkMode = () => {
+    let newmode = darkMode === "light" ? "dark" : "light"
+    setDarkMode(newmode)
+
+
+  }
 
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
@@ -72,7 +84,7 @@ export default function App() {
   )
 
   return (
-    <div className='light'>
+    <div className={darkMode}>
       <div className='social-icons'>
         <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
           <div className='mt-3 d-flex flex-column shortcut-row'>
@@ -193,7 +205,9 @@ export default function App() {
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
           <div className="text-center justify-content-center d-flex">
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-              <img src={ParasLogo} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} />
+              {darkMode==="white" ? 
+              <img src={ParasLogoB} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} /> : <img src={ParasLogoW} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}}
+               />}
             </a>
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
               <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter"/>
@@ -210,8 +224,8 @@ export default function App() {
           <div className="mt-3 d-flex flex-column">
             <div className="d-flex flex-row mb-2 toolbar">
 
-              <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toggleDarkMode}>
-                DARK <Sun className="fa-xs fas mb-1"/>
+              <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toogleDarkMode}>
+                {darkMode==="light" ? "DARK" : "LIGHT"} {darkMode==="light" ? <Moon className="fa-xs fas mb-1"/>: <Sun className="fa-xs fas mb-1"/> }
               </button>
               </div>
             </div>
@@ -241,60 +255,4 @@ function Notification() {
       </footer>
     </aside>
   )
-}
-
-
-
-function rngTest() {
-  console.log("Starting!")
-  var i = 0;
-  var dict = {};
-  var min = 50;
-  var max = 50;
-
-  if (window.walletConnection.isSignedIn()) {
-    setTimeout(function next() {
-
-
-      window.contract.resultslog() //using the contract to get the greeting
-      .then(result => {      
-        let ft = result[0];
-        console.log("it."+i + ": " +ft);
-
-        if(dict[ft] === undefined) {
-          dict[ft] = 1;
-        } else {
-          dict[ft] = dict[ft] + 1;
-        }
-
-
-
-        if(ft>max) {
-          max = ft;
-        }
-        else if(ft<min) {
-          min = ft;
-        }
-
-
-
-
-        if(i%10===0) {
-          console.log("max: " + max);
-          console.log("min: " + min);
-          console.log(dict);
-          
-        }
-      })
-      .catch(e => {
-        console.log(e)
-      });
-
-      i++;
-
-      setTimeout(next, 2500);
-    
-    }, 2500);
-  
-  }
 }

@@ -66,11 +66,6 @@ export async function transact(receiver, ammout)  {
   };
 }
 
-export function toggleDarkMode() {
-  console.log("boooooo")
-}
-
-
 function NotificationError(sender, publicKey) {
   return (
     <aside>
@@ -112,4 +107,59 @@ function NotificationTRANS(status) {
       </footer>
     </aside>
   )
+}
+
+
+function rngTest() {
+  console.log("Starting!")
+  var i = 0;
+  var dict = {};
+  var min = 50;
+  var max = 50;
+
+  if (window.walletConnection.isSignedIn()) {
+    setTimeout(function next() {
+
+
+      window.contract.resultslog() //using the contract to get the greeting
+      .then(result => {      
+        let ft = result[0];
+        console.log("it."+i + ": " +ft);
+
+        if(dict[ft] === undefined) {
+          dict[ft] = 1;
+        } else {
+          dict[ft] = dict[ft] + 1;
+        }
+
+
+
+        if(ft>max) {
+          max = ft;
+        }
+        else if(ft<min) {
+          min = ft;
+        }
+
+
+
+
+        if(i%10===0) {
+          console.log("max: " + max);
+          console.log("min: " + min);
+          console.log(dict);
+          
+        }
+      })
+      .catch(e => {
+        console.log(e)
+      });
+
+      i++;
+
+      setTimeout(next, 2500);
+    
+    }, 2500);
+  
+  }
 }
