@@ -25,7 +25,8 @@ setup_alloc!();
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Welcome {
     game: LookupMap<String, u8>,
-    seed: Vec<u8>
+    seed: Vec<u8>,
+    bet_amount: Vec<u128>,
 }
 
 impl Default for Welcome {
@@ -33,6 +34,7 @@ impl Default for Welcome {
     Self {
       game: LookupMap::new(b"a".to_vec()),
       seed: env::random_seed(), //0-255
+      bet_amount: vec![1_000_000_000_000_000_000_000_000, 2_000_000_000_000_000_000_000_000, 5_000_000_000_000_000_000_000_000, 10_000_000_000_000_000_000_000_000],
     }
   }
 }
@@ -81,9 +83,9 @@ impl Welcome {
     //true = heads, false = tails
     #[payable]
     pub fn coin_flip(&mut self, option: bool) -> &str {
-        let amount: u128 = 1_000_000_000_000_000_000_000_000;
+        let amount: u128 = env::attached_deposit();
 
-        assert!(env::attached_deposit()==amount, "Owner's method");
+        assert!(self.bet_amount.contains(&amount), "Attached amount needs to be 1 near");
         let seed = env::random_seed();
         let rng = env::sha256(seed.as_slice());
 
@@ -96,7 +98,7 @@ impl Welcome {
         //return result; //returns true 50% of the time otherwise false
         if result == option{
             let to: AccountId = env::signer_account_id(); //env::current_account_id() //"ertemo.testnet".parse().unwrap();
-            Promise::new(to).transfer(amount);
+            Promise::new(to).transfer(amount*2);
             return "you won";
         }
         return "get rugged xd lmao";
