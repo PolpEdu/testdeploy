@@ -49,9 +49,8 @@ export default function App() {
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
         window.walletConnection.account().getAccountBalance().then(function(balance) {
-          let fullstr = convertYocto(balance.available);
-          let split = fullstr.split(".");
-          let str = split[0] + "." + split[1].substring(0,4);
+          let fullstr = convertYocto(balance.available).split(".");
+          let str = fullstr[0] + "." + fullstr[1].substring(0,4);
           setbalance("NEAR: "+ str); 
         }).catch(e => {
           console.log('There has been a problem with getting your balance: ' + e.message);
@@ -73,222 +72,153 @@ export default function App() {
   )
 
   return (
-      <div className='light'>
-        <div className='social-icons'>
-          <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
-            <div className='mt-3 d-flex flex-column shortcut-row'>
-              <div className='d-flex flex-row mb-2 toolbar'>
+    <div className='light'>
+      <div className='social-icons'>
+        <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
+          <div className='mt-3 d-flex flex-column shortcut-row'>
+            <div className='d-flex flex-row mb-2 toolbar'>
 
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
-                <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
 
-
-                { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/></div>
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Title className='mx-auto mt-2'>Modal heading</Modal.Title>
-                    <Modal.Body>
-                      <div className='d-flex flex-column'>
-                        <span> Woohoo, you're reading this text in a modal!</span>
-                    
-                        <button className='btn p-2' onClick={handleClose}>Save</button>
-                        <button className='btn p-2' onClick={logout}>Sign Out</button>
+              { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
+              </div>
+              <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
+                  <Modal.Body className='p-0'>
+                    <div className='d-flex flex-column '>
+                      <div className="card-body text-center">
+                        <h4 style={{fontWeight:"bold"}}>USER PROFILE</h4>
+                      <h6>
+                        <small style={{fontWeight:"semibold"}} className="w-30">Currently logged as:{window.accountId}!</small>
+                      </h6>
+                      <div className="profile-picture d-flex w-80 mb-3">
+                        <div className="imageWrapper ms-auto me-auto">
+                          <img className="rounded-circle cursor-pointer image-large" src="https://i.imgur.com/E3aJ7TP.jpg" alt="pfp"/>
+                          <a href="#" className="cornerLink" ><small style={{fontSize:"0.75rem"}}>CHANGE PICTURE</small></a>
+                          </div>
+                        </div>
+                          <h6>First Fliperino: </h6>
+                          <div className="input-group">
+                        
+                        {/*<input type="text" className="form-control" placeholder="Nickname" aria-label="Username" aria-describedby="basic-addon1" value=""/>
+                        */}
+                        </div>
                       </div>
-                    </Modal.Body>
-                </Modal>
-                  </>
-                  }
-              </div>
-              {window.walletConnection.isSignedIn()? <h6 className="mt-1 balance-text mb-0">{balance ==="" ? <Loading/> : balance}</h6>:<></>}
-
-            </div>
-          </div>
-        </div>
-        <div className='text-center body-wrapper h-100vh h-100'>
-          <div className='menumain'>
-           <h1 style={{fontSize:"3rem"}}><strong>Near Coin Flip!</strong></h1>
-           <div className='maincenter text-center'>
-            <img className="rounded-circle" src="https://cdn.discordapp.com/attachments/416647772943679488/938502348010029086/qr-code.png" alt="logo" width="256" height="256"/>
-            { !window.walletConnection.isSignedIn() ? 
-            <NotLogged/> : <>
-              <main>
-                <h1>
-                  <label
-                    htmlFor="greeting"
-                    style={{
-                      color: 'var(--secondary)',
-                      borderBottom: '2px solid var(--secondary)'
-                    }}
-                  >
-                    {greeting}
-                  </label>
-                  {' '/* React trims whitespace around tags; insert literal space character when needed */}
-                  {window.accountId}!
-                </h1>
-                <form onSubmit={async event => {
-                  event.preventDefault()
-
-                  // get elements from the form using their id attribute
-                  const { fieldset, greeting } = event.target.elements
-
-                  // hold onto new user-entered value from React's SynthenticEvent for use after `await` call
-                  const newGreeting = greeting.value
-
-                  // disable the form while the value gets updated on-chain
-                  fieldset.disabled = true
-
-                  try {
-                    // make an update call to the smart contract
-                    await window.contract.set_greeting({
-                      // pass the value that the user entered in the greeting field
-                      message: newGreeting
-                    })
-                  } catch (e) {
-                    alert(
-                      'Something went wrong! ' +
-                      'Maybe you need to sign out and back in? ' +
-                      'Check your browser console for more info.'
-                    )
-                    console.log(e)
-                    throw e
-                  } finally {
-                    // re-enable the form, whether the call succeeded or failed
-                    fieldset.disabled = false
-                  }
-
-                  // update local `greeting` variable to match persisted value
-                  set_greeting(newGreeting)
-
-                  // show Notification
-                  setShowNotification(true)
-
-                  
-                  // remove Notification again after css animation completes
-                  // this allows it to be shown again next time the form is submitted
-                  setTimeout(() => {
-                    setShowNotification(false)
-                  }, 11000)
-                }}>
-                  <fieldset id="fieldset">
-                    <label
-                      htmlFor="greeting"
-                      style={{
-                        display: 'block',
-                        color: 'var(--gray)',
-                        marginBottom: '0.5em'
-                      }}
-                    >
-                      Change greeting
-                    </label>
-                    <div style={{ display: 'flex' }}>
-                      <input
-                        autoComplete="off"
-                        defaultValue={greeting}
-                        id="greeting"
-                        onChange={e => setButtonDisabled(e.target.value === greeting)}
-                        style={{ flex: 1 }}
-                      />
-                      <button
-                        disabled={buttonDisabled}
-                        style={{ borderRadius: '0 5px 5px 0' }}
-                      >
-                        Save
-                      </button>
                     </div>
-                  </fieldset>
-                </form>
-                <hr />
-
-                <button
-                onClick={async event => {
-                  setButtonDisabled(true)
-
-                  //transact("polpedu.testnet", '1.5')
-
-
-                  setButtonDisabled(false)
-
-
-                  // show Notification
-                  setshowTransaction(true)
-
-                  
-                  // remove Notification again after css animation completes
-                  // this allows it to be shown again next time the form is submitted
-                  setTimeout(() => {
-                    setshowTransaction(false)
-                  }, 11000)
-                  
-                  
-                }}
-                disabled={buttonDisabled}
-                  >test transaction</button>
-
-                <button
-                onClick={async event => {
-                  setButtonDisabled(true)
-
-
-
-                  try {
-                    if (window.walletConnection.isSignedIn()) {
-                      window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
-                    }
-                  } catch(e) {
-                    console.log(e)    
-                  }
-
-                  setButtonDisabled(false)
-                }}
-
-                disabled={buttonDisabled}
-                  >Test Game</button>
-              </main>
-              {showNotification && <Notification />}
-            </>
-            }
+                  </Modal.Body>
+                  <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
+                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal"}} onClick={handleClose}>Save</button>
+                      <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3' onClick={logout}>Sign Out</button>
+                  </div>
+              </Modal>
+                </>
+                }
             </div>
-            
-          </div>
-          <h1 className="mt-2" style={{fontSize:"2.3rem"}}>RECENT PLAYS</h1>
-          <div className="accordion text-center mb-2" id="myAccordion">
-            <h6 className="mt-3" style={{transition:"color 0.4 ease-in-out"}}>
-              <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
-                <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
-              </small>
-          </h6>
-          </div>
-        </div>
-        <div className="social-icons-bottom-right">
-          <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
-            <div className="text-center justify-content-center d-flex">
-              <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-                <img src={ParasLogo} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} />
-              </a>
-              <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-                <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter"/>
-              </a>
-              <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-                  <Discord color="#5865f2" size={31} className="rounded mt-1 fa-discord"/>
-              </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="social-icons-left">
-          <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
-            <div className="mt-3 d-flex flex-column">
-              <div className="d-flex flex-row mb-2 toolbar">
+            {window.walletConnection.isSignedIn()? <h6 className="mt-1 balance-text mb-0">{balance ==="" ? <Loading/> : balance}</h6>:<></>}
 
-                <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toggleDarkMode}>
-                  DARK <Sun className="fa-xs fas mb-1"/>
-                </button>
-                </div>
-              </div>
-            </div>
+          </div>
         </div>
       </div>
-    )
+      <div className='text-center body-wrapper h-100vh h-100'>
+        <div className='menumain'>
+          <h1 style={{fontSize:"3rem"}}><strong>Near Coin Flip!</strong></h1>
+          <div className='maincenter text-center'>
+          <img className="rounded-circle" src="https://cdn.discordapp.com/attachments/416647772943679488/938502348010029086/qr-code.png" alt="logo" width="256" height="256"/>
+          { !window.walletConnection.isSignedIn() ? 
+          <NotLogged/> : <>
+            <main>
+
+              <button
+              onClick={async event => {
+                setButtonDisabled(true)
+
+                //transact("polpedu.testnet", '1.5')
+
+
+                setButtonDisabled(false)
+
+
+                // show Notification
+                setshowTransaction(true)
+
+                
+                // remove Notification again after css animation completes
+                // this allows it to be shown again next time the form is submitted
+                setTimeout(() => {
+                  setshowTransaction(false)
+                }, 11000)
+                
+                
+              }}
+              disabled={buttonDisabled}
+                >test transaction</button>
+
+              <button
+              onClick={async event => {
+                setButtonDisabled(true)
+
+
+
+                try {
+                  if (window.walletConnection.isSignedIn()) {
+                    window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
+                  }
+                } catch(e) {
+                  console.log(e)    
+                }
+
+                setButtonDisabled(false)
+              }}
+
+              disabled={buttonDisabled}
+                >Test Game</button>
+            </main>
+            {showNotification && <Notification />}
+          </>
+          }
+          </div>
+          
+        </div>
+        <h1 className="mt-2" style={{fontSize:"2.3rem"}}>RECENT PLAYS</h1>
+        <div className="accordion text-center mb-2" id="myAccordion">
+          <h6 className="mt-3" style={{transition:"color 0.4 ease-in-out"}}>
+            <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
+              <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
+            </small>
+        </h6>
+        </div>
+      </div>
+      <div className="social-icons-bottom-right">
+        <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
+          <div className="text-center justify-content-center d-flex">
+            <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+              <img src={ParasLogo} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} />
+            </a>
+            <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+              <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter"/>
+            </a>
+            <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+                <Discord color="#5865f2" size={31} className="rounded mt-1 fa-discord"/>
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="social-icons-left">
+        <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
+          <div className="mt-3 d-flex flex-column">
+            <div className="d-flex flex-row mb-2 toolbar">
+
+              <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toggleDarkMode}>
+                DARK <Sun className="fa-xs fas mb-1"/>
+              </button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  )
 }
 
 // this component gets rendered by App after the form is submitted
