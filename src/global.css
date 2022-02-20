@@ -1,53 +1,73 @@
+@font-face {
+  font-family: 'VCR_OSD_MONO';
+  src: url(./assets/fonts/VCR_OSD_MONO_1.001.ttf) format('truetype');
+}
+
 * {
   box-sizing: border-box;
 }
 
-@font-face {
-  font-family: 'PressStart';
-  src: url('./assets/font/PressStart2P-Regular.ttf') format('ttf');
+body, html {
+  margin: 0;
+  background-color: #f5f5f5;
+  font-family: 'VCR_OSD_MONO' !important;
+  min-height: 100%;
+  height: 100vh !important;
+}
+
+.balance-text {
+    text-align: center;
+}
+
+.h-100vh {
+    min-height: 100vh!important;
+}
+
+.dark {
+  background-color: rgb(15, 23, 42);
+  min-height: 100vh;
+}
+
+.dark .body-wrapper {
+  background-color: #0f172a;
+}
+
+
+.light .list-group-item:hover {
+  background-color: #f5f5f5!important;
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.near-balance {
+  animation: pop 0.3s linear 1;
 }
 
 html {
-  --bg: #efefef;
-  --fg: #1e1e1e;
-  --gray: #555;
-  --light-gray: #ccc;
-  --shadow: #e6e6e6;
-  --success: rgb(90, 206, 132);
-  --primary: #FF585D;
-  --secondary: #0072CE;
 
-  background-color: var(--bg);
-  color: var(--fg);
-  /*font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,'Gamer Font';*/
-  font-family: 'PressStart', cursive,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,;
-  font-size: calc(0.9em + 0.5vw);
+  font-family: 'VCR_OSD_MONO', -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif !important;
+  font-weight: 400;
+  font-size: calc(0.8em + 0.5vw);
   line-height: 1.3;
 }
 
-body {
-  margin: 0;
-  padding: 1em;
-}
-
-main {
-  display: flex;
-  align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-
-
-h1 {
-  background-image: url(assets/logo-black.svg);
+.nearlogo {
   background-position: center 1em;
   background-repeat: no-repeat;
   background-size: auto 1.5em;
-  margin-top: 0;
-  padding: 3.5em 0 0.5em;
   text-align: center;
+  width: 1.7rem;
+}
+.profile-picture-md .image {
+    height: 2.05rem;
+    width:  2.05rem;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 
+img, svg {
+  vertical-align: middle;
+}
 a,
 .link {
   color: var(--primary);
@@ -55,6 +75,7 @@ a,
 }
 a:hover,
 a:focus,
+a:focus-visible,
 .link:hover,
 .link:focus {
   text-decoration: underline;
@@ -64,23 +85,11 @@ a:active,
   color: var(--secondary);
 }
 
-button, input {
-  font: inherit;
-  outline: none;
-}
-
-button {
-  background-color: var(--secondary);
-  border-radius: 5px;
-  border: none;
-  color: #efefef;
-  cursor: pointer;
-  padding: 0.3em 0.75em;
-  transition: transform 30ms;
-}
-button:hover, button:focus {
+.btnhover:hover, button:focus{
+  transition: box-shadow 0.5s ease-in-out;
   box-shadow: 0 0 10em rgba(255, 255, 255, 0.2) inset;
 }
+
 button:active {
   box-shadow: 0 0 10em rgba(0, 0, 0, 0.1) inset;
 }
@@ -115,14 +124,10 @@ button.link {
   top: 0.45em;
   right: 0.5em;
 }
+
 @keyframes loader {
   0% { transform: rotate(0deg) }
   100% { transform: rotate(360deg) }
-}
-
-fieldset {
-  border: none;
-  padding: 2em 0;
 }
 
 input {
@@ -149,30 +154,6 @@ li {
   padding-bottom: 1em;
 }
 
-aside {
-  animation: notify ease-in-out 10s;
-  background-color: var(--shadow);
-  border-radius: 5px;
-  bottom: 0;
-  font-size: 0.8em;
-  margin: 1em;
-  padding: 1em;
-  position: fixed;
-  transform: translateY(10em);
-  right: 0;
-}
-aside footer {
-  display: flex;
-  font-size: 0.9em;
-  justify-content: space-between;
-  margin-top: 0.5em;
-}
-aside footer *:first-child {
-  color: var(--success);
-}
-aside footer *:last-child {
-  color: var(--gray);
-}
 @keyframes notify {
   0% { transform: translateY(10em) }
   5% { transform: translateY(0) }
@@ -180,25 +161,22 @@ aside footer *:last-child {
   100% { transform: translateY(10em) }
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    --bg: #1e1e1e;
-    --fg: #efefef;
-    --gray: #aaa;
-    --shadow: #2a2a2a;
-    --light-gray: #444;
-  }
-  h1 {
-    background-image: url(assets/logo-white.svg);
-  }
-  input:focus {
-    box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
-  }
+.social-icons {
+  position: relative;
+  z-index: 2;
 }
 
+.body-wrapper {
+    padding-top: 20px;
+    background-color: #f5f5f5;
+}
 /* min widh*/
 @media (min-width: 992px) {
-  .social-icons {
+  .balance-text {
+    text-align: right;
+  }
+
+  .social-icons  {
     position: absolute;
     height: 100%;
     top: 0;
@@ -228,8 +206,53 @@ aside footer *:last-child {
     width: auto;
     z-index: 10;
   }
+  .social-icons-left {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 1.8rem;
+    width: auto;
+  }
+  .social-icons-bottom-right {
+    position: absolute;
+    /* height: 100%; */
+    bottom: 1.8rem;
+    right: 1.8rem;
+    width: auto;
+    z-index: 10;
+  }
+
+  .maincenter, .play {
+    padding: 15px;
+  }
+
+  .body-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 45px;
+    padding-bottom: 40px;
+  }
 }
 
+
+.fa-nearnfts::before{
+  content: "\f0c9";
+}
+
+.fa-discord:before {
+  content: "\f392";
+}
+
+.fa-twitter:before {
+    content: "\f099";
+}
+
+.maincenter {
+    width: 100%;
+    max-width: 420px;
+    margin: auto;
+}
 
 .menumain{
   width: 69vw;
@@ -238,13 +261,80 @@ aside footer *:last-child {
   margin: auto;
 }
 
-h3 {
-  font-size: calc(1.3rem + .6vw);
+h1 {
+  font-size: calc(3rem + .6vw);
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  line-height: 1.2;
+.toolbar {
+  justify-content: flex-end;
 }
+
+.wallet-adapter-button {
+    background-color: #404144;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+    font-family: "Inter","Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.wallet-adapter-button-trigger {
+    background-color: rgb(36,36,36);
+}
+
+.btn {
+  padding: 0.35rem 0.5rem!important;
+}
+
+.profile-picture {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.imageWrapper {
+    position: relative;
+}
+
+.imageWrapper .cornerLink {
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2px 0;
+    color: #fff;
+    background: #000;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity .5s;
+}
+
+.profile-picture .image-large {
+    width: 128px;
+    height: 128px;
+}
+.imageWrapper {
+    position: relative;
+}
+.imageWrapper img {
+  display: block;
+}
+
+.imageWrapper:hover .cornerLink {
+  opacity: 0.8;
+}
+
+.linetop {
+      border-top: 1px solid rgba(0,0,0,.125);
+}
+
