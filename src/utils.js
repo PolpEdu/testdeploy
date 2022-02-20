@@ -66,6 +66,17 @@ export async function transact(receiver, ammout)  {
   };
 }
 
+export function coin_flip(args) {
+  return window.contract.coin_flip(args)
+  .then(result => {
+    console.log(result)
+    return result;
+  })
+  .catch(e => {
+    console.log(e)
+  });
+}
+
 function NotificationError(sender, publicKey) {
   return (
     <aside>

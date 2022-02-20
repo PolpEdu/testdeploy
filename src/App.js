@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './global.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto} from './utils'
+import { logout, convertYocto, coin_flip} from './utils'
 import { NotLogged, Loading } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
@@ -144,8 +144,8 @@ export default function App() {
               <button
               onClick={async event => {
                 setButtonDisabled(true)
-
-                //transact("polpedu.testnet", '1.5')
+                
+                coin_flip({'option':false})
 
 
                 setButtonDisabled(false)
@@ -166,7 +166,7 @@ export default function App() {
               disabled={buttonDisabled}
                 >test transaction</button>
 
-              <button
+              {/*<button
               onClick={async event => {
                 setButtonDisabled(true)
 
@@ -184,7 +184,7 @@ export default function App() {
               }}
 
               disabled={buttonDisabled}
-                >Test Game</button>
+            >Test Game</button>*/}
             </main>
             {showNotification && <Notification />}
           </>
@@ -194,7 +194,7 @@ export default function App() {
         </div>
         <h1 className="mt-2" style={{fontSize:"2.3rem"}}>RECENT PLAYS</h1>
         <div className="accordion text-center mb-2" id="myAccordion">
-          <h6 className="mt-3" style={{transition:"color 0.4 ease-in-out"}}>
+          <h6 className="mt-3 w-60" style={{transition:"color 0.4 ease-in-out"}}>
             <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
               <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
             </small>
@@ -205,8 +205,8 @@ export default function App() {
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
           <div className="text-center justify-content-center d-flex">
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-              {darkMode==="white" ? 
-              <img src={ParasLogoB} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} /> : <img src={ParasLogoW} alt="Paras Logo" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}}
+              {darkMode==="light" ? 
+              <img src={ParasLogoB} alt="Paras Logo B " className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} /> : <img src={ParasLogoW} alt="Paras Logo W" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}}
                />}
             </a>
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
