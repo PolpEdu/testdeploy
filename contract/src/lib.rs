@@ -15,6 +15,7 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen, setup_alloc};
 use near_sdk::collections::LookupMap;
+use near_sdk::{json_types::U128, AccountId, Promise};
 
 setup_alloc!();
 
@@ -58,17 +59,47 @@ impl Welcome {
         }
     }
 
+    pub fn pay() -> Promise {
+        let amount: u128 = 1_000_000_000_000_000_000_000_000; // 1 $NEAR as yoctoNEAR
+        let to: AccountId = env::signer_account_id(); //env::current_account_id() //"ertemo.testnet".parse().unwrap();
+        Promise::new(to).transfer(amount)
+    }
+/*
+    #[payable]
+    pub fn transfer(&mut self){ //, new_owner_id: AccountId, amount: U128) {
+        // NOTE: New owner's Account ID checked in transfer_from.
+        // Storage fees are also refunded in transfer_from.
+        Promise::transfer_from(env::predecessor_account_id(), env::current_account_id(), 1_000_000_000_000_000_000_000_000);
+    } */
 
+    #[payable]
+    pub fn take_my_money(&mut self) {
+        assert!(env::attached_deposit()==1_000_000_000_000_000_000_000_000, "Owner's method");
+        env::log(format!("{:?}", env::attached_deposit()).as_bytes());
+    }
 
-    pub fn coin_flip(&self) -> bool {
-        let rng = env::sha256(self.seed.as_slice());
+    //true = heads, false = tails
+    #[payable]
+    pub fn coin_flip(&mut self, option: bool) -> &str {
+        let amount: u128 = 1_000_000_000_000_000_000_000_000;
 
-        env::log(format!("Random seed: {:?}", self.seed).as_bytes());
-        env::log(format!("{:?}", rng).as_bytes());
+        assert!(env::attached_deposit()==amount, "Owner's method");
+        let seed = env::random_seed();
+        let rng = env::sha256(seed.as_slice());
+
+        env::log(format!("Random seed: {:?}", seed).as_bytes());
+        //env::log(format!("{:?}", rng).as_bytes());
 
 
         let result = rng.as_slice()[0] % 2 == 0;
-        return result; //returns true 50% of the time otherwise false
+        env::log(format!("{:?}", result).as_bytes());
+        //return result; //returns true 50% of the time otherwise false
+        if result == option{
+            let to: AccountId = env::signer_account_id(); //env::current_account_id() //"ertemo.testnet".parse().unwrap();
+            Promise::new(to).transfer(amount);
+            return "you won";
+        }
+        return "get rugged xd lmao";
     }
 
 
