@@ -3,11 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './global.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, coin_flip} from './utils'
+import { logout, convertYocto, flip} from './utils'
 import { NotLogged, Loading } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
+import LOGOMAIN from './assets/unknown.png';
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 
@@ -136,16 +137,14 @@ export default function App() {
         <div className='menumain'>
           <h1 style={{fontSize:"3rem"}}><strong>Near Coin Flip!</strong></h1>
           <div className='maincenter text-center'>
-          <img className="rounded-circle" src="https://cdn.discordapp.com/attachments/416647772943679488/938502348010029086/qr-code.png" alt="logo" width="256" height="256"/>
+          <img src={LOGOMAIN} alt="logo" width="256" height="256"/>
           { !window.walletConnection.isSignedIn() ? 
-          <NotLogged/> : <>
-            <main>
-
-              <button
+          <NotLogged/> : <div className='d-flex flex-column '>
+          <button
               onClick={async event => {
                 setButtonDisabled(true)
-                
-                coin_flip({'option':false})
+                let ammoutNEAR = "1";
+                flip(false, ammoutNEAR)
 
 
                 setButtonDisabled(false)
@@ -164,7 +163,9 @@ export default function App() {
                 
               }}
               disabled={buttonDisabled}
-                >test transaction</button>
+                >Flip!</button>
+            
+              
 
               {/*<button
               onClick={async event => {
@@ -185,9 +186,8 @@ export default function App() {
 
               disabled={buttonDisabled}
             >Test Game</button>*/}
-            </main>
             {showNotification && <Notification />}
-          </>
+          </div>
           }
           </div>
           

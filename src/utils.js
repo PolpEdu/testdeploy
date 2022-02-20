@@ -23,12 +23,15 @@ export async function initContract() {
     viewMethods: ['get_greeting', 'coin_flip', 'resultslog', 'gen_game'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['set_greeting'],
+    // Sender is the account ID to initialize transactions. It can be omitted if you want to send
+    sender: window.walletConnection.account(), // account object to initialize and sign transactions.
   })
 }
 
 export function convertYocto(YOCTO){
   return utils.format.formatNearAmount(YOCTO);
 }
+
 
 export function logout() {
   window.walletConnection.signOut()
@@ -66,15 +69,26 @@ export async function transact(receiver, ammout)  {
   };
 }
 
-export function coin_flip(args) {
-  return window.contract.coin_flip(args)
+export function flip(args, ammoutNEAR) {
+  let yoctoNEAR=  utils.format.parseNearAmount(ammoutNEAR);
+  
+  /*window.contract.coin_flip({option:false, attached_deposit:yoctoNEAR})
   .then(result => {
     console.log(result)
     return result;
   })
   .catch(e => {
     console.log(e)
+  });*/
+
+  let contractID = process.env.CONTRACT_NAME;
+  window.walletConnection.account().functionCall({contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR}).then(result => {
+    console.log(result)
+  })
+  .catch(e => {
+    console.log(e)
   });
+
 }
 
 function NotificationError(sender, publicKey) {
