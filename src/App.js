@@ -33,7 +33,9 @@ const menusayings = [
   "Have you ever heard of PS,\nThe God of the Flips?"
 ]
 
-
+function genrandomphrase() {
+  return menusayings[Math.floor(Math.random()*menusayings.length)];
+}
 
 export default function App() {
   // use React Hooks to store greeting in component state
@@ -57,7 +59,15 @@ export default function App() {
   // Dark Theme
   const [darkMode, setDarkMode] = React.useState("light")
 
+
   const [tailsHeads, setTailsHeads] = React.useState("")
+
+
+  // surprise phrase
+  const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
+
+  //
+  const [ammoutNEAR, setammout] = React.useState("")
 
   //popup
   const [show, setShow] = React.useState(false);
@@ -170,9 +180,10 @@ export default function App() {
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-        <div className='menumain'>
-          <div className='play form-signin'>
-          <h1 style={{fontSize:"1.8rem"}}>{menusayings[Math.floor(Math.random()*menusayings.length)]}</h1>
+        <div className='play form-signin'>
+          <div className='menumain'>
+          
+          <h1 style={{fontSize:"1.8rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
           <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="200" height="200"/>
           
@@ -238,7 +249,7 @@ export default function App() {
                 
                 
               }}
-              disabled={buttonDisabled || tailsHeads===""}
+              disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR==="" /*also need to have the ammount selected*/}
                 >Flip!</button>
             
           </div>
