@@ -235,7 +235,7 @@ export default function App() {
             <h3 className='mt-1 mt-sm-2'>I choose...</h3>
             <div className="row mb-3">
               <div className="col-6">
-                <button className={tailsHeads==="heads" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={toggleHoverL} onMouseEnter={toggleHoverL} onMouseLeave={toggleHoverL}>
+                <button className={tailsHeads==="heads" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setHeads} onMouseEnter={toggleHoverL} onMouseLeave={toggleHoverL}>
                   <span style={{fontSize:"1.5rem", fontWeight:"bold"}}>{isHoveredL ? genrandomemoji() :"HEADS"}</span>
                 </button>
               </div>
