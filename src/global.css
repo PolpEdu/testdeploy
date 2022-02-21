@@ -364,7 +364,12 @@ h1 {
 }
 
 .top-index {
+  position: relative;
   z-index: 5;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
 }
 
 .form-signin {
