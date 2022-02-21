@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME ||'near-app'
+const CONTRACT_NAME = process.env.CONTRACT_NAME ||'dev-1645468760160-26705510783939'
 function getConfig(env) {
   switch (env) {
 

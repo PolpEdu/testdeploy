@@ -2,6 +2,62 @@ import React from 'react'
 import { login } from '../utils.js'
 import NearLogo from '../assets/logo-white.svg';
 
+export const menusayings = [
+  "Near Coin Flip!",
+  "Want to play a game?",
+  "Prepare to be flipped!",
+  "Flip a coin!",
+  "GIVE ME MY NEAR BACK!",
+  "I'm a coin-flipping machine!",
+  ">:((((((",
+  "shhhhh, its tails bro trust me.",
+  "fifty-fifty.",
+  "It's Heads.\nSource: Trust me bro.",
+  "Do you even Flip?",
+  "Make a wish...",
+  "Have you ever heard of PS,\nThe God of the Flips?",
+  "Might wanna double it...",
+  "I'll phone a friend.",
+  "Let me take a breath.",
+  "What color do I want my lambo....",
+  "See you in Dubai",
+
+]
+
+export const hoverEmojis = [
+  "🤔",
+  "😳",
+  "😱",
+  "😏",
+  "😍",
+  "👉👈",
+  "🤓",
+  "🤠",
+  "😎",
+  "🤪",
+  "🥶",
+  "💪",
+  "😀",
+  "🙃",
+  "😉",
+  "😌",
+  "😛",
+  "😜",
+  "😇",
+  "🔥🔥🔥",
+  "💸💸💸",
+  "💰",
+  "🤩",
+  "😮‍💨",
+  "😬",
+  "🙄",
+  "😤",
+  "💍",
+  "🚀🚀🚀",
+  "⛱️",
+  
+]
+
 export function NotLogged() {
     return (
          <>
