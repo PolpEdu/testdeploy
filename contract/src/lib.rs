@@ -27,6 +27,7 @@ pub struct Welcome {
     game: LookupMap<String, u8>,
     seed: Vec<u8>,
     bet_amount: Vec<u128>,
+    last_block: LookupMap<AccountId, u64>
 }
 
 impl Default for Welcome {
@@ -35,6 +36,7 @@ impl Default for Welcome {
       game: LookupMap::new(b"a".to_vec()),
       seed: env::random_seed(), //0-255
       bet_amount: vec![1_000_000_000_000_000_000_000_000, 2_000_000_000_000_000_000_000_000, 5_000_000_000_000_000_000_000_000, 10_000_000_000_000_000_000_000_000],
+      last_block: LookupMap::new(b"a".to_vec()),
     }
   }
 }
@@ -83,18 +85,32 @@ impl Welcome {
     //true = heads, false = tails
     #[payable]
     pub fn coin_flip(&mut self, option: bool) -> &str {
-        let amount: u128 = (env::attached_deposit()*1000)/1035;
+        let amount: u128 = (env::attached_deposit()*1000000000000)/1035128593432;
 
         assert!(self.bet_amount.contains(&amount), "Attached amount not in available array");
+
+        let signer = env::signer_account_id();
         let seed = env::random_seed();
         let rng = env::sha256(seed.as_slice());
 
         env::log(format!("Random seed: {:?}", seed).as_bytes());
+        env::log(format!("block hash: {:?}", env::block_index()).as_bytes());
         //env::log(format!("{:?}", rng).as_bytes());
 
 
         let result = rng.as_slice()[0] % 2 == 0;
         env::log(format!("{:?}", result).as_bytes());
+
+        
+        match self.last_block.get(&signer) {
+            Some(index) => {
+                env::log(format!("last block {:?}", index).as_bytes());
+
+                assert!(index != env::block_index(), "error: RNG denied");
+            }
+            None =>{}
+        }
+        self.last_block.insert(&signer,&env::block_index());
         //return result; //returns true 50% of the time otherwise false
         if result == option{
             let to: AccountId = env::signer_account_id(); //env::current_account_id() //"ertemo.testnet".parse().unwrap();
