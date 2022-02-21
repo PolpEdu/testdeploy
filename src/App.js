@@ -230,7 +230,8 @@ export default function App() {
           <button
               onClick={async event => {
                 setButtonDisabled(true)
-                let ammoutNEAR = "1";
+                setammout("10")
+                let ammoutNEAR = "10";
                 flip(tailsHeads==="heads", ammoutNEAR)
 
 
@@ -249,7 +250,7 @@ export default function App() {
                 
                 
               }}
-              disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR==="" /*also need to have the ammount selected*/}
+              disabled={buttonDisabled || tailsHeads==="" /*|| ammoutNEAR==="" also need to have the ammount selected*/}
                 >Flip!</button>
             
           </div>
