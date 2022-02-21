@@ -3,7 +3,7 @@ import getConfig from './config'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 let near;
-
+const fees = 1.035;
 
 // Initialize contract & set global variables
 export async function initContract() {
@@ -70,7 +70,7 @@ export async function transact(receiver, ammout)  {
 }
 
 export function flip(args, ammoutNEAR) {
-  let yoctoNEAR=  utils.format.parseNearAmount(ammoutNEAR);
+  let yoctoNEAR=  utils.format.parseNearAmount((ammoutNEAR*fees).toString());
   
   /*window.contract.coin_flip({option:false, attached_deposit:yoctoNEAR})
   .then(result => {

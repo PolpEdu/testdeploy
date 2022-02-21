@@ -4,7 +4,7 @@ import './global.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip} from './utils'
-import { NotLogged, Loading } from './components/logged';
+import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
@@ -17,6 +17,21 @@ const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 //import { ThemeProvider } from 'styled-components';
 
+const menusayings = [
+  "Near Coin Flip!",
+  "Want to play a game?",
+  "Prepare to be flipped!",
+  "Flip a coin!",
+  "GIVE ME MY NEAR BACK!",
+  "I'm a coin-flipping machine!",
+  ">:((((((",
+  "shhhhh, its tails bro trust me.",
+  "fifty-fifty.",
+  "It's Heads.\nSource: Trust me bro.",
+  "Do you even Flip?",
+  "Make a wish...",
+  "Have you ever heard of PS,\nThe God of the Flips?"
+]
 
 
 
@@ -42,6 +57,8 @@ export default function App() {
   // Dark Theme
   const [darkMode, setDarkMode] = React.useState("light")
 
+  const [tailsHeads, setTailsHeads] = React.useState("")
+
   //popup
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -51,9 +68,22 @@ export default function App() {
   const toogleDarkMode = () => {
     let newmode = darkMode === "light" ? "dark" : "light"
     setDarkMode(newmode)
-
-
   }
+
+  const toggleTailsHeads = () => {
+    let newmode = tailsHeads === "tails" ? "heads" : "tails"
+    setTailsHeads(newmode)
+  }
+
+  /**
+   * try {
+      if (window.walletConnection.isSignedIn()) {
+        window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
+      }
+    } catch(e) {
+      console.log(e)    
+    }
+   */
 
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
@@ -121,30 +151,76 @@ export default function App() {
                     </div>
                   </Modal.Body>
                   <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal"}} onClick={handleClose}>Save</button>
-                      <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3' onClick={logout}>Sign Out</button>
+                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                      <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
                   </div>
               </Modal>
                 </>
                 }
             </div>
-            {window.walletConnection.isSignedIn()? <h6 className="mt-1 balance-text mb-0">{balance ==="" ? <Loading/> : balance}</h6>:<></>}
+            {window.walletConnection.isSignedIn() && <h6 className="mt-1 balance-text mb-0">{balance ==="" ? <Loading/> : balance}</h6>
+            }
 
           </div>
         </div>
       </div>
       <div className='text-center body-wrapper h-100vh h-100'>
+        <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
+        <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
+        <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
+        <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
+        <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className='menumain'>
-          <h1 style={{fontSize:"3rem"}}><strong>Near Coin Flip!</strong></h1>
+          <div className='play form-signin'>
+          <h1 style={{fontSize:"1.8rem"}}>{menusayings[Math.floor(Math.random()*menusayings.length)]}</h1>
           <div className='maincenter text-center'>
-          <img src={LOGOMAIN} alt="logo" width="256" height="256"/>
+          <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="200" height="200"/>
+          
           { !window.walletConnection.isSignedIn() ? 
-          <NotLogged/> : <div className='d-flex flex-column '>
+          <NotLogged/> :
+          <div className='d-flex flex-column '>
+            <h3 className='mt-2 mt-sm-4'>I choose...</h3>
+            <div className="row mb-3">
+              <div className="col-6">
+                <img className="cursor-pointer w-100 double-button " src="https://i.imgur.com/wc7Ci3f.png" alt="heads" width="100%" height="100%"/>
+              </div>
+              <div className="col-6">
+                <button className='btn selected double-button' className={tailsHeads==="tails" ? "selected" : ""} onClick={toggleTailsHeads}>
+                  TAILS
+                </button>
+              </div>
+            </div>
+            <h3>FOR</h3>
+            <div className="row">
+              <div className="col-4">
+                <img className="cursor-pointer double-button" src="https://i.imgur.com/LnRn1mC.png" alt="0.05 sol" width="100%" height="100%"/>
+              </div>
+              <div className="col-4">
+                <img className="cursor-pointer double-button" src="https://i.imgur.com/o6IEhiu.png" alt="0.1 sol" width="100%" height="100%"/>
+              </div>
+              <div className="col-4">
+                <img className="cursor-pointer double-button" src="https://i.imgur.com/5lRVCML.png" alt="0.25 sol" width="100%" height="100%"/>
+              </div>
+              
+            </div>
+            <div className="row my-3">
+              <div className="col-4">
+                <img className="cursor-pointer double-button" src="https://i.imgur.com/iChJqD2.png" alt="0.5 sol" width="100%" height="100%"/>
+              </div>
+              <div className="col-4">
+                <img className="cursor-pointer double-button" src="https://i.imgur.com/D8b7RNF.png" alt="1 sol" width="100%" height="100%"/>
+              </div>
+              <div className="col-4">
+                <img className="cursor-pointer double-button" src="https://i.imgur.com/eS5gbgf.png" alt="2 sol" width="100%" height="100%"/>
+              </div>
+            </div>
+
+          
           <button
               onClick={async event => {
                 setButtonDisabled(true)
                 let ammoutNEAR = "1";
-                flip(false, ammoutNEAR)
+                flip(tailsHeads==="heads", ammoutNEAR)
 
 
                 setButtonDisabled(false)
@@ -162,44 +238,16 @@ export default function App() {
                 
                 
               }}
-              disabled={buttonDisabled}
+              disabled={buttonDisabled || tailsHeads===""}
                 >Flip!</button>
             
-              
-
-              {/*<button
-              onClick={async event => {
-                setButtonDisabled(true)
-
-
-
-                try {
-                  if (window.walletConnection.isSignedIn()) {
-                    window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
-                  }
-                } catch(e) {
-                  console.log(e)    
-                }
-
-                setButtonDisabled(false)
-              }}
-
-              disabled={buttonDisabled}
-            >Test Game</button>*/}
-            {showNotification && <Notification />}
           </div>
           }
           </div>
-          
+          {showNotification && <Notification />}
+          </div>
         </div>
-        <h1 className="mt-2" style={{fontSize:"2.3rem"}}>RECENT PLAYS</h1>
-        <div className="accordion text-center mb-2" id="myAccordion">
-          <h6 className="mt-3 w-60" style={{transition:"color 0.4 ease-in-out"}}>
-            <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
-              <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
-            </small>
-        </h6>
-        </div>
+        {!window.walletConnection.isSignedIn() && <RecentPlays/>}
       </div>
       <div className="social-icons-bottom-right">
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
@@ -224,7 +272,7 @@ export default function App() {
           <div className="mt-3 d-flex flex-column">
             <div className="d-flex flex-row mb-2 toolbar">
 
-              <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} onClick={toogleDarkMode}>
+              <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} >
                 {darkMode==="light" ? "DARK" : "LIGHT"} {darkMode==="light" ? <Moon className="fa-xs fas mb-1"/>: <Sun className="fa-xs fas mb-1"/> }
               </button>
               </div>

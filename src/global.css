@@ -233,6 +233,10 @@ li {
     padding-top: 45px;
     padding-bottom: 40px;
   }
+
+  .form-signin, .play {
+    padding: 15px;
+  }
 }
 
 
@@ -341,4 +345,38 @@ h1 {
 .btn-danger:hover {
   background-color: #880b0b;
   transition: background-color .3s ease-in-out;
+}
+
+.selected {
+    border: 2px solid #000;
+}
+
+.double-button:hover {
+    -webkit-transform: translateY(-1px);
+    transform: translateY(-1px);
+    box-shadow: 0 7px 14px rgb(50 50 93 / 10%), 0 3px 6px rgb(0 0 0 / 8%);
+}
+.play {
+    width: 90vw;
+    max-width: 1000px;
+    margin: auto;
+    z-index: 5;
+}
+
+.top-index {
+  z-index: 5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 820px;
+  margin: auto;
+}
+
+.toast-container {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 100%;
+  pointer-events: none;
 }
