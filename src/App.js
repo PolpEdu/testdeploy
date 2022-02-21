@@ -225,7 +225,7 @@ export default function App() {
         <div className='play form-signin'>
           <div className='menumain'>
           
-          <h1 style={{fontSize:"1.3rem"}}>{surprisePhrase}</h1>
+          <h1 style={ window.walletConnection.isSignedIn() ? {fontSize:"1.3rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
           <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="126" height="126"/>
           
