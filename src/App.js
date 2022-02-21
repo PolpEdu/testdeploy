@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './global.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, flip} from './utils'
+import { logout, convertYocto, flip,NotificationError, getlastFlip, menusayings, hoverEmojis} from './utils'
 import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
@@ -17,43 +17,7 @@ const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 //import { ThemeProvider } from 'styled-components';
 
-const menusayings = [
-  "Near Coin Flip!",
-  "Want to play a game?",
-  "Prepare to be flipped!",
-  "Flip a coin!",
-  "GIVE ME MY NEAR BACK!",
-  "I'm a coin-flipping machine!",
-  ">:((((((",
-  "shhhhh, its tails bro trust me.",
-  "fifty-fifty.",
-  "It's Heads.\nSource: Trust me bro.",
-  "Do you even Flip?",
-  "Make a wish...",
-  "Have you ever heard of PS,\nThe God of the Flips?"
-]
 
-const hoverEmojis = [
-  "🤔",
-  "😳",
-  "😱",
-  "😏",
-  "😍",
-  "👉👈",
-  "🤓",
-  "🤠",
-  "😎",
-  "🤪",
-  "🥶",
-  "💪",
-  "😀",
-  "🙃",
-  "😉",
-  "😌",
-  "😛",
-  "😜",
-  "😇",
-]
 
 function genrandomphrase() {
   return menusayings[Math.floor(Math.random()*menusayings.length)];
@@ -149,15 +113,18 @@ export default function App() {
           setbalance("NEAR: "+ str); 
         }).catch(e => {
           console.log('There has been a problem with getting your balance: ' + e.message);
-          setbalance("Couldn't Fetch Balance") ;
+          setbalance("Couldn't Fetch Balance");
+         <NotificationError/>
         });
 
         // window.contract is set by initContract in index.js
-        window.contract.get_greeting({ account_id: window.accountId }) //using the contract to get the greeting
+        /*window.contract.get_greeting({ account_id: window.accountId }) //using the contract to get the greeting
           .then(greetingFromContract => {
             set_greeting(greetingFromContract)
-          })
+          })*/
+
       }
+
     },
 
     //! The second argument to useEffect tells React when to re-run the effect
@@ -165,7 +132,6 @@ export default function App() {
     //! This works because signing into NEAR Wallet reloads the page
     []
   )
-
   return (
     <div className={darkMode}>
       <div className='social-icons'>
@@ -223,7 +189,7 @@ export default function App() {
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className='play form-signin'>
-          <div className='menumain'>
+          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"370px"}}>
           
           <h1 style={ window.walletConnection.isSignedIn() ? {fontSize:"1.3rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
@@ -276,7 +242,11 @@ export default function App() {
                 setButtonDisabled(true)
                 setammout("10")
                 let ammoutNEAR = "10";
-                flip(tailsHeads==="heads", ammoutNEAR)
+                flip(tailsHeads==="heads", ammoutNEAR).catch( function(err) {
+    <NotificationError/>
+
+                }
+                )
 
 
                 setButtonDisabled(false)
