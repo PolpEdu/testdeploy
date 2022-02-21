@@ -83,9 +83,9 @@ impl Welcome {
     //true = heads, false = tails
     #[payable]
     pub fn coin_flip(&mut self, option: bool) -> &str {
-        let amount: u128 = env::attached_deposit();
+        let amount: u128 = (env::attached_deposit()*1000)/1035;
 
-        assert!(self.bet_amount.contains(&amount), "Attached amount needs to be 1 near");
+        assert!(self.bet_amount.contains(&amount), "Attached amount not in available array");
         let seed = env::random_seed();
         let rng = env::sha256(seed.as_slice());
 
