@@ -4,7 +4,7 @@ import getConfig from './config'
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 let near;
 let fcall;
-const fees = 1.035;
+const fees = 1.035128593432;
 
 // Initialize contract & set global variables
 export async function initContract() {
@@ -58,21 +58,21 @@ export function login() {
   window.walletConnection.requestSignIn(nearConfig.contractName)
 }
 
-export function flip(args, ammoutNEAR) {
+export function flip(args, ammoutNEAR, calledContractHandler) {
   let yoctoNEAR=  utils.format.parseNearAmount((ammoutNEAR*fees).toString());
+  calledContractHandler()
 
   let contractID = process.env.CONTRACT_NAME || 'dev-1645468760160-26705510783939';
   const called = window.walletConnection.account().functionCall({contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR}).then(result => {
     console.log(result)
+    console.log(called);
+
+    return result;
   })
   .catch(e => {
     console.log(e)
   });
-  console.log(called)
-
-
-  fcall = getlastFlip(called)
-  console.log(fcall)
+  
 }
 
 function NotificationError() {

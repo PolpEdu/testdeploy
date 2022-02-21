@@ -39,6 +39,9 @@ export default function App() {
   // 
   const [showTransactiom,  setshowTransaction] = React.useState(false)
 
+  //
+  const [calledContract, setCalledContract] = React.useState(false)
+
   // check if won
   const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
 
@@ -49,9 +52,8 @@ export default function App() {
   // Dark Theme
   const [darkMode, setDarkMode] = React.useState("light")
 
-
+  //
   const [tailsHeads, setTailsHeads] = React.useState("")
-
 
   // surprise phrase
   const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
@@ -77,6 +79,10 @@ export default function App() {
   const handleShow = () => setShow(true);
 
   
+  const calledContractHandler = () => {
+    setTailsHeads("");
+    setCalledContract(true)
+  }
 
   const toogleDarkMode = () => {
     let newmode = darkMode === "light" ? "dark" : "light"
@@ -242,11 +248,9 @@ export default function App() {
                 setButtonDisabled(true)
                 setammout("10")
                 let ammoutNEAR = "10";
-                flip(tailsHeads==="heads", ammoutNEAR).catch( function(err) {
-    <NotificationError/>
-
-                }
-                )
+                flip(tailsHeads==="heads", ammoutNEAR, calledContractHandler).catch( function(err) {
+                  <NotificationError/>
+                })
 
 
                 setButtonDisabled(false)
