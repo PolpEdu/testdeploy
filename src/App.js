@@ -33,8 +33,34 @@ const menusayings = [
   "Have you ever heard of PS,\nThe God of the Flips?"
 ]
 
+const hoverEmojis = [
+  "🤔",
+  "😳",
+  "😱",
+  "😏",
+  "😍",
+  "👉👈",
+  "🤓",
+  "🤠",
+  "😎",
+  "🤪",
+  "🥶",
+  "💪",
+  "😀",
+  "🙃",
+  "😉",
+  "😌",
+  "😛",
+  "😜",
+  "😇",
+]
+
 function genrandomphrase() {
   return menusayings[Math.floor(Math.random()*menusayings.length)];
+}
+
+function genrandomemoji() {
+  return hoverEmojis[Math.floor(Math.random()*hoverEmojis.length)].toString();
 }
 
 export default function App() {
@@ -69,20 +95,36 @@ export default function App() {
   //
   const [ammoutNEAR, setammout] = React.useState("")
 
+  const [isHoveredL, setHoverL] = React.useState(false)
+
+  const [isHoveredR, setHoverR] = React.useState(false)
+  
+  const toggleHoverL = () => {
+    setHoverL(!isHoveredL);
+  }
+
+  const toggleHoverR = () => {
+    setHoverR(!isHoveredR);
+  }
+
   //popup
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  
 
   const toogleDarkMode = () => {
     let newmode = darkMode === "light" ? "dark" : "light"
     setDarkMode(newmode)
   }
 
-  const toggleTailsHeads = () => {
-    let newmode = tailsHeads === "tails" ? "heads" : "tails"
-    setTailsHeads(newmode)
+  const setHeads = () => {
+    setTailsHeads("heads")
+  }
+
+  const setTails = () => {
+    setTailsHeads("tails")
   }
 
   /**
@@ -183,25 +225,27 @@ export default function App() {
         <div className='play form-signin'>
           <div className='menumain'>
           
-          <h1 style={{fontSize:"1.8rem"}}>{surprisePhrase}</h1>
+          <h1 style={{fontSize:"1.3rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
-          <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="200" height="200"/>
+          <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="126" height="126"/>
           
           { !window.walletConnection.isSignedIn() ? 
           <NotLogged/> :
           <div className='d-flex flex-column '>
-            <h3 className='mt-2 mt-sm-4'>I choose...</h3>
+            <h3 className='mt-1 mt-sm-2'>I choose...</h3>
             <div className="row mb-3">
               <div className="col-6">
-                <img className="cursor-pointer w-100 double-button " src="https://i.imgur.com/wc7Ci3f.png" alt="heads" width="100%" height="100%"/>
+                <button className={tailsHeads==="heads" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={toggleHoverL} onMouseEnter={toggleHoverL} onMouseLeave={toggleHoverL}>
+                  <span style={{fontSize:"1.5rem", fontWeight:"bold"}}>{isHoveredL ? genrandomemoji() :"HEADS"}</span>
+                </button>
               </div>
               <div className="col-6">
-                <button className='btn selected double-button' className={tailsHeads==="tails" ? "selected" : ""} onClick={toggleTailsHeads}>
-                  TAILS
+                <button className={tailsHeads==="tails" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setTails} onMouseEnter={toggleHoverR} onMouseLeave={toggleHoverR}>
+                  <span style={{fontSize:"1.5rem", fontWeight:"bold"}}>{isHoveredR ? genrandomemoji() :"TAILS"}</span>
                 </button>
               </div>
             </div>
-            <h3>FOR</h3>
+            <h4>FOR</h4>
             <div className="row">
               <div className="col-4">
                 <img className="cursor-pointer double-button" src="https://i.imgur.com/LnRn1mC.png" alt="0.05 sol" width="100%" height="100%"/>
