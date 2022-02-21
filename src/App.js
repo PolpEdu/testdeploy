@@ -249,7 +249,7 @@ export default function App() {
                 setammout("10")
                 let ammoutNEAR = "10";
                 calledContractHandler(true);
-                flip(tailsHeads==="heads", ammoutNEAR, call).catch( function(err) {
+                flip(tailsHeads==="heads", ammoutNEAR, calledContractHandler).catch( function(err) {
                   <NotificationError/>
                 })
 
