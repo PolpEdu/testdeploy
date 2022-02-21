@@ -6,6 +6,44 @@ let near;
 let fcall;
 const fees = 1.035128593432;
 
+export const menusayings = [
+  "Near Coin Flip!",
+  "Want to play a game?",
+  "Prepare to be flipped!",
+  "Flip a coin!",
+  "GIVE ME MY NEAR BACK!",
+  "I'm a coin-flipping machine!",
+  ">:((((((",
+  "shhhhh, its tails bro trust me.",
+  "fifty-fifty.",
+  "It's Heads.\nSource: Trust me bro.",
+  "Do you even Flip?",
+  "Make a wish...",
+  "Have you ever heard of PS,\nThe God of the Flips?"
+]
+
+export const hoverEmojis = [
+  "🤔",
+  "😳",
+  "😱",
+  "😏",
+  "😍",
+  "👉👈",
+  "🤓",
+  "🤠",
+  "😎",
+  "🤪",
+  "🥶",
+  "💪",
+  "😀",
+  "🙃",
+  "😉",
+  "😌",
+  "😛",
+  "😜",
+  "😇",
+]
+
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
@@ -58,17 +96,18 @@ export function login() {
   window.walletConnection.requestSignIn(nearConfig.contractName)
 }
 
-export function flip(args, ammoutNEAR) {
+export function flip(args, ammoutNEAR, calledContractHandler) {
   let yoctoNEAR=  utils.format.parseNearAmount((ammoutNEAR*fees).toString());
 
   let contractID = process.env.CONTRACT_NAME || 'dev-1645468760160-26705510783939';
   const called = window.walletConnection.account().functionCall({contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR}).then(result => {
     console.log(result)
     console.log(called);
-
+    calledContractHandler(false);
     return result;
   })
   .catch(e => {
+    calledContractHandler(false);
     console.log(e)
   });
   

@@ -79,9 +79,9 @@ export default function App() {
   const handleShow = () => setShow(true);
 
   
-  const calledContractHandler = () => {
+  const calledContractHandler = (arg) => {
     setTailsHeads("");
-    setCalledContract(true)
+    setCalledContract(arg)
   }
 
   const toogleDarkMode = () => {
@@ -248,8 +248,8 @@ export default function App() {
                 setButtonDisabled(true)
                 setammout("10")
                 let ammoutNEAR = "10";
-                calledContractHandler();
-                flip(tailsHeads==="heads", ammoutNEAR).catch( function(err) {
+                calledContractHandler(true);
+                flip(tailsHeads==="heads", ammoutNEAR, call).catch( function(err) {
                   <NotificationError/>
                 })
 
