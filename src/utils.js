@@ -58,9 +58,8 @@ export function login() {
   window.walletConnection.requestSignIn(nearConfig.contractName)
 }
 
-export function flip(args, ammoutNEAR, calledContractHandler) {
+export function flip(args, ammoutNEAR) {
   let yoctoNEAR=  utils.format.parseNearAmount((ammoutNEAR*fees).toString());
-  calledContractHandler()
 
   let contractID = process.env.CONTRACT_NAME || 'dev-1645468760160-26705510783939';
   const called = window.walletConnection.account().functionCall({contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR}).then(result => {

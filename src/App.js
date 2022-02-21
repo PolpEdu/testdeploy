@@ -248,7 +248,8 @@ export default function App() {
                 setButtonDisabled(true)
                 setammout("10")
                 let ammoutNEAR = "10";
-                flip(tailsHeads==="heads", ammoutNEAR, calledContractHandler).catch( function(err) {
+                calledContractHandler();
+                flip(tailsHeads==="heads", ammoutNEAR).catch( function(err) {
                   <NotificationError/>
                 })
 
