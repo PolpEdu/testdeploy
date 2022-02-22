@@ -413,3 +413,30 @@ h1 {
   -ms-user-select: none;
   user-select: none;
 }
+
+aside {
+  position: absolute;
+  animation: notify ease-in-out 6s;
+  background-color: #212529;
+  border-radius: 5px;
+  bottom: 0;
+  font-size: 0.8em;
+  margin: 1em;
+  padding: 1em;
+  position: fixed;
+  transform: translateY(10em);
+  right: 0;
+  z-index: 11;
+}
+aside footer {
+  display: flex;
+  font-size: 0.9em;
+  justify-content: space-between;
+  margin-top: 0.5em;
+}
+aside footer *:first-child {
+  color: rgb(116, 194, 0);
+}
+aside footer *:last-child {
+  color: gray;
+}

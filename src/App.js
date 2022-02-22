@@ -38,9 +38,6 @@ export default function App() {
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
 
-  // 
-  const [showTransaction,  setshowTransaction] = React.useState(false)
-
   //
   const [calledContract, setCalledContract] = React.useState(false)
 
@@ -106,6 +103,7 @@ export default function App() {
     setTailsHeads("")
     settxsHash("")
     settxsResult("")
+    
 
     searchParams.delete("transactionHashes")
     navigate(searchParams.toString());
@@ -115,7 +113,8 @@ export default function App() {
   const getTxsResult = async () => {
     let decodedstr = ""
     await gettxsRes(txsHashes).then(res => {
-      setshowTransaction(true)
+      setShowNotification(true)
+
       let decoded = Buffer.from(res.status.SuccessValue, 'base64')
       
       //each element of decoded contains de ASCII value of the character
@@ -141,10 +140,12 @@ export default function App() {
           setbalance("Couldn't Fetch Balance");
          <NotificationError/>
         });
-
+        
         getTxsResult(txsHashes);
         console.log(txsResult)
-      }
+
+        
+      } 
 
     },
 
@@ -155,6 +156,7 @@ export default function App() {
   )
   return (
     <div className={darkMode}>
+      {showNotification && <Notification />}
       <div className='social-icons'>
         <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
           <div className='mt-3 d-flex flex-column shortcut-row'>
@@ -217,6 +219,7 @@ export default function App() {
             <>
               {txsResult==="true" ?
               <div>
+                
                 YOU WON!
               </div>
               :
@@ -294,7 +297,6 @@ export default function App() {
           </div>
           }
           </div>
-          {showNotification && <Notification />}
           </div>
         }
         </div>
@@ -337,14 +339,14 @@ export default function App() {
 
 // this component gets rendered by App after the form is submitted
 function Notification() {
-  const urlPrefix = `https://explorer.${networkId}.near.org/accounts`
+  const urlPrefix = "https://explorer."+networkId+".near.org/accounts"
   return (
     <aside>
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
         {window.accountId}
       </a>
       {' '/* React trims whitespace around tags; insert literal space character when needed */}
-      called method in contract:
+      <span style={{color:"#f5f5f5"}}>called method in contract:</span> 
       {' '}
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
         {window.contract.contractId}
