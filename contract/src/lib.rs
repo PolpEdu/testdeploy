@@ -84,7 +84,7 @@ impl Welcome {
 
     //true = heads, false = tails
     #[payable]
-    pub fn coin_flip(&mut self, option: bool) -> &str {
+    pub fn coin_flip(&mut self, option: bool) -> bool {
         let amount: u128 = (env::attached_deposit()*1000000000000)/1035128593432;
 
         assert!(self.bet_amount.contains(&amount), "Attached amount not in available array");
@@ -115,9 +115,9 @@ impl Welcome {
         if result == option{
             let to: AccountId = env::signer_account_id(); //env::current_account_id() //"ertemo.testnet".parse().unwrap();
             Promise::new(to).transfer(amount*2);
-            return "you won";
+            return true;
         }
-        return "get rugged xd lmao";
+        return false;
     }
 
 
