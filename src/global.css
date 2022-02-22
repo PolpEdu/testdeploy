@@ -223,7 +223,10 @@ li {
   }
 
   .maincenter, .play {
-    padding: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+
   }
 
   .body-wrapper {

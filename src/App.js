@@ -39,7 +39,7 @@ export default function App() {
   const [showNotification, setShowNotification] = React.useState(false)
 
   // 
-  const [showTransactiom,  setshowTransaction] = React.useState(false)
+  const [showTransaction,  setshowTransaction] = React.useState(false)
 
   //
   const [calledContract, setCalledContract] = React.useState(false)
@@ -72,11 +72,10 @@ export default function App() {
     setHoverR(!isHoveredR);
   }
 
-  const [resultofRet, setStateRet] = React.useState("")
 
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
 
-  
+  const [txsResult, settxsResult] = React.useState("");
 
   //popup
   const [show, setShow] = React.useState(false);
@@ -105,43 +104,34 @@ export default function App() {
   const navigate = useNavigate()
   const resetGame = () => {
     setTailsHeads("")
-    setStateRet("")
+    settxsHash("")
+    settxsResult("")
 
     searchParams.delete("transactionHashes")
-    settxsHash("")
     navigate(searchParams.toString());
   }
 
   
-  
+  const getTxsResult = async () => {
+    let decodedstr = ""
+    await gettxsRes(txsHashes).then(res => {
+      setshowTransaction(true)
+      let decoded = Buffer.from(res.status.SuccessValue, 'base64')
+      
+      //each element of decoded contains de ASCII value of the character
+      decodedstr = decoded.toString('ascii')
+    }).catch(e => {
+      console.log(e)
+    })
+    console.log(decodedstr)
+    settxsResult(decodedstr);
+  }
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
   React.useEffect(
     () => {
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
-
-
-        if(txsHashes) {
-          console.log(txsHashes)
-          gettxsRes(txsHashes).then(res => {
-            setshowTransaction(true)
-            let decoded = Buffer.from(res.status.SuccessValue, 'base64')
-            
-            //each element of decoded contains de ASCII value of the character
-            let decodedstr = decoded.toString('ascii')
-            console.log(decodedstr)
-
-            setStateRet(decodedstr)
-          }).catch(e => {
-            console.log(e)
-          })
-          
-          
-        }
-
-
-      
         window.walletConnection.account().getAccountBalance().then(function(balance) {
           let fullstr = convertYocto(balance.available).split(".");
           let str = fullstr[0] + "." + fullstr[1].substring(0,4);
@@ -151,9 +141,9 @@ export default function App() {
           setbalance("Couldn't Fetch Balance");
          <NotificationError/>
         });
-        
-        
 
+        getTxsResult(txsHashes);
+        console.log(txsResult)
       }
 
     },
@@ -221,12 +211,24 @@ export default function App() {
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         
         <div className='play form-signin'>
-          {resultofRet? 
+          {txsHashes? 
           <>
-            
-            <button className='btn' onClick={resetGame} /* redirect to main page without the arguments on top of the url; setStateRet(false) and */>
-              {resultofRet==="true" ? "Play Again" : "Try Again"}
-            </button>
+            {txsResult==="" ? <Loading/> :
+            <>
+              {txsResult==="true" ?
+              <div>
+                YOU WON!
+              </div>
+              :
+              <div>
+                You lost bro.
+              </div>
+            }
+            <button className='btn' onClick={resetGame}>
+                {txsResult==="true" ? "Play Again" : "Try Again"}
+              </button>
+            </>
+            }
           </>  :
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"350px"}}>
           
