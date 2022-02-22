@@ -64,7 +64,7 @@ export default function App() {
 
   const [isHoveredR, setHoverR] = React.useState(false)
   
-  const [lastPlatedstate, setStateRet] = React.useState(false)
+  const [lastPlatedstate, setStateRet] = React.useState(null)
 
 
   const [txsHashes, set] = React.useState(
@@ -203,12 +203,19 @@ export default function App() {
         </div>
       </div>
       <div className='text-center body-wrapper h-100vh h-100'>
-        {lastPlatedstate===true && <ConfettiExplosion />}
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
+        {lastPlatedstate ? 
+        <div>
+          {lastPlatedstate===true && <ConfettiExplosion />}
+          <button className='btn' /* redirect to main page without the arguments on top of the url; setStateRet(false) and */>
+            Redeem
+          </button>
+
+        </div> :
         <div className='play form-signin'>
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"350px"}}>
           
@@ -280,6 +287,8 @@ export default function App() {
           {showNotification && <Notification />}
           </div>
         </div>
+        }
+        
         {!window.walletConnection.isSignedIn() && <RecentPlays/>}
       </div>
       <div className="social-icons-bottom-right">
