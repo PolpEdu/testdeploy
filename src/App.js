@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './global.css'
 import React from 'react'
+import {ConfettiExplosion} from '@reonomy/react-confetti-explosion'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip,NotificationError, getlastFlip, menusayings, hoverEmojis} from './utils'
 import { NotLogged, Loading, RecentPlays } from './components/logged';
@@ -42,9 +43,6 @@ export default function App() {
   //
   const [calledContract, setCalledContract] = React.useState(false)
 
-  // check if won
-  const [wonCoinFlip, setWonCoinFlip] = React.useState(false)
-
   // on the top right
   const [balance, setbalance] = React.useState("")
 
@@ -65,6 +63,8 @@ export default function App() {
 
   const [isHoveredR, setHoverR] = React.useState(false)
   
+  const [lastPlatedstate, setStateRet] = React.useState(false)
+
   const toggleHoverL = () => {
     setHoverL(!isHoveredL);
   }
@@ -106,11 +106,11 @@ export default function App() {
       console.log(e)    
     }
    */
-
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
   React.useEffect(
     () => {
+
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
         window.walletConnection.account().getAccountBalance().then(function(balance) {
@@ -189,15 +189,16 @@ export default function App() {
         </div>
       </div>
       <div className='text-center body-wrapper h-100vh h-100'>
+        {lastPlatedstate===true && <ConfettiExplosion />}
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className='play form-signin'>
-          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"370px"}}>
+          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"350px"}}>
           
-          <h1 style={ window.walletConnection.isSignedIn() ? {fontSize:"1.3rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
+          <h1 style={ window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
           <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="126" height="126"/>
           
@@ -208,12 +209,12 @@ export default function App() {
             <div className="row mb-3">
               <div className="col-6">
                 <button className={tailsHeads==="heads" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setHeads} onMouseEnter={toggleHoverL} onMouseLeave={toggleHoverL}>
-                  <span style={{fontSize:"1.5rem", fontWeight:"bold"}}>{isHoveredL ? genrandomemoji() :"HEADS"}</span>
+                  <span className='textbttn' style={{fontWeight:"bold"}}>{isHoveredL ? genrandomemoji() :"HEADS"}</span>
                 </button>
               </div>
               <div className="col-6">
                 <button className={tailsHeads==="tails" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setTails} onMouseEnter={toggleHoverR} onMouseLeave={toggleHoverR}>
-                  <span style={{fontSize:"1.5rem", fontWeight:"bold"}}>{isHoveredR ? genrandomemoji() :"TAILS"}</span>
+                  <span className='textbttn' style={{fontWeight:"bold"}}>{isHoveredR ? genrandomemoji() :"TAILS"}</span>
                 </button>
               </div>
             </div>
@@ -244,30 +245,17 @@ export default function App() {
 
           
           <button
-              onClick={async event => {
+              onClick={event => {
                 setButtonDisabled(true)
                 setammout("10")
                 let ammoutNEAR = "10";
                 calledContractHandler(true);
-                flip(tailsHeads==="heads", ammoutNEAR, calledContractHandler).catch( function(err) {
+                flip(tailsHeads==="heads", ammoutNEAR)
+                .catch(function(err) {
                   <NotificationError/>
                 })
-
-
-                setButtonDisabled(false)
-
-
-                // show Notification
-                setshowTransaction(true)
-
                 
-                // remove Notification again after css animation completes
-                // this allows it to be shown again next time the form is submitted
-                setTimeout(() => {
-                  setshowTransaction(false)
-                }, 11000)
-                
-                
+                /*code doesnt reach here*/
               }}
               disabled={buttonDisabled || tailsHeads==="" /*|| ammoutNEAR==="" also need to have the ammount selected*/}
                 >Flip!</button>

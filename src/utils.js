@@ -3,7 +3,7 @@ import getConfig from './config'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 let near;
-let fcall;
+
 const fees = 1.035128593432;
 
 export const menusayings = [
@@ -19,7 +19,13 @@ export const menusayings = [
   "It's Heads.\nSource: Trust me bro.",
   "Do you even Flip?",
   "Make a wish...",
-  "Have you ever heard of PS,\nThe God of the Flips?"
+  "Have you ever heard of PS,\nThe God of the Flips?",
+  "Might wanna double it...",
+  "I'll phone a friend.",
+  "Let me take a breath.",
+  "What color do I want my lambo....",
+  "See you in Dubai",
+
 ]
 
 export const hoverEmojis = [
@@ -28,7 +34,7 @@ export const hoverEmojis = [
   "😱",
   "😏",
   "😍",
-  "👉👈",
+  "👌",
   "🤓",
   "🤠",
   "😎",
@@ -42,6 +48,17 @@ export const hoverEmojis = [
   "😛",
   "😜",
   "😇",
+  "🔥",
+  "💸",
+  "💰",
+  "🤩",
+  "😮‍💨",
+  "😬",
+  "🙄",
+  "😤",
+  "💍",
+  "🚀",
+  "⛱️",
 ]
 
 // Initialize contract & set global variables
@@ -67,20 +84,11 @@ export async function initContract() {
   })
 }
 
+
 export function convertYocto(YOCTO){
   return utils.format.formatNearAmount(YOCTO);
 }
 
-export function getlastFlip(fcall) {
-  if(fcall) {
-    const result = providers.getTransactionLastResult(
-      fcall
-    );
-    console.log(result);
-    return result;
-  }
-  
-}
 
 export function logout() {
   window.walletConnection.signOut()
@@ -96,21 +104,23 @@ export function login() {
   window.walletConnection.requestSignIn(nearConfig.contractName)
 }
 
-export function flip(args, ammoutNEAR, calledContractHandler) {
+export async function getState(txHash, accountId) {
+  const result = await provider.txStatus(txHash, accountId);
+  console.log("Result: ", result);
+}
+
+export function flip(args, ammoutNEAR) {
   let yoctoNEAR=  utils.format.parseNearAmount((ammoutNEAR*fees).toString());
 
   let contractID = process.env.CONTRACT_NAME || 'dev-1645468760160-26705510783939';
-  const called = window.walletConnection.account().functionCall({contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR}).then(result => {
-    console.log(result)
-    console.log(called);
-    calledContractHandler(false);
-    return result;
-  })
+  const result = window.walletConnection.account().functionCall({
+    contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR})
   .catch(e => {
-    calledContractHandler(false);
+    consol
     console.log(e)
   });
-  
+  console.log(result);
+  setTimeout(function(){console.log("stop")}, 500000)
 }
 
 function NotificationError() {

@@ -401,3 +401,12 @@ h1 {
   border-bottom: 3px solid #FCD010;
   border-right: 3px solid #FCD010;
 }
+
+
+.textbttn {
+  font-size: 1.5rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
