@@ -1,7 +1,8 @@
 import { connect, Contract, keyStores, WalletConnection, utils,providers } from 'near-api-js'
 import getConfig from './config'
 
-let node_env = process.env.NODE_ENV || 'testnet'
+let node_env = process.env.NODE_ENV || 'testnet';
+console.log(node_env)
 const nearConfig = getConfig(node_env)
 
 let providerurl = "https://archival-rpc."+node_env+".near.org";
@@ -20,7 +21,7 @@ export const menusayings = [
   "Flip a coin!",
   "GIVE ME MY NEAR BACK!",
   "I'm a coin-flipping machine!",
-  ">:((((((",
+  "*rawr*",
   "shhhhh, its tails bro trust me.",
   "fifty-fifty.",
   "It's Heads.\nSource: Trust me bro.",
@@ -32,7 +33,10 @@ export const menusayings = [
   "Let me take a breath.",
   "What color do I want my lambo....",
   "See you in Dubai",
-
+  "Fliperino the coinerino",
+  "Poggers",
+  "Flippin in the moon",
+  ""
 ]
 
 export const hoverEmojis = [

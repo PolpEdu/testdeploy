@@ -15,7 +15,7 @@ import { useSearchParams, useNavigate} from "react-router-dom";
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 
 import getConfig from './config'
-const { networkId } = getConfig(process.env.NODE_ENV || 'development')
+const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 
 //import { ThemeProvider } from 'styled-components';
 
