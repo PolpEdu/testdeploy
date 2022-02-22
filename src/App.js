@@ -4,12 +4,13 @@ import './global.css'
 import React from 'react'
 import {ConfettiExplosion} from '@reonomy/react-confetti-explosion'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, flip,NotificationError, getlastFlip, menusayings, hoverEmojis} from './utils'
+import { logout, convertYocto, flip,NotificationError, gettxsRes, menusayings, hoverEmojis} from './utils'
 import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
 import LOGOMAIN from './assets/unknown.png';
+import { useSearchParams } from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 
@@ -29,8 +30,8 @@ function genrandomemoji() {
 }
 
 export default function App() {
-  // use React Hooks to store greeting in component state
-  const [greeting, set_greeting] = React.useState()
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
 
@@ -64,6 +65,11 @@ export default function App() {
   const [isHoveredR, setHoverR] = React.useState(false)
   
   const [lastPlatedstate, setStateRet] = React.useState(false)
+
+
+  const [txsHashes, set] = React.useState(
+    searchParams.get("transactionHashes")
+  );
 
   const toggleHoverL = () => {
     setHoverL(!isHoveredL);
@@ -122,12 +128,20 @@ export default function App() {
           setbalance("Couldn't Fetch Balance");
          <NotificationError/>
         });
-
-        // window.contract is set by initContract in index.js
-        /*window.contract.get_greeting({ account_id: window.accountId }) //using the contract to get the greeting
-          .then(greetingFromContract => {
-            set_greeting(greetingFromContract)
-          })*/
+        
+        if(txsHashes) {
+          console.log(txsHashes)
+          gettxsRes(txsHashes).then(res => {
+            setshowTransaction(true)
+            setStateRet(res)
+            console.log(res)
+            
+          }).catch(e => {
+            console.log(e)
+          })
+          
+          
+        }
 
       }
 

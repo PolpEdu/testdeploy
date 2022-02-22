@@ -1,9 +1,16 @@
 import { connect, Contract, keyStores, WalletConnection, utils,providers } from 'near-api-js'
 import getConfig from './config'
 
-const nearConfig = getConfig(process.env.NODE_ENV || 'development')
-let near;
+let node_env = process.env.NODE_ENV || 'testnet'
+const nearConfig = getConfig(node_env)
 
+let providerurl = "https://archival-rpc."+node_env+".near.org";
+console.log(providerurl)
+//network config (replace testnet with mainnet or betanet)
+const provider = new providers.JsonRpcProvider(providerurl);
+
+
+let near;
 const fees = 1.035128593432;
 
 export const menusayings = [
@@ -89,6 +96,10 @@ export function convertYocto(YOCTO){
   return utils.format.formatNearAmount(YOCTO);
 }
 
+export async function gettxsRes(txs) {
+  const result = await provider.txStatus(txs, window.accountId)
+  return result;
+}
 
 export function logout() {
   window.walletConnection.signOut()
