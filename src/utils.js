@@ -26,7 +26,7 @@ export const menusayings = [
   "It's Heads.\nSource: Trust me bro.",
   "Do you even Flip?",
   "Make a wish...",
-  "Have you ever heard of PS,\nThe God of the Flips?",
+  "The Legend of PS,\nThe God of the Flips.",
   "Might wanna double it...",
   "I'll phone a friend.",
   "Let me take a breath.",
