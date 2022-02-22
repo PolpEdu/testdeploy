@@ -10,7 +10,7 @@ import { NotLogged, Loading, RecentPlays } from './components/logged';
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
 import LOGOMAIN from './assets/unknown.png';
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate} from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 
@@ -63,13 +63,6 @@ export default function App() {
   const [isHoveredL, setHoverL] = React.useState(false)
 
   const [isHoveredR, setHoverR] = React.useState(false)
-  
-  const [lastPlatedstate, setStateRet] = React.useState(null)
-
-
-  const [txsHashes, set] = React.useState(
-    searchParams.get("transactionHashes")
-  );
 
   const toggleHoverL = () => {
     setHoverL(!isHoveredL);
@@ -78,6 +71,12 @@ export default function App() {
   const toggleHoverR = () => {
     setHoverR(!isHoveredR);
   }
+
+  const [resultofRet, setStateRet] = React.useState("")
+
+  const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
+
+  
 
   //popup
   const [show, setShow] = React.useState(false);
@@ -103,22 +102,46 @@ export default function App() {
     setTailsHeads("tails")
   }
 
-  /**
-   * try {
-      if (window.walletConnection.isSignedIn()) {
-        window.contract.gen_game({ account_id_p1: window.accountId,  account_id_p2: "polpedu.testnet"}); 
-      }
-    } catch(e) {
-      console.log(e)    
-    }
-   */
+  const navigate = useNavigate()
+  const resetGame = () => {
+    setTailsHeads("")
+    setStateRet("")
+
+    searchParams.delete("transactionHashes")
+    settxsHash("")
+    navigate(searchParams.toString());
+  }
+
+  
+  
   // The useEffect hook can be used to fire side-effects during render
   // Learn more: https://reactjs.org/docs/hooks-intro.html
   React.useEffect(
     () => {
-
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
+
+
+        if(txsHashes) {
+          console.log(txsHashes)
+          gettxsRes(txsHashes).then(res => {
+            setshowTransaction(true)
+            let decoded = Buffer.from(res.status.SuccessValue, 'base64')
+            
+            //each element of decoded contains de ASCII value of the character
+            let decodedstr = decoded.toString('ascii')
+            console.log(decodedstr)
+
+            setStateRet(decodedstr)
+          }).catch(e => {
+            console.log(e)
+          })
+          
+          
+        }
+
+
+      
         window.walletConnection.account().getAccountBalance().then(function(balance) {
           let fullstr = convertYocto(balance.available).split(".");
           let str = fullstr[0] + "." + fullstr[1].substring(0,4);
@@ -129,19 +152,7 @@ export default function App() {
          <NotificationError/>
         });
         
-        if(txsHashes) {
-          console.log(txsHashes)
-          gettxsRes(txsHashes).then(res => {
-            setshowTransaction(true)
-            setStateRet(res)
-            console.log(res)
-            
-          }).catch(e => {
-            console.log(e)
-          })
-          
-          
-        }
+        
 
       }
 
@@ -208,15 +219,15 @@ export default function App() {
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-        {lastPlatedstate ? 
-        <div>
-          {lastPlatedstate===true && <ConfettiExplosion />}
-          <button className='btn' /* redirect to main page without the arguments on top of the url; setStateRet(false) and */>
-            Redeem
-          </button>
-
-        </div> :
+        
         <div className='play form-signin'>
+          {resultofRet? 
+          <>
+            
+            <button className='btn' onClick={resetGame} /* redirect to main page without the arguments on top of the url; setStateRet(false) and */>
+              {resultofRet==="true" ? "Play Again" : "Try Again"}
+            </button>
+          </>  :
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"350px"}}>
           
           <h1 style={ window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
@@ -272,9 +283,6 @@ export default function App() {
                 let ammoutNEAR = "10";
                 calledContractHandler(true);
                 flip(tailsHeads==="heads", ammoutNEAR)
-                .catch(function(err) {
-                  <NotificationError/>
-                })
                 
                 /*code doesnt reach here*/
               }}
@@ -286,8 +294,8 @@ export default function App() {
           </div>
           {showNotification && <Notification />}
           </div>
-        </div>
         }
+        </div>
         
         {!window.walletConnection.isSignedIn() && <RecentPlays/>}
       </div>

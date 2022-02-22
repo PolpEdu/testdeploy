@@ -68,6 +68,10 @@ export const hoverEmojis = [
   "⛱️",
 ]
 
+export const buttonReddem = [
+  "I took the L",
+]
+
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
@@ -126,12 +130,6 @@ export function flip(args, ammoutNEAR) {
   let contractID = process.env.CONTRACT_NAME || 'dev-1645468760160-26705510783939';
   const result = window.walletConnection.account().functionCall({
     contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR})
-  .catch(e => {
-    consol
-    console.log(e)
-  });
-  console.log(result);
-  setTimeout(function(){console.log("stop")}, 500000)
 }
 
 function NotificationError() {
