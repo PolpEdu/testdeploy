@@ -308,7 +308,7 @@ export default function App() {
           <div className="text-center justify-content-center d-flex">
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
               {darkMode==="light" ? 
-              <img src={ParasLogoB} alt="Paras Logo B " className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}} /> : <img src={ParasLogoW} alt="Paras Logo W" className='rounded mt-1 fa-nearnfts' style={{height:"31px",width:"31px"}}
+              <img src={ParasLogoB} alt="Paras Logo B " className='rounded mt-1 fa-nearnfts' style={{height:"28px",width:"28px"}} /> : <img src={ParasLogoW} alt="Paras Logo W" className='rounded mt-1 fa-nearnfts' style={{height:"28px",width:"28px"}}
                />}
             </a>
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
