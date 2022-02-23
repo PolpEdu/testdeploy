@@ -4,7 +4,13 @@
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: inherit;
+}
+*:after{
+  box-sizing: inherit;
+}
+*:before{
+  box-sizing: inherit;
 }
 
 html {
@@ -19,6 +25,10 @@ html {
   --gray: #aaa;
   --shadow: #2a2a2a;
   --light-gray: #444;
+  --text-color-default: #ffffff;
+  --gold-yellow: #FFE23F;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
 }
 
 body, html {
@@ -27,6 +37,7 @@ body, html {
   font-family: 'VCR_OSD_MONO' !important;
   min-height: 100%;
   height: 100vh !important;
+  color: var(--text-color-default);
 }
 
 .balance-text {
@@ -52,7 +63,26 @@ body, html {
   animation: pop 0.3s linear 1;
 }
 
+.logo {
 
+    --background: #F6F8FF;
+    --colorwalletadapter: #1E2235;
+    --shadow: #00093d38;
+    --z-before: -6;
+    display: block;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    color: var(--colorwalletadapter);
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--transform-duration, .4s);
+    will-change: transform;
+    transform-style: preserve-3d;
+    transform: perspective(440px) rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg)) translateZ(0);
+
+    
+}
 
 .nearlogo {
   background-position: center 1em;
@@ -87,11 +117,6 @@ a:focus-visible,
 a:active,
 .link:active {
   color: #0072CE;
-}
-
-.btnhover:hover, button:focus{
-  transition: box-shadow 0.5s ease-in-out;
-  box-shadow: 0 0 10em rgba(255, 255, 255, 0.2) inset;
 }
 
 button:active {
@@ -168,6 +193,10 @@ li {
   100% { transform: translateY(10em) }
 }
 
+.textsurprise {
+  color: var(--gold-yellow);
+}
+
 .social-icons {
   position: relative;
   z-index: 2;
@@ -180,12 +209,9 @@ li {
     flex-direction: column!important;
 }
 
-@media (min-width: 576px) {
-  
-}
 
 /* min widh*/
-@media (min-width: 992px) {
+@media (min-width: 650px) {
   .balance-text {
     text-align: right;
   }
@@ -253,9 +279,7 @@ li {
   }
 
   .form-signin, .play {
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 15px;
+    padding: 15px
   }
 }
 
@@ -280,7 +304,7 @@ li {
 
 .menumain{
   width: 69vw;
-  max-width: 370px;
+  max-width: 870px;
   padding: 15px;
   margin: auto;
 }
@@ -296,8 +320,8 @@ h1 {
 .wallet-adapter-button {
     background-color: #404144;
 
-    --background: #1E2235;
-    --colorwalletadapter: #F6F8FF;
+    --background: #F6F8FF;
+    --colorwalletadapter: #1E2235;
     --shadow: #00093d38;
     --z-before: -6;
     display: block;
@@ -310,7 +334,7 @@ h1 {
     line-height: 26px;
     font-family: inherit;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 1.2rem;
     color: var(--colorwalletadapter);
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
@@ -414,7 +438,7 @@ h1 {
 
 .play {
   width: 90vw;
-  max-width: 1000px;
+  max-width: 1300px;
   margin: auto;
   z-index: 5;
 }
@@ -430,7 +454,7 @@ h1 {
 
 .form-signin {
   width: 100%;
-  max-width: 570px;
+  max-width: 1070px;
   margin: auto;
 }
 

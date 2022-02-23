@@ -12,7 +12,7 @@ const provider = new providers.JsonRpcProvider(providerurl);
 
 
 let near;
-const fees = 1.035128593432;
+const fees = 1.035;
 
 export const menusayings = [
   "Near Coin Flip!",

@@ -2,25 +2,24 @@ import 'regenerator-runtime/runtime'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './global.css'
 import React from 'react'
-import {ConfettiExplosion} from '@reonomy/react-confetti-explosion'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip,NotificationError, gettxsRes, menusayings, hoverEmojis} from './utils'
 import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
-import LOGOMAIN from './assets/unknown.png';
+import LOGOMAIN from './assets/nearcoin.png';
+import LOGODOG from './assets/nearcoindoggo.png';
 import { useSearchParams, useNavigate} from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 
 import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
+const doggochance= 0.05;
+
 
 //import { ThemeProvider } from 'styled-components';
-
-
-
 function genrandomphrase() {
   return menusayings[Math.floor(Math.random()*menusayings.length)];
 }
@@ -69,7 +68,6 @@ export default function App() {
     setHoverR(!isHoveredR);
   }
 
-
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
 
   const [txsResult, settxsResult] = React.useState("");
@@ -79,7 +77,9 @@ export default function App() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  
+  //
+  const [showDoggo, setShowDogo] = React.useState(false);
+
   const calledContractHandler = (arg) => {
     setTailsHeads("");
     setCalledContract(arg)
@@ -129,6 +129,8 @@ export default function App() {
   // Learn more: https://reactjs.org/docs/hooks-intro.html
   React.useEffect(
     () => {
+      checkifdoggo();
+
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
         window.walletConnection.account().getAccountBalance().then(function(balance) {
@@ -143,8 +145,6 @@ export default function App() {
         
         getTxsResult(txsHashes);
         console.log(txsResult)
-
-        
       } 
 
     },
@@ -154,6 +154,14 @@ export default function App() {
     //! This works because signing into NEAR Wallet reloads the page
     []
   )
+
+  const checkifdoggo = () => {
+    let random = Math.random()
+    if (random < doggochance) {
+      setShowDogo(true);
+    }
+  }
+  
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -162,9 +170,9 @@ export default function App() {
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
-              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.52rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.52rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.52rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
 
               { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
               </div>
@@ -233,11 +241,11 @@ export default function App() {
             </>
             }
           </>  :
-          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"479px"}: {maxWidth:"350px"}}>
+          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"550px"}}>
           
-          <h1 style={ window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
+          <h1 className="textsurprese"style={window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
-          <img src={LOGOMAIN} className="logo mb-3" alt="logo" width="126" height="126"/>
+          <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="224" height="224"/>
           
           { !window.walletConnection.isSignedIn() ? 
           <NotLogged/> :
@@ -308,7 +316,7 @@ export default function App() {
           <div className="text-center justify-content-center d-flex">
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
               {darkMode==="light" ? 
-              <img src={ParasLogoB} alt="Paras Logo B " className='rounded mt-1 fa-nearnfts' style={{height:"28px",width:"28px"}} /> : <img src={ParasLogoW} alt="Paras Logo W" className='rounded mt-1 fa-nearnfts' style={{height:"28px",width:"28px"}}
+              <img src={ParasLogoW} alt="Paras Logo W " className='rounded mt-1 fa-nearnfts' style={{height:"28px",width:"28px"}} /> : <img src={ParasLogoB} alt="Paras Logo B" className='rounded mt-1 fa-nearnfts' style={{height:"28px",width:"28px"}}
                />}
             </a>
             <a href="" target="_blank" rel="" className="cursor-pointer me-2">
