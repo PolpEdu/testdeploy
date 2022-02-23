@@ -12,7 +12,7 @@ const provider = new providers.JsonRpcProvider(providerurl);
 
 
 let near;
-const fees = 1.035128593432;
+const fees = 1.035;
 
 export const menusayings = [
   "Near Coin Flip!",
@@ -36,7 +36,7 @@ export const menusayings = [
   "Fliperino the coinerino",
   "Poggers",
   "Flippin in the moon",
-  ""
+  "one sec, let me call drake brb"
 ]
 
 export const hoverEmojis = [
