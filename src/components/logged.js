@@ -60,10 +60,9 @@ export const hoverEmojis = [
 
 export function NotLogged() {
     return (
-         <>
-            <div className="mt-2 mb-3"></div>
-              <button className='wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' onClick={login}>Log In with NEAR  <img src={NearLogo} alt="Near Logo" className='nearlogo'/></button>
-            </>
+            <div className="mt-2 mb-3">
+              <button className='wallet-adapter-button justify-content-center mx-auto btnhover' onClick={login}>Log In with NEAR  <img src={NearLogo} alt="Near Logo" className='nearlogo'/></button>
+            </div>
     );
 }
 

@@ -36,7 +36,7 @@ export const menusayings = [
   "Fliperino the coinerino",
   "Poggers",
   "Flippin in the moon",
-  ""
+  "one sec, let me call drake brb"
 ]
 
 export const hoverEmojis = [

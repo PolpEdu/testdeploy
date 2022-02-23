@@ -162,9 +162,9 @@ export default function App() {
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
-              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.8rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.52rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.52rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
+              <a href="#" className="ms-2"><button className="btn btn-dark btnhover" style={{fontSize:"0.52rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
 
               { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
               </div>
@@ -192,7 +192,7 @@ export default function App() {
                     </div>
                   </Modal.Body>
                   <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button wallet-adapter-button-trigger justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
                       <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
                   </div>
               </Modal>
@@ -325,10 +325,10 @@ export default function App() {
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
           <div className="mt-3 d-flex flex-column">
             <div className="d-flex flex-row mb-2 toolbar">
-
+            {/*}
               <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} >
                 {darkMode==="light" ? "DARK" : "LIGHT"} {darkMode==="light" ? <Moon className="fa-xs fas mb-1"/>: <Sun className="fa-xs fas mb-1"/> }
-              </button>
+      </button>*/}
               </div>
             </div>
           </div>
