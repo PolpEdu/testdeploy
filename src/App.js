@@ -177,7 +177,7 @@ export default function App() {
               { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
               </div>
               <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
-                  <Modal.Body className='p-0'>
+                  <Modal.Body className='p-0' style={{color:"black"}}>
                     <div className='d-flex flex-column '>
                       <div className="card-body text-center">
                         <h4 style={{fontWeight:"bold"}}>USER PROFILE</h4>
