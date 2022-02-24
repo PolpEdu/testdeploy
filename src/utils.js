@@ -6,7 +6,7 @@ console.log(node_env)
 const nearConfig = getConfig(node_env)
 
 let providerurl = "https://archival-rpc."+node_env+".near.org";
-console.log(providerurl)
+//console.log(providerurl)
 //network config (replace testnet with mainnet or betanet)
 const provider = new providers.JsonRpcProvider(providerurl);
 

@@ -171,9 +171,42 @@ export default function App() {
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
-              <a href="#" className="ms-2"><button className="btn btn-light " style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-light " style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-light" style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
+              <div role='button' class='retro-btn danger'>
+                <a class='buttoncool'> 
+                  <span class='btn-inner'>
+                    <span class='content-wrapper'>
+                      <span class='btn-content'>
+                        <span class='btn-content-inner' label="ON FIRE">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </div>
+              <div role='button' class='retro-btn'>
+                <a class='buttoncool'> 
+                  <span class='btn-inner'>
+                    <span class='content-wrapper'>
+                      <span class='btn-content'>
+                        <span class='btn-content-inner' label="WHO'S PLAYIN">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </div>
+              <div role='button' class='retro-btn info'>
+                <a class='buttoncool'> 
+                  <span class='btn-inner'>
+                    <span class='content-wrapper'>
+                      <span class='btn-content'>
+                        <span class='btn-content-inner' label="TOP PLAYERS">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </div>
 
               { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
               </div>
@@ -309,8 +342,6 @@ export default function App() {
           </div>
         }
         </div>
-        
-        {!window.walletConnection.isSignedIn() && <RecentPlays/>}
       </div>
       <div className="social-icons-bottom-right">
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
@@ -338,10 +369,6 @@ export default function App() {
               <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} >
                 {darkMode==="light" ? "DARK" : "LIGHT"} {darkMode==="light" ? <Moon className="fa-xs fas mb-1"/>: <Sun className="fa-xs fas mb-1"/> }
       </button>*/}
-                <div class="coin ms-2 ">
-                  <div class="tails"></div>
-                  <div class="heads"></div>
-                </div>
               </div>
             </div>
           </div>

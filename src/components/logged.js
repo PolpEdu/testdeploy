@@ -6,7 +6,7 @@ import NearLogo from '../assets/logo-black.svg';
 export function NotLogged() {
     return (
             <div className="mt-5 mb-3">
-              <button className='wallet-adapter-button justify-content-center mx-auto btnhover' onClick={login}>Log In NEAR<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
+              <button className='wallet-adapter-button justify-content-center mx-auto btnhover' onClick={login}>LOG IN NEAR<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
             </div>
     );
 }

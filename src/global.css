@@ -5,12 +5,17 @@
 
 * {
   box-sizing: inherit;
+  padding: 0;
 }
 *:after{
   box-sizing: inherit;
+  padding: 0;
+
 }
 *:before{
   box-sizing: inherit;
+  padding: 0;
+
 }
 
 html {
@@ -361,9 +366,6 @@ h1 {
     box-shadow: 0 4px 8px var(--shadow);
 }
 
-.btn {
-  padding: 0.35rem 0.5rem!important;
-}
 
 .profile-picture {
   font-size: 1.125rem;
