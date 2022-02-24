@@ -267,24 +267,19 @@ export default function App() {
           </>  :
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"550px"}}>
           
-          <h1 className="textsurprese"style={window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
+
+          <h1 className="textsurprese"style={window.walletConnection.isSignedIn() ? {fontSize:"2.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
-          <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
-          
+
           { !window.walletConnection.isSignedIn() ? 
-          <NotLogged/> :
+          <>
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
+            <NotLogged/>
+          </> :
           <div className='d-flex flex-column '>
-            <h3 className='mt-1 mt-sm-2'>I choose...</h3>
-            <div className="mb-2 justify-content-center">
-              <div className="col-6 mx-auto">
-                <li class="tg-list-item">
-                    <input class="tgl tgl-flip" id="cb5" type="checkbox" />
-                    <label class="tgl-btn mx-auto" data-tg-off="Tails" data-tg-on="Heads" for="cb5">
-                      
-                    </label>
-                </li>
-              </div>
-            </div>
+            <h3 className='mt-1 mt-sm-1'>I choose...</h3>
+            
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
             <h4>FOR</h4>
             <div className="row">
               <div className="col-4">

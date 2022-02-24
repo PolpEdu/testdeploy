@@ -5,18 +5,7 @@
 	 padding: 0;
 	 margin: 0;
 }
- body {
-	 color: #aaa;
-	 background-color: #2f2f2f;
-	 text-align: center;
-	 overflow-x: hidden;
-}
- #title {
-	 position: relative;
-	 margin: 70px auto 50px;
-	 font-size: 60px;
-	 font-family: 'Press Start 2P', cursive;
-}
+
  .wrapper {
 	 position: relative;
 	 display: inline-block;
@@ -355,7 +344,7 @@
 	 display: block;
 	 z-index: 10;
 	 padding: 0 60px;
-	 background: #1d9650;
+	 background: #72ce98;
 	 transform: translateY(-6px);
 	 -webkit-transition: -webkit-transform 0.2s;
 	 transition: transform 0.2s;
