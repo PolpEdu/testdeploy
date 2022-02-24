@@ -25,10 +25,6 @@ function genrandomphrase() {
   return menusayings[Math.floor(Math.random()*menusayings.length)];
 }
 
-function genrandomemoji() {
-  return hoverEmojis[Math.floor(Math.random()*hoverEmojis.length)].toString();
-}
-
 export default function App() {
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,17 +52,11 @@ export default function App() {
 
   //
   const [ammoutNEAR, setammout] = React.useState("")
+ 
+  const toogleHeadsTails = () => {
 
-  const [isHoveredL, setHoverL] = React.useState(false)
 
-  const [isHoveredR, setHoverR] = React.useState(false)
-
-  const toggleHoverL = () => {
-    setHoverL(!isHoveredL);
-  }
-
-  const toggleHoverR = () => {
-    setHoverR(!isHoveredR);
+    
   }
 
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
@@ -279,22 +269,20 @@ export default function App() {
           
           <h1 className="textsurprese"style={window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
-          <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="224" height="224"/>
+          <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
           
           { !window.walletConnection.isSignedIn() ? 
           <NotLogged/> :
           <div className='d-flex flex-column '>
             <h3 className='mt-1 mt-sm-2'>I choose...</h3>
-            <div className="row mb-3">
-              <div className="col-6">
-                <button className={tailsHeads==="heads" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setHeads} onMouseEnter={toggleHoverL} onMouseLeave={toggleHoverL}>
-                  <span className='textbttn' style={{fontWeight:"bold"}}>{isHoveredL ? genrandomemoji() :"HEADS"}</span>
-                </button>
-              </div>
-              <div className="col-6">
-                <button className={tailsHeads==="tails" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setTails} onMouseEnter={toggleHoverR} onMouseLeave={toggleHoverR}>
-                  <span className='textbttn' style={{fontWeight:"bold"}}>{isHoveredR ? genrandomemoji() :"TAILS"}</span>
-                </button>
+            <div className="mb-2 justify-content-center">
+              <div className="col-6 mx-auto">
+                <li class="tg-list-item">
+                    <input class="tgl tgl-flip" id="cb5" type="checkbox" />
+                    <label class="tgl-btn mx-auto" data-tg-off="Tails" data-tg-on="Heads" for="cb5">
+                      
+                    </label>
+                </li>
               </div>
             </div>
             <h4>FOR</h4>
