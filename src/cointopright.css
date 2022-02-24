@@ -124,9 +124,9 @@
 	 transition: opacity 0.1s ease-out;
 	 z-index: 5;
 	 -webkit-font-smoothing: antialiased;
-	 width: 190px;
+	 width: 8rem;
 	 height: 46px;
-	 font-size: 18px;
+	 font-size: 0.9rem;
 	 line-height: 24px;
 	 background-color: transparent;
 	 text-decoration-color: initial;
