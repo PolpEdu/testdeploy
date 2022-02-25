@@ -285,25 +285,30 @@ export default function App() {
               </div>
             <div className="row">
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/LnRn1mC.png" alt="0.05 sol" width="100%" height="100%"/>
+                <button className="button button-retro is-warning">0.5 NEAR</button>
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/o6IEhiu.png" alt="0.1 sol" width="100%" height="100%"/>
+                <button className="button button-retro is-warning">1 NEAR</button>
+
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/5lRVCML.png" alt="0.25 sol" width="100%" height="100%"/>
+                <button className="button button-retro is-warning">25 NEAR</button>
+
               </div>
               
             </div>
             <div className="row my-3">
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/iChJqD2.png" alt="0.5 sol" width="100%" height="100%"/>
+              <button className="button button-retro is-warning">50 NEAR</button>
+
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/D8b7RNF.png" alt="1 sol" width="100%" height="100%"/>
+              <button className="button button-retro is-warning">75 NEAR</button>
+
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/eS5gbgf.png" alt="2 sol" width="100%" height="100%"/>
+              <button className="button button-retro is-warning">100 NEAR</button>
+
               </div>
             </div>
 
