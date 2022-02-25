@@ -563,6 +563,7 @@ li{
   box-shadow: inset -3px -3px #adafbc;
   will-change: transform;
   transition: transform 0.1s ease-in-out;
+  font-weight: bold;
 }
 .button-retro:hover {
   background-color: #e7e7e7;
@@ -601,16 +602,16 @@ li{
 .button-retro.is-warning {
   color: #141418;
   background-color: #f7d51d;
-  box-shadow: inset -3px -3px #e59400;
+  box-shadow: inset 0px -3px #e59400;
   will-change: transform;
   transition: transform 0.1s ease-in-out;
 }
 .button-retro.is-warning:hover {
   background-color: #f2c409;
-  box-shadow: inset -4px -4px #e59400;
+  box-shadow: inset 0px -4px #e59400;
   transform: translateY(-1px);
 }
 .button-retro.is-warning:active {
-  box-shadow: inset -4px -4px #ffae19;
+  box-shadow: inset 0px -4px #ffae19;
   transform: translateY(1px);
 }

@@ -54,10 +54,10 @@ export default function App() {
   const [ammoutNEAR, setammout] = React.useState("")
  
   const toogleHeadsTails = () => {
-
-
     
   }
+
+
 
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
 
@@ -79,6 +79,10 @@ export default function App() {
   const toogleDarkMode = () => {
     let newmode = darkMode === "light" ? "dark" : "light"
     setDarkMode(newmode)
+  }
+
+  const setPrice = (price) => {
+    setammout(price)
   }
 
   const setHeads = () => {
@@ -285,29 +289,29 @@ export default function App() {
               </div>
             <div className="row">
               <div className="col-4">
-                <button className="button button-retro is-warning">0.5 NEAR</button>
+                <button className="button button-retro is-warning" onClick={setPrice(0.5)}>0.5 NEAR</button>
               </div>
               <div className="col-4">
-                <button className="button button-retro is-warning">1 NEAR</button>
+                <button className="button button-retro is-warning" onClick={setPrice(1)}>1 NEAR</button>
 
               </div>
               <div className="col-4">
-                <button className="button button-retro is-warning">25 NEAR</button>
+                <button className="button button-retro is-warning" onClick={setPrice(25)}>25 NEAR</button>
 
               </div>
               
             </div>
             <div className="row my-3">
               <div className="col-4">
-              <button className="button button-retro is-warning">50 NEAR</button>
+              <button className="button button-retro is-warning" onClick={setPrice(50)}>50 NEAR</button>
 
               </div>
               <div className="col-4">
-              <button className="button button-retro is-warning">75 NEAR</button>
+              <button className="button button-retro is-warning"  onClick={setPrice(75)}>75 NEAR</button>
 
               </div>
               <div className="col-4">
-              <button className="button button-retro is-warning">100 NEAR</button>
+              <button className="button button-retro is-warning" onClick={setPrice(100)}>100 NEAR</button>
 
               </div>
             </div>
