@@ -289,29 +289,29 @@ export default function App() {
               </div>
             <div className="row">
               <div className="col-4">
-                <button className="button button-retro is-warning" onClick={setPrice(0.5)}>0.5 NEAR</button>
+                <button className="button button-retro is-warning" onClick={() => setPrice("0.5")}>0.5 NEAR</button>
               </div>
               <div className="col-4">
-                <button className="button button-retro is-warning" onClick={setPrice(1)}>1 NEAR</button>
+                <button className="button button-retro is-warning" onClick={() => setPrice("1")}>1 NEAR</button>
 
               </div>
               <div className="col-4">
-                <button className="button button-retro is-warning" onClick={setPrice(25)}>25 NEAR</button>
+                <button className="button button-retro is-warning" onClick={() => setPrice("25")}>25 NEAR</button>
 
               </div>
               
             </div>
             <div className="row my-3">
               <div className="col-4">
-              <button className="button button-retro is-warning" onClick={setPrice(50)}>50 NEAR</button>
+              <button className="button button-retro is-warning" onClick={() => setPrice("50")}>50 NEAR</button>
 
               </div>
               <div className="col-4">
-              <button className="button button-retro is-warning"  onClick={setPrice(75)}>75 NEAR</button>
+              <button className="button button-retro is-warning"  onClick={() => setPrice("75")}>75 NEAR</button>
 
               </div>
               <div className="col-4">
-              <button className="button button-retro is-warning" onClick={setPrice(100)}>100 NEAR</button>
+              <button className="button button-retro is-warning" onClick={() => setPrice("100")}>100 NEAR</button>
 
               </div>
             </div>
@@ -320,8 +320,6 @@ export default function App() {
           <button
               onClick={event => {
                 setButtonDisabled(true)
-                setammout("10")
-                let ammoutNEAR = "10";
                 calledContractHandler(true);
                 flip(tailsHeads==="heads", ammoutNEAR)
                 
