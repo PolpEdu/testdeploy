@@ -268,7 +268,7 @@ export default function App() {
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"550px"}}>
           
 
-          <h1 className="textsurprese"style={window.walletConnection.isSignedIn() ? {fontSize:"2.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
+          <h1 className="textsurprese font-weight-normal" style={{fontSize:"2rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
 
           { !window.walletConnection.isSignedIn() ? 
@@ -277,10 +277,12 @@ export default function App() {
             <NotLogged/>
           </> :
           <div className='d-flex flex-column '>
-            <h3 className='mt-1 mt-sm-1'>I choose...</h3>
+            <h4 className='mt-1 mt-sm-1'>I choose...</h4>
             
             <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
-            <h4>FOR</h4>
+            <div id="game" class="game">
+                <h4 className="start text-uppercase">insert coin</h4>
+              </div>
             <div className="row">
               <div className="col-4">
                 <img className="cursor-pointer double-button" src="https://i.imgur.com/LnRn1mC.png" alt="0.05 sol" width="100%" height="100%"/>

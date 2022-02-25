@@ -280,7 +280,12 @@ code {
   }
 
   .form-signin, .play {
-    padding: 15px
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-top: 5px
+
+
   }
 }
 
@@ -511,4 +516,34 @@ ul.ba {
 }
 li{
   list-style:none ;
+}
+
+.start {
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  color: white;
+  justify-content: center;
+  text-shadow: 2px 2px 0 red;
+}
+.start {
+  text-shadow: 1px 1px 0px rgb(236, 162, 0);
+  transition: transform opacity 1.5s ease-out;
+  animation: opacityPulse 1.2s ease-out;
+  animation-iteration-count: infinite;
+}
+.game:target .start {
+  animation: none;
+  opacity: 0;
+  pointer-events: none;
+}
+.game:target .content {
+  opacity: 1;
+}
+@keyframes opacityPulse {
+  30% { opacity: 0; }
+  60% { opacity: 1; }
 }
