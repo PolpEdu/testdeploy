@@ -28,15 +28,21 @@ function genrandomphrase() {
 
 export default function App() {
 
+  img1 = new Image();
+  img2 = new Image();
+  img3 = new Image();
+
+  img1.src = LOGOMAIN;
+  img2.src = LOGOBACK;
+  img3.src = LOGODOG;
+
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
 
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
-
-  //
-  const [calledContract, setCalledContract] = React.useState(false)
 
   // on the top right
   const [balance, setbalance] = React.useState("")
@@ -69,10 +75,6 @@ export default function App() {
   //
   const [showDoggo, setShowDogo] = React.useState(false);
 
-  const calledContractHandler = (arg) => {
-    setTailsHeads("");
-    setCalledContract(arg)
-  }
 
   const toogleDarkMode = () => {
     let newmode = darkMode === "light" ? "dark" : "light"
@@ -83,17 +85,9 @@ export default function App() {
     setammout(price)
   }
 
-  const setHeads = () => {
-    setTailsHeads("heads")
-  }
-
-  const setTails = () => {
-    setTailsHeads("tails")
-  }
-
   const navigate = useNavigate()
   const resetGame = () => {
-    setTailsHeads("")
+    setTailsHeads(Math.random()<0.5 ? "tails" : "heads")
     settxsHash("")
     settxsResult("")
     
@@ -117,14 +111,15 @@ export default function App() {
     })
     settxsResult(decodedstr);
   }
-  // The useEffect hook can be used to fire side-effects during render
-  // Learn more: https://reactjs.org/docs/hooks-intro.html
+
+  
   React.useEffect(
     () => {
       checkifdoggo();
 
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
+        console.log("LOADING BALANCE AND HEADS OR TAILS")
         window.walletConnection.account().getAccountBalance().then(function(balance) {
           let fullstr = convertYocto(balance.available).split(".");
           let str = fullstr[0] + "." + fullstr[1].substring(0,4);
@@ -337,7 +332,8 @@ export default function App() {
             className="button button-retro is-warning"
             onClick={event => {
               setButtonDisabled(true)
-              calledContractHandler(true);
+              console.log(tailsHeads);
+              console.log(ammoutNEAR);
               flip(tailsHeads==="heads", ammoutNEAR)
               
               /*code doesnt reach here*/
