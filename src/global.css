@@ -602,9 +602,7 @@ li{
   border-top: 2px;
   border-bottom: 2px;
 }
-.selected {
-  outline: 4px solid #000;
-}
+
 .button-retro.is-warning {
   color: #141418;
   background-color: #f7d51d;
@@ -629,4 +627,18 @@ li{
 .button-retro:hover:disabled {
   background-color: #8d834a;
   box-shadow: inset 0px -3px #5a4d35;
+}
+
+
+.button-retro.is-selected {
+  color: #141418;
+  transition: 0.1s ease-in-out;
+  background: rgb(247,213,29);
+background: -moz-radial-gradient(circle, rgba(247,213,29,1) 0%, rgba(247,213,29,1) 43%, rgba(221,64,58,1) 100%);
+background: -webkit-radial-gradient(circle, rgba(247,213,29,1) 0%, rgba(247,213,29,1) 43%, rgba(221,64,58,1) 100%);
+background: radial-gradient(circle, rgba(247,213,29,1) 0%, rgba(247,213,29,1) 43%, rgba(221,64,58,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endColorstr="#dd403a",GradientType=1);
+  box-shadow: inset 0px -3px #883725;
+  will-change: transform;
+  transition: transform 0.1s ease-in-out;
 }

@@ -291,28 +291,28 @@ export default function App() {
             <div className="row">
               <div className="col-4">
                 
-                <button className="button button-retro is-warning" onClick={() => setPrice("0.5")}>0.5 NEAR</button>
+                <button className={ammoutNEAR==="0.5" ? "button button-retro is-selected": "button button-retro is-warning"} onClick={() => setPrice("0.5")}>0.5 NEAR</button>
               </div>
               <div className="col-4">
-                <button className="button button-retro is-warning" onClick={() => setPrice("1")}>1 NEAR</button>
+                <button className={ammoutNEAR==="1" ? "button button-retro is-selected": "button button-retro is-warning"} onClick={() => setPrice("1")}>1 NEAR</button>
               </div>
               <div className="col-4">
-                <button className="button button-retro is-warning" onClick={() => setPrice("25")}>25 NEAR</button>
+                <button className={ammoutNEAR==="2.5" ? "button button-retro is-selected": "button button-retro is-warning"}  onClick={() => setPrice("2.5")}>2.5 NEAR</button>
 
               </div>
               
             </div>
             <div className="row my-3">
               <div className="col-4">
-              <button className="button button-retro is-warning" onClick={() => setPrice("50")}>50 NEAR</button>
+              <button className={ammoutNEAR==="5.0" ? "button button-retro is-selected": "button button-retro is-warning"}  onClick={() => setPrice("5.0")}>5.0 NEAR</button>
 
               </div>
               <div className="col-4">
-              <button className="button button-retro is-warning"  onClick={() => setPrice("75")}>75 NEAR</button>
+              <button className={ammoutNEAR==="7.5" ? "button button-retro is-selected": "button button-retro is-warning"}   onClick={() => setPrice("7.5")}>7.5 NEAR</button>
 
               </div>
               <div className="col-4">
-              <button className="button button-retro is-warning" onClick={() => setPrice("100")}>100 NEAR</button>
+              <button className={ammoutNEAR==="10" ? "button button-retro is-selected": "button button-retro is-warning"} onClick={() => setPrice("10")}>10 NEAR</button>
 
               </div>
             </div>
