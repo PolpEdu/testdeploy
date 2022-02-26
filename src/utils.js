@@ -2,11 +2,11 @@ import { connect, Contract, keyStores, WalletConnection, utils,providers } from 
 import getConfig from './config'
 
 let node_env = process.env.NODE_ENV || 'testnet';
-console.log(node_env)
+//console.log(node_env)
 const nearConfig = getConfig(node_env)
 
 let providerurl = "https://archival-rpc."+node_env+".near.org";
-console.log(providerurl)
+//console.log(providerurl)
 //network config (replace testnet with mainnet or betanet)
 const provider = new providers.JsonRpcProvider(providerurl);
 
@@ -39,38 +39,6 @@ export const menusayings = [
   "one sec, let me call drake brb"
 ]
 
-export const hoverEmojis = [
-  "🤔",
-  "😳",
-  "😱",
-  "😏",
-  "😍",
-  "👌",
-  "🤓",
-  "🤠",
-  "😎",
-  "🤪",
-  "🥶",
-  "💪",
-  "😀",
-  "🙃",
-  "😉",
-  "😌",
-  "😛",
-  "😜",
-  "😇",
-  "🔥",
-  "💸",
-  "💰",
-  "🤩",
-  "😮‍💨",
-  "😬",
-  "🙄",
-  "😤",
-  "💍",
-  "🚀",
-  "⛱️",
-]
 
 export const buttonReddem = [
   "I took the L",
@@ -233,3 +201,4 @@ function rngTest() {
   
   }
 }
+  

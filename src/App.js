@@ -9,8 +9,9 @@ import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
-import LOGOMAIN from './assets/nearcoin.png';
-import LOGODOG from './assets/nearcoindoggo.png';
+import LOGOMAIN from './assets/result.svg';
+import LOGODOG from './assets/nearcoindoggo.svg';
+import LOGOBACK from './assets/nearcoin.svg';
 import { useSearchParams, useNavigate} from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
@@ -25,11 +26,16 @@ function genrandomphrase() {
   return menusayings[Math.floor(Math.random()*menusayings.length)];
 }
 
-function genrandomemoji() {
-  return hoverEmojis[Math.floor(Math.random()*hoverEmojis.length)].toString();
-}
-
 export default function App() {
+
+  img1 = new Image();
+  img2 = new Image();
+  img3 = new Image();
+
+  img1.src = LOGOMAIN;
+  img2.src = LOGOBACK;
+  img3.src = LOGODOG;
+
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -37,9 +43,6 @@ export default function App() {
 
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
-
-  //
-  const [calledContract, setCalledContract] = React.useState(false)
 
   // on the top right
   const [balance, setbalance] = React.useState("")
@@ -49,7 +52,7 @@ export default function App() {
   const [darkMode, setDarkMode] = React.useState("light")
 
   //
-  const [tailsHeads, setTailsHeads] = React.useState("")
+  const [tailsHeads, setTailsHeads] = React.useState(Math.random()<0.5 ? "tails" : "heads")
 
   // surprise phrase
   const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
@@ -57,17 +60,8 @@ export default function App() {
   //
   const [ammoutNEAR, setammout] = React.useState("")
 
-  const [isHoveredL, setHoverL] = React.useState(false)
 
-  const [isHoveredR, setHoverR] = React.useState(false)
 
-  const toggleHoverL = () => {
-    setHoverL(!isHoveredL);
-  }
-
-  const toggleHoverR = () => {
-    setHoverR(!isHoveredR);
-  }
 
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
 
@@ -81,27 +75,19 @@ export default function App() {
   //
   const [showDoggo, setShowDogo] = React.useState(false);
 
-  const calledContractHandler = (arg) => {
-    setTailsHeads("");
-    setCalledContract(arg)
-  }
 
   const toogleDarkMode = () => {
     let newmode = darkMode === "light" ? "dark" : "light"
     setDarkMode(newmode)
   }
 
-  const setHeads = () => {
-    setTailsHeads("heads")
-  }
-
-  const setTails = () => {
-    setTailsHeads("tails")
+  const setPrice = (price) => {
+    setammout(price)
   }
 
   const navigate = useNavigate()
   const resetGame = () => {
-    setTailsHeads("")
+    setTailsHeads(Math.random()<0.5 ? "tails" : "heads")
     settxsHash("")
     settxsResult("")
     
@@ -121,19 +107,19 @@ export default function App() {
       //each element of decoded contains de ASCII value of the character
       decodedstr = decoded.toString('ascii')
     }).catch(e => {
-      console.log(e)
+      
     })
-    console.log(decodedstr)
     settxsResult(decodedstr);
   }
-  // The useEffect hook can be used to fire side-effects during render
-  // Learn more: https://reactjs.org/docs/hooks-intro.html
+
+  
   React.useEffect(
     () => {
       checkifdoggo();
 
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
+        console.log("LOADING BALANCE AND HEADS OR TAILS")
         window.walletConnection.account().getAccountBalance().then(function(balance) {
           let fullstr = convertYocto(balance.available).split(".");
           let str = fullstr[0] + "." + fullstr[1].substring(0,4);
@@ -145,7 +131,6 @@ export default function App() {
         });
         
         getTxsResult(txsHashes);
-        console.log(txsResult)
       } 
 
     },
@@ -163,6 +148,14 @@ export default function App() {
     }
   }
   
+  const toggleHeadsTails = () => {
+    if (tailsHeads === "heads") {
+      setTailsHeads("tails")
+    } else {
+      setTailsHeads("heads")
+    }
+  }
+  
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -171,9 +164,42 @@ export default function App() {
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
-              <a href="#" className="ms-2"><button className="btn btn-light " style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex ">WHO'S PLAYIN ❓</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-light " style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex ">ON FIRE 🔥</span></button></a>
-              <a href="#" className="ms-2"><button className="btn btn-light" style={{fontSize:"0.82rem"}}><span className="d-none d-sm-inline-flex">TOP PLAYERS 🏆</span></button></a>
+              <div role='button' className='retro-btn danger'>
+                <a className='buttoncool'> 
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="ON FIRE">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </div>
+              <div role='button' className='retro-btn'>
+                <a className='buttoncool'> 
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="WHO'S PLAYIN">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </div>
+              <div role='button' className='retro-btn info'>
+                <a className='buttoncool'> 
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="TOP PLAYERS">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </div>
 
               { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
               </div>
@@ -228,7 +254,6 @@ export default function App() {
             <>
               {txsResult==="true" ?
               <div>
-                
                 YOU WON!
               </div>
               :
@@ -242,66 +267,79 @@ export default function App() {
             </>
             }
           </>  :
-          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"550px"}}>
+          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"650px"}}>
           
-          <h1 className="textsurprese"style={window.walletConnection.isSignedIn() ? {fontSize:"1.2rem"} : {fontSize:"2rem"}}>{surprisePhrase}</h1>
+
+          <h1 className="textsurprese font-weight-normal" style={{fontSize:"1.8rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
-          <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="224" height="224"/>
-          
+
           { !window.walletConnection.isSignedIn() ? 
-          <NotLogged/> :
+          <>
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="250" height="250"/>
+            <NotLogged/>
+          </> :
           <div className='d-flex flex-column '>
-            <h3 className='mt-1 mt-sm-2'>I choose...</h3>
-            <div className="row mb-3">
-              <div className="col-6">
-                <button className={tailsHeads==="heads" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setHeads} onMouseEnter={toggleHoverL} onMouseLeave={toggleHoverL}>
-                  <span className='textbttn' style={{fontWeight:"bold"}}>{isHoveredL ? genrandomemoji() :"HEADS"}</span>
-                </button>
-              </div>
-              <div className="col-6">
-                <button className={tailsHeads==="tails" ? "selected btn double-button w-100 h-100" : "btn double-button  w-100 h-100"} onClick={setTails} onMouseEnter={toggleHoverR} onMouseLeave={toggleHoverR}>
-                  <span className='textbttn' style={{fontWeight:"bold"}}>{isHoveredR ? genrandomemoji() :"TAILS"}</span>
-                </button>
-              </div>
+            <h4 className='mt-1 mt-sm-1'>I choose...</h4>
+            
+              <div className="flip-box logo mb-3 mx-auto">
+                <div className={tailsHeads==="heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
+                  <div className="flip-box-front">
+                    <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={() => {toggleHeadsTails();}}/>
+                  </div>
+                  <div className="flip-box-back">
+                     <img src={LOGOBACK}  alt="logoback" width="250" height="250" onClick={() => {toggleHeadsTails();}}/>
+                  </div>
+                </div>
+
+              
             </div>
-            <h4>FOR</h4>
+            
+
+            <div id="game" className="game">
+                <h4 className="start text-uppercase mb-3">insert coin</h4>
+              </div>
             <div className="row">
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/LnRn1mC.png" alt="0.05 sol" width="100%" height="100%"/>
+                
+                <button className={ammoutNEAR==="0.5" ? "button button-retro is-selected": "button button-retro is-warning"} onClick={() => setPrice("0.5")}>0.5 NEAR</button>
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/o6IEhiu.png" alt="0.1 sol" width="100%" height="100%"/>
+                <button className={ammoutNEAR==="1" ? "button button-retro is-selected": "button button-retro is-warning"} onClick={() => setPrice("1")}>1 NEAR</button>
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/5lRVCML.png" alt="0.25 sol" width="100%" height="100%"/>
+                <button className={ammoutNEAR==="2.5" ? "button button-retro is-selected": "button button-retro is-warning"}  onClick={() => setPrice("2.5")}>2.5 NEAR</button>
+
               </div>
               
             </div>
             <div className="row my-3">
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/iChJqD2.png" alt="0.5 sol" width="100%" height="100%"/>
+              <button className={ammoutNEAR==="5.0" ? "button button-retro is-selected": "button button-retro is-warning"}  onClick={() => setPrice("5.0")}>5.0 NEAR</button>
+
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/D8b7RNF.png" alt="1 sol" width="100%" height="100%"/>
+              <button className={ammoutNEAR==="7.5" ? "button button-retro is-selected": "button button-retro is-warning"}   onClick={() => setPrice("7.5")}>7.5 NEAR</button>
+
               </div>
               <div className="col-4">
-                <img className="cursor-pointer double-button" src="https://i.imgur.com/eS5gbgf.png" alt="2 sol" width="100%" height="100%"/>
+              <button className={ammoutNEAR==="10" ? "button button-retro is-selected": "button button-retro is-warning"} onClick={() => setPrice("10")}>10 NEAR</button>
+
               </div>
             </div>
 
-          
+          <hr/>
           <button
-              onClick={event => {
-                setButtonDisabled(true)
-                setammout("10")
-                let ammoutNEAR = "10";
-                calledContractHandler(true);
-                flip(tailsHeads==="heads", ammoutNEAR)
-                
-                /*code doesnt reach here*/
-              }}
-              disabled={buttonDisabled || tailsHeads==="" /*|| ammoutNEAR==="" also need to have the ammount selected*/}
-                >Flip!</button>
+            className="button button-retro is-warning"
+            onClick={event => {
+              setButtonDisabled(true)
+              console.log(tailsHeads);
+              console.log(ammoutNEAR);
+              flip(tailsHeads==="heads", ammoutNEAR)
+              
+              /*code doesnt reach here*/
+            }}
+            disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR===""}
+          >Flip!</button>
             
           </div>
           }
@@ -309,8 +347,6 @@ export default function App() {
           </div>
         }
         </div>
-        
-        {!window.walletConnection.isSignedIn() && <RecentPlays/>}
       </div>
       <div className="social-icons-bottom-right">
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
@@ -338,10 +374,6 @@ export default function App() {
               <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} >
                 {darkMode==="light" ? "DARK" : "LIGHT"} {darkMode==="light" ? <Moon className="fa-xs fas mb-1"/>: <Sun className="fa-xs fas mb-1"/> }
       </button>*/}
-                <div class="coin ms-2 ">
-                  <div class="tails"></div>
-                  <div class="heads"></div>
-                </div>
               </div>
             </div>
           </div>
