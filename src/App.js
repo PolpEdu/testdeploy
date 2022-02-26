@@ -158,6 +158,7 @@ export default function App() {
   }
   
   console.log(ammoutNEAR)
+  let classNames = 'logo mb-3 mx-auto';
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -278,13 +279,20 @@ export default function App() {
 
           { !window.walletConnection.isSignedIn() ? 
           <>
-            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="250" height="250"/>
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="250" height="250"/>
             <NotLogged/>
           </> :
           <div className='d-flex flex-column '>
             <h4 className='mt-1 mt-sm-1'>I choose...</h4>
             
-            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
+            <div className={classNames}>
+              <div className="front">
+                <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={ () => {classNames.includes("flip") ? classNames+= " flip" : classNames.split(" ")[0]}}/>
+              </div>
+              
+            </div>
+            
+
             <div id="game" class="game">
                 <h4 className="start text-uppercase">insert coin</h4>
               </div>

@@ -632,7 +632,7 @@ li{
 
 .button-retro.is-selected {
   color: #141418;
-  transition: 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
   background: rgb(247,213,29);
 background: -moz-radial-gradient(circle, rgba(247,213,29,1) 0%, rgba(247,213,29,1) 43%, rgba(221,64,58,1) 100%);
 background: -webkit-radial-gradient(circle, rgba(247,213,29,1) 0%, rgba(247,213,29,1) 43%, rgba(221,64,58,1) 100%);
@@ -641,4 +641,20 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   box-shadow: inset 0px -3px #883725;
   will-change: transform;
   transition: transform 0.1s ease-in-out;
+
+
+  -webkit-animation: mover 0.4s infinite  alternate;
+    animation: mover  0.4s infinite  alternate;
+  -webkit-animation: mover  0.4s infinite  alternate;
+    animation: mover  0.4s infinite  alternate;
+}
+
+
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+}
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
 }
