@@ -453,7 +453,7 @@ h1 {
 aside {
   position: absolute;
   animation: notify ease-in-out 6s;
-  background-color: #212529;
+  background-color: #0D1F22;
   border-radius: 5px;
   bottom: 0;
   font-size: 0.8em;
@@ -481,34 +481,7 @@ aside footer *:last-child {
     display: inline-flex!important;
 }
 
-.flip-image {
-	 position: absolute;
-	 top: 0;
-	 left: 0;
-}
- .flip-image-list {
-	 display: inline-block;
-	 position: relative;
-	 width: 300px;
-	 height: 300px;
-}
- .flip-image-list .flip-image.flip-front {
-	 z-index: 2;
-}
- .flip-image-list .flip-image.flip-back {
-	 transform: rotateY(180deg);
-	 z-index: 1;
-}
- .flip-image-list.on .flip-image.flip-front {
-	 transform: rotateY(180deg);
-}
- .flip-image-list.on .flip-image.flip-back {
-	 transform: rotateY(360deg);
-}
- .flip-image-list .flip-image, .flip-image-list.on .flip-image {
-	 transition: transform 1000ms;
-	 backface-visibility: hidden;
-}
+
  
 ul.ba {
   list-style-type: none;
@@ -657,4 +630,53 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
 @keyframes mover {
     0% { transform: translateY(0); }
     100% { transform: translateY(-5px); }
+}
+
+
+.flip-box {
+  background-color: transparent;
+  width: 250px;
+  height: 250px;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-box-inner-flipped {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-box-front,
+.flip-box-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-box-front {
+  color: black;
+}
+
+/* Style the back side */
+.flip-box-back {
+  color: white;
+  transform: rotateY(180deg);
 }

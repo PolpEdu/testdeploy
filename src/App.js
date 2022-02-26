@@ -9,8 +9,9 @@ import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
-import LOGOMAIN from './assets/nearcoin.png';
-import LOGODOG from './assets/nearcoindoggo.png';
+import LOGOMAIN from './assets/result.svg';
+import LOGODOG from './assets/nearcoindoggo.svg';
+import LOGOBACK from './assets/nearcoin.svg';
 import { useSearchParams, useNavigate} from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
@@ -45,17 +46,14 @@ export default function App() {
   const [darkMode, setDarkMode] = React.useState("light")
 
   //
-  const [tailsHeads, setTailsHeads] = React.useState("")
+  const [tailsHeads, setTailsHeads] = React.useState(Math.random()<0.5 ? "tails" : "heads")
 
   // surprise phrase
   const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
 
   //
   const [ammoutNEAR, setammout] = React.useState("")
- 
-  const toogleHeadsTails = () => {
-    
-  }
+
 
 
 
@@ -115,9 +113,8 @@ export default function App() {
       //each element of decoded contains de ASCII value of the character
       decodedstr = decoded.toString('ascii')
     }).catch(e => {
-      console.log(e)
+      
     })
-    console.log(decodedstr)
     settxsResult(decodedstr);
   }
   // The useEffect hook can be used to fire side-effects during render
@@ -139,7 +136,6 @@ export default function App() {
         });
         
         getTxsResult(txsHashes);
-        console.log(txsResult)
       } 
 
     },
@@ -157,9 +153,14 @@ export default function App() {
     }
   }
   
+  const toggleHeadsTails = () => {
+    if (tailsHeads === "heads") {
+      setTailsHeads("tails")
+    } else {
+      setTailsHeads("heads")
+    }
+  }
   
-  console.log(ammoutNEAR)
-  let classNames = 'logo mb-3 mx-auto';
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -168,36 +169,36 @@ export default function App() {
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
-              <div role='button' class='retro-btn danger'>
-                <a class='buttoncool'> 
-                  <span class='btn-inner'>
-                    <span class='content-wrapper'>
-                      <span class='btn-content'>
-                        <span class='btn-content-inner' label="ON FIRE">
+              <div role='button' className='retro-btn danger'>
+                <a className='buttoncool'> 
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="ON FIRE">
                         </span>
                       </span>
                     </span>
                   </span>
                 </a>
               </div>
-              <div role='button' class='retro-btn'>
-                <a class='buttoncool'> 
-                  <span class='btn-inner'>
-                    <span class='content-wrapper'>
-                      <span class='btn-content'>
-                        <span class='btn-content-inner' label="WHO'S PLAYIN">
+              <div role='button' className='retro-btn'>
+                <a className='buttoncool'> 
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="WHO'S PLAYIN">
                         </span>
                       </span>
                     </span>
                   </span>
                 </a>
               </div>
-              <div role='button' class='retro-btn info'>
-                <a class='buttoncool'> 
-                  <span class='btn-inner'>
-                    <span class='content-wrapper'>
-                      <span class='btn-content'>
-                        <span class='btn-content-inner' label="TOP PLAYERS">
+              <div role='button' className='retro-btn info'>
+                <a className='buttoncool'> 
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="TOP PLAYERS">
                         </span>
                       </span>
                     </span>
@@ -274,7 +275,7 @@ export default function App() {
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"650px"}}>
           
 
-          <h1 className="textsurprese font-weight-normal" style={{fontSize:"2rem"}}>{surprisePhrase}</h1>
+          <h1 className="textsurprese font-weight-normal" style={{fontSize:"1.8rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
 
           { !window.walletConnection.isSignedIn() ? 
@@ -285,16 +286,22 @@ export default function App() {
           <div className='d-flex flex-column '>
             <h4 className='mt-1 mt-sm-1'>I choose...</h4>
             
-            <div className={classNames}>
-              <div className="front">
-                <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={() => {classNames.includes("flip") ? classNames+= " flip" : classNames.split(" ")[0]}}/>
-              </div>
+              <div className="flip-box logo mb-3 mx-auto">
+                <div className={tailsHeads==="heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
+                  <div className="flip-box-front">
+                    <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={() => {toggleHeadsTails();}}/>
+                  </div>
+                  <div className="flip-box-back">
+                     <img src={LOGOBACK}  alt="logoback" width="250" height="250" onClick={() => {toggleHeadsTails();}}/>
+                  </div>
+                </div>
+
               
             </div>
             
 
-            <div id="game" class="game">
-                <h4 className="start text-uppercase">insert coin</h4>
+            <div id="game" className="game">
+                <h4 className="start text-uppercase mb-3">insert coin</h4>
               </div>
             <div className="row">
               <div className="col-4">

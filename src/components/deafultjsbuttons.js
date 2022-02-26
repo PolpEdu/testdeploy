@@ -31,7 +31,7 @@ document.querySelectorAll('.wallet-adapter-button').forEach(button => {
             '--z-before': 0,
             duration: .2,
             onComplete() {
-                particles(button.querySelector('.emitter'), 100, -4, 6, -80, -50);
+                
                 gsap.to(button, {
                     '--icon-x': 0,
                     '--icon-y': 0,
@@ -80,7 +80,6 @@ document.querySelectorAll('.logo').forEach(button => {
             '--z-before': 0,
             duration: .2,
             onComplete() {
-                particles(button.querySelector('.emitter'), 100, -4, 6, -80, -50);
                 gsap.to(button, {
                     '--icon-x': 0,
                     '--icon-y': 0,
@@ -217,7 +216,6 @@ for(var i = 0; i < buttons.length; i++) {
         newClass = 'btn-center';
       }
     }
-    // remove prev class
     var clearedClassList = this.className.replace(/btn-center|btn-right|btn-left/gi, "").trim();
     this.className = clearedClassList + " " + newClass;
   });
@@ -227,7 +225,7 @@ for(var i = 0; i < buttons.length; i++) {
 //
 // ---Retro Submit Button---
 //
-var pButton = document.querySelector('.loader-button');
+/*var pButton = document.querySelector('.loader-button');
 
 // Click
 pButton.addEventListener('mousedown', function() {
@@ -235,7 +233,7 @@ pButton.addEventListener('mousedown', function() {
 });
 pButton.addEventListener('mouseup', function() {
   this.classList.remove('btn-active');
-});
+});*/
 
 
 function classReg( className ) {

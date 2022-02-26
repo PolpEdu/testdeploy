@@ -2,7 +2,7 @@ import { connect, Contract, keyStores, WalletConnection, utils,providers } from 
 import getConfig from './config'
 
 let node_env = process.env.NODE_ENV || 'testnet';
-console.log(node_env)
+//console.log(node_env)
 const nearConfig = getConfig(node_env)
 
 let providerurl = "https://archival-rpc."+node_env+".near.org";
