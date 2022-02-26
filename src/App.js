@@ -157,6 +157,7 @@ export default function App() {
     }
   }
   
+  
   console.log(ammoutNEAR)
   let classNames = 'logo mb-3 mx-auto';
   return (
@@ -257,7 +258,6 @@ export default function App() {
             <>
               {txsResult==="true" ?
               <div>
-                
                 YOU WON!
               </div>
               :
@@ -287,7 +287,7 @@ export default function App() {
             
             <div className={classNames}>
               <div className="front">
-                <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={ () => {classNames.includes("flip") ? classNames+= " flip" : classNames.split(" ")[0]}}/>
+                <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={() => {classNames.includes("flip") ? classNames+= " flip" : classNames.split(" ")[0]}}/>
               </div>
               
             </div>
@@ -327,16 +327,16 @@ export default function App() {
 
           <hr/>
           <button
-              className="button button-retro is-warning"
-              onClick={event => {
-                setButtonDisabled(true)
-                calledContractHandler(true);
-                flip(tailsHeads, ammoutNEAR)
-                
-                /*code doesnt reach here*/
-              }}
-              disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR===""}
-                >Flip!</button>
+            className="button button-retro is-warning"
+            onClick={event => {
+              setButtonDisabled(true)
+              calledContractHandler(true);
+              flip(tailsHeads==="heads", ammoutNEAR)
+              
+              /*code doesnt reach here*/
+            }}
+            disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR===""}
+          >Flip!</button>
             
           </div>
           }
