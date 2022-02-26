@@ -67,10 +67,10 @@
 	 background-color: #37474f;
 }
  .retro-btn.danger .buttoncool .btn-inner .content-wrapper:before {
-	 background-color: #590000;
+	 background-color: #551816;
 }
  .retro-btn.danger .buttoncool .btn-inner .content-wrapper .btn-content {
-	 background-color: #c00;
+	 background-color: #DD403A;
 }
  .retro-btn.warning .buttoncool .btn-inner .content-wrapper:before {
 	 background-color: #6a3800;
@@ -131,7 +131,7 @@
 	 background-color: rgba(13, 13, 13, .1);
 }
  .retro-btn .buttoncool:before {
-	 content: " ";
+	 content: "";
 	 background-color: rgba(13, 13, 13, .3);
 	 width: calc(100% - 2px);
 	 height: calc(100% - 4px);
@@ -211,7 +211,7 @@
 }
  .retro-btn .buttoncool .btn-inner .content-wrapper:before {
 	 background-image: initial;
-	 background-color: #004d40;
+	 background-color: #363f11;
 	 content: " ";
 	 border-radius: 3px;
 	 top: auto;
@@ -232,7 +232,7 @@
 }
  .retro-btn .buttoncool .btn-inner .content-wrapper .btn-content {
 	 background-image: initial;
-	 background-color: #26a69a;
+	 background-color: #697A21;
 	 color: #ebf1f8;
 	 position: relative;
 	 display: -webkit-box;
@@ -305,7 +305,7 @@
 	 padding: 0 60px;
 	 outline: none;
 	 border: none;
-	 background: #1d9650;
+	 background: #ffffff;
 	 color: #fff;
 	 text-transform: uppercase;
 	 letter-spacing: 1px;

@@ -157,6 +157,7 @@ export default function App() {
     }
   }
   
+  console.log(ammoutNEAR)
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -269,7 +270,7 @@ export default function App() {
             </>
             }
           </>  :
-          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"550px"}}>
+          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"650px"}}>
           
 
           <h1 className="textsurprese font-weight-normal" style={{fontSize:"2rem"}}>{surprisePhrase}</h1>
@@ -277,7 +278,7 @@ export default function App() {
 
           { !window.walletConnection.isSignedIn() ? 
           <>
-            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="224" height="224"/>
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-2 mx-auto" alt="logo" width="250" height="250"/>
             <NotLogged/>
           </> :
           <div className='d-flex flex-column '>
@@ -289,11 +290,11 @@ export default function App() {
               </div>
             <div className="row">
               <div className="col-4">
+                
                 <button className="button button-retro is-warning" onClick={() => setPrice("0.5")}>0.5 NEAR</button>
               </div>
               <div className="col-4">
                 <button className="button button-retro is-warning" onClick={() => setPrice("1")}>1 NEAR</button>
-
               </div>
               <div className="col-4">
                 <button className="button button-retro is-warning" onClick={() => setPrice("25")}>25 NEAR</button>
@@ -316,16 +317,17 @@ export default function App() {
               </div>
             </div>
 
-          
+          <hr/>
           <button
+              className="button button-retro is-warning"
               onClick={event => {
                 setButtonDisabled(true)
                 calledContractHandler(true);
-                flip(tailsHeads==="heads", ammoutNEAR)
+                flip(tailsHeads, ammoutNEAR)
                 
                 /*code doesnt reach here*/
               }}
-              disabled={buttonDisabled || tailsHeads==="" /*|| ammoutNEAR==="" also need to have the ammount selected*/}
+              disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR===""}
                 >Flip!</button>
             
           </div>

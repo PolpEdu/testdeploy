@@ -25,7 +25,7 @@ html {
   font-size: calc(0.8em + 0.5vw);
   line-height: 1.3;
 
-  --bg: #1e1e1e;
+  --bg: #3E363F;
   --fg: #efefef;
   --gray: #aaa;
   --shadow: #2a2a2a;
@@ -54,7 +54,7 @@ body, html {
 }
 
 .dark {
-  background-color: rgb(15, 23, 42);
+  background-color: rgb(18, 26, 44);
   min-height: 100vh;
 }
 
@@ -268,7 +268,6 @@ code {
   .maincenter, .play {
     padding-left: 15px;
     padding-right: 15px;
-    padding-top: 15px;
 
   }
 
@@ -304,7 +303,7 @@ code {
 
 .maincenter {
     width: 100%;
-    max-width: 420px;
+    max-width: 24rem;
     margin: auto;
 }
 
@@ -552,7 +551,7 @@ li{
   white-space: normal; 
   position: relative;
   display: inline-block;
-  padding: 10px 8px;
+  padding: 12px 8px;
   width: 100%;
   text-align: center;
   vertical-align: middle;
@@ -560,10 +559,11 @@ li{
   user-select: none;
   color: #141418;
   background-color: #fff;
-  box-shadow: inset -3px -3px #adafbc;
+  box-shadow: inset -3px -3px #b8bac5;
   will-change: transform;
   transition: transform 0.1s ease-in-out;
   font-weight: bold;
+  white-space: nowrap;
 }
 .button-retro:hover {
   background-color: #e7e7e7;
@@ -580,9 +580,15 @@ li{
   width: 100%;
   height: 100%;
   content: "";
-  border-color: #141418;
+  border-color: #0D0A0B;
   border-style: solid;
-  border-width: 4px;
+  border-width:4px;
+}
+
+.textsurprese {
+  /* nowrap*/
+  text-align: center;
+  min-height: 2rem;
 }
 .button-retro::before {
   top: -4px;
@@ -596,22 +602,31 @@ li{
   border-top: 2px;
   border-bottom: 2px;
 }
-.button-retro:focus {
-  outline: 4px solid currentColor;
+.selected {
+  outline: 4px solid #000;
 }
 .button-retro.is-warning {
   color: #141418;
   background-color: #f7d51d;
-  box-shadow: inset 0px -3px #e59400;
+  box-shadow: inset 0px -3px #946000;
   will-change: transform;
   transition: transform 0.1s ease-in-out;
 }
 .button-retro.is-warning:hover {
   background-color: #f2c409;
-  box-shadow: inset 0px -4px #e59400;
+  box-shadow: inset 0px -4px rgb(82, 49, 0);
   transform: translateY(-1px);
 }
 .button-retro.is-warning:active {
-  box-shadow: inset 0px -4px #ffae19;
+  box-shadow: inset 0px -4px #271900;
   transform: translateY(1px);
+}
+.button-retro:disabled {
+  background-color: #635c35;
+  box-shadow: inset 0px -3px #493f2d;
+}
+
+.button-retro:hover:disabled {
+  background-color: #8d834a;
+  box-shadow: inset 0px -3px #5a4d35;
 }
