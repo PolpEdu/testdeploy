@@ -53,22 +53,19 @@ impl Welcome {
         let seed = env::random_seed();
         let rng = env::sha256(seed.as_slice());
 
-        env::log(format!("Random seed: {:?}", seed).as_bytes());
-        env::log(format!("Random seed2: {:?}", env::random_seed()).as_bytes());
-        env::log(format!("rng: {:?}", rng).as_bytes());
-        env::log(format!("block hash: {:?}", env::block_index()).as_bytes());
         //env::log(format!("{:?}", rng).as_bytes());
 
 
         let result = rng.as_slice()[0] % 2 == 0;
-        env::log(format!("{:?}", result).as_bytes());
 
         //return result; //returns true 50% of the time otherwise false
         if result == option{
             let to: AccountId = env::signer_account_id(); //env::current_account_id() //"ertemo.testnet".parse().unwrap();
             Promise::new(to).transfer(amount*2);
+            env::log(format!("lucky you").as_bytes());
             return true;
         }
+        env::log(format!("lmao rugged xddddddd!111!!1").as_bytes());
         return false;
     }
 }
