@@ -452,8 +452,8 @@ h1 {
 
 aside {
   position: absolute;
-  animation: notify ease-in-out 6s;
-  background-color: #0D1F22;
+  animation: notify ease-in-out 7s;
+  background-color: #020024;
   border-radius: 5px;
   bottom: 0;
   font-size: 0.8em;
@@ -464,9 +464,12 @@ aside {
   right: 0;
   z-index: 11;
 }
+aside:hover {
+  animation-play-state: paused;
+}
 aside footer {
   display: flex;
-  font-size: 0.9em;
+  font-size:1em;
   justify-content: space-between;
   margin-top: 0.5em;
 }
@@ -474,7 +477,11 @@ aside footer *:first-child {
   color: rgb(116, 194, 0);
 }
 aside footer *:last-child {
-  color: gray;
+  color: rgb(150, 150, 150);
+}
+
+.err {
+    color: rgb(236, 79, 79)!important;
 }
 
 .d-sm-inline-flex {

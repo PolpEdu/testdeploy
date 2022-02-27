@@ -4,7 +4,7 @@ import './global.css'
 import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, flip,NotificationError, gettxsRes, menusayings, hoverEmojis} from './utils'
+import { logout, convertYocto, flip, gettxsRes, menusayings} from './utils'
 import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
@@ -36,13 +36,14 @@ export default function App() {
   img2.src = LOGOBACK;
   img3.src = LOGODOG;
 
-
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
 
   // after submitting the form, we want to show Notification
   const [showNotification, setShowNotification] = React.useState(false)
+
 
   // on the top right
   const [balance, setbalance] = React.useState("")
@@ -65,6 +66,14 @@ export default function App() {
 
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
 
+  let msg = "";
+  if(searchParams.get("errorCode")) {
+    msg = searchParams.get("errorCode")+ ", "+(searchParams.get("errorMessage").replaceAll("%20"," "))+".";
+    
+  }
+
+  const[errormsg, setErrormsg] = React.useState(msg);
+
   const [txsResult, settxsResult] = React.useState("");
 
   //popup
@@ -85,14 +94,16 @@ export default function App() {
     setammout(price)
   }
 
-  const navigate = useNavigate()
   const resetGame = () => {
     setTailsHeads(Math.random()<0.5 ? "tails" : "heads")
     settxsHash("")
     settxsResult("")
+    setErrormsg("")
     
 
     searchParams.delete("transactionHashes")
+    searchParams.delete("errorCode")
+    searchParams.delete("errorMessage")
     navigate(searchParams.toString());
   }
 
@@ -100,6 +111,7 @@ export default function App() {
   const getTxsResult = async () => {
     let decodedstr = ""
     await gettxsRes(txsHashes).then(res => {
+      console.log(res)
       setShowNotification(true)
 
       let decoded = Buffer.from(res.status.SuccessValue, 'base64')
@@ -127,9 +139,14 @@ export default function App() {
         }).catch(e => {
           console.log('There has been a problem with getting your balance: ' + e.message);
           setbalance("Couldn't Fetch Balance");
-         <NotificationError/>
         });
-        
+
+
+        searchParams.delete("errorCode");
+        searchParams.delete("errorMessage");
+        navigate(searchParams.toString());
+
+
         getTxsResult(txsHashes);
       } 
 
@@ -159,6 +176,7 @@ export default function App() {
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
+      {errormsg && <NotificationError err={errormsg}/>}
       <div className='social-icons'>
         <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
           <div className='mt-3 d-flex flex-column shortcut-row'>
@@ -398,6 +416,28 @@ function Notification() {
       </a>
       <footer>
         <div>✔ Succeeded</div>
+        <div>Just now</div>
+      </footer>
+    </aside>
+  )
+}
+
+function NotificationError(props) {
+  const urlPrefix = "https://explorer."+networkId+".near.org/accounts";
+
+  return (
+    <aside>
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
+        {window.accountId}
+      </a>
+      {' '/* React trims whitespace around tags; insert literal space character when needed */}
+      tried to call a method in Contract:
+      {' '}
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
+        {window.contract.contractId}
+      </a>
+      <footer>
+        <div className='err'>❌ Error: <span style={{color: "white"}}>{props.err}</span></div>
         <div>Just now</div>
       </footer>
     </aside>

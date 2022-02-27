@@ -104,25 +104,7 @@ export function flip(args, ammoutNEAR) {
     contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR})
 }
 
-function NotificationError() {
-  return (
-    <aside>
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
-        {window.accountId}
-      </a>
-      {' '/* React trims whitespace around tags; insert literal space character when needed */}
-      Transaction failed.
-      {' '}
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
-        {window.contract.contractId}
-      </a>
-      <footer>
-        <div>❌ Error</div>
-        <div>Just now</div>
-      </footer>
-    </aside>
-  )
-}
+
 
 
 
