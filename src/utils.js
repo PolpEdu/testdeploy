@@ -12,7 +12,7 @@ const provider = new providers.JsonRpcProvider(providerurl);
 
 
 let near;
-const fees = 1.035;
+export const fees = 1.035;
 
 export const menusayings = [
   "Near Coin Flip!",
@@ -66,7 +66,6 @@ export async function initContract() {
     sender: window.walletConnection.account(), // account object to initialize and sign transactions.
   })
 }
-
 
 export function convertYocto(YOCTO){
   return utils.format.formatNearAmount(YOCTO);

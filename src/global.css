@@ -458,7 +458,7 @@ aside {
   bottom: 0;
   font-size: 0.8em;
   margin: 1em;
-  padding: 1em;
+  padding: 0.8em;
   position: fixed;
   transform: translateY(10em);
   right: 0;
@@ -481,13 +481,29 @@ aside footer *:last-child {
 }
 
 .err {
-    color: rgb(236, 79, 79)!important;
+    color: rgb(252, 0, 0)!important;
 }
 
 .d-sm-inline-flex {
     display: inline-flex!important;
 }
 
+ .button-retro.is-primary {
+	 color: #fff;
+	 background-color: #92cc41;
+	 box-shadow: inset -3px -3px #4aa52e;
+	 will-change: transform;
+	 transition: transform 0.1s ease-in-out;
+}
+ .button-retro.is-primary:hover {
+	 background-color: #76c442;
+	 box-shadow: inset -4px -4px #4aa52e;
+	 transform: translateY(-1px);
+}
+ .button-retro.is-primary:active {
+	 box-shadow: inset -4px -4px #5ec93d;
+	 transform: translateY(1px);
+}
 
  
 ul.ba {
@@ -687,3 +703,20 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   color: white;
   transform: rotateY(180deg);
 }
+
+ .button-retro.is-error {
+	 color: #fff;
+	 background-color: #e76e55;
+	 box-shadow: inset -3px -3px #8c2022;
+	 will-change: transform;
+	 transition: transform 0.1s ease-in-out;
+}
+ .button-retro.is-error:hover {
+	 background-color: #ce372b;
+	 box-shadow: inset -4px -4px #8c2022;
+	 transform: translateY(-1px);
+}
+ .button-retro.is-error:active {
+	 box-shadow: inset -4px -4px #b6292c;
+   transform: translateY(1px);
+ }

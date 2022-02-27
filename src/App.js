@@ -4,7 +4,7 @@ import './global.css'
 import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, flip, gettxsRes, menusayings} from './utils'
+import { logout, convertYocto, flip, gettxsRes, menusayings, fees} from './utils'
 import { NotLogged, Loading, RecentPlays } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
@@ -27,6 +27,8 @@ function genrandomphrase() {
 }
 
 export default function App() {
+
+  
 
   img1 = new Image();
   img2 = new Image();
@@ -61,6 +63,7 @@ export default function App() {
   //
   const [ammoutNEAR, setammout] = React.useState("")
 
+  const [ammountWon, setWonAmmount] = React.useState("")
 
 
 
@@ -99,6 +102,7 @@ export default function App() {
     settxsHash("")
     settxsResult("")
     setErrormsg("")
+    setWonAmmount("")
     
 
     searchParams.delete("transactionHashes")
@@ -109,19 +113,39 @@ export default function App() {
 
   
   const getTxsResult = async () => {
-    let decodedstr = ""
+    let decodedstr = "";
+    let decodedWonAmmountstr = "";
+
     await gettxsRes(txsHashes).then(res => {
       console.log(res)
       setShowNotification(true)
 
       let decoded = Buffer.from(res.status.SuccessValue, 'base64')
+      decodedstr = decoded.toString("ascii");
+
+      let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit/fees;
       
-      //each element of decoded contains de ASCII value of the character
-      decodedstr = decoded.toString('ascii')
+      console.log(decodedWonAmmount);
+      console.log(decodedstr);
+
+      try {
+        decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', {useGrouping:false}));
+        
+      } catch(e) {
+        console.log("Error converting ammount bet to string.");
+      }
+
+      console.log("decoded won ammount: "+decodedWonAmmountstr)
+      console.log("decoded result: "+ decodedstr)
+      
     }).catch(e => {
+      if(!e instanceof TypeError) {
+        console.log(e);
+      }
       
     })
     settxsResult(decodedstr);
+    setWonAmmount(decodedWonAmmountstr)
   }
 
   
@@ -267,24 +291,35 @@ export default function App() {
         
         <div className='play form-signin'>
           {txsHashes? 
-          <>
+          <div className='maincenter text-center'>
             {txsResult==="" ? <Loading/> :
-            <>
+              <>
               {txsResult==="true" ?
+              <>
+
               <div>
                 YOU WON!
               </div>
-              :
-              <div>
-                You lost bro.
-              </div>
-            }
-            <button className='btn' onClick={resetGame}>
-                {txsResult==="true" ? "Play Again" : "Try Again"}
+              <button className="button button-retro is-primary" onClick={resetGame}>
+                Play Again
               </button>
-            </>
+              </>
+              
+              :
+              <>
+              <div>
+                Game Over!
+              </div>
+               <button className="button button-retro is-error" onClick={resetGame}>
+                  Try Again
+              </button>
+              </>
+              
             }
-          </>  :
+           </>
+            }
+            </div>
+            :
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"650px"}}>
           
 
@@ -415,7 +450,6 @@ function Notification() {
         {window.contract.contractId}
       </a>
       <footer>
-        <div>✔ Succeeded</div>
         <div>Just now</div>
       </footer>
     </aside>
