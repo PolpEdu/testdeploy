@@ -117,16 +117,13 @@ export default function App() {
     let decodedWonAmmountstr = "";
 
     await gettxsRes(txsHashes).then(res => {
-      console.log(res)
+      //console.log(res)
       setShowNotification(true)
 
       let decoded = Buffer.from(res.status.SuccessValue, 'base64')
       decodedstr = decoded.toString("ascii");
 
       let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit/fees;
-      
-      console.log(decodedWonAmmount);
-      console.log(decodedstr);
 
       try {
         decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', {useGrouping:false}));
@@ -296,8 +293,7 @@ export default function App() {
               <>
               {txsResult==="true" ?
               <>
-
-              <div>
+              <div className="textinfowin font-weight-normal" style={{fontSize:"2rem"}}>
                 YOU WON!
               </div>
               <button className="button button-retro is-primary" onClick={resetGame}>
@@ -307,7 +303,7 @@ export default function App() {
               
               :
               <>
-              <div>
+              <div className="textinfolose font-weight-normal" style={{fontSize:"2rem"}}>
                 Game Over!
               </div>
                <button className="button button-retro is-error" onClick={resetGame}>
