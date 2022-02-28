@@ -452,13 +452,13 @@ h1 {
 
 aside {
   position: absolute;
-  animation: notify ease-in-out 7s;
+  animation: notify ease-in-out 4s;
   background-color: #020024;
   border-radius: 5px;
   bottom: 0;
-  font-size: 0.8em;
+  font-size: 0.7em;
   margin: 1em;
-  padding: 0.8em;
+  padding: 0.7em;
   position: fixed;
   transform: translateY(10em);
   right: 0;

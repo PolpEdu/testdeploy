@@ -15,12 +15,12 @@ import LOGOBACK from './assets/nearcoin.svg';
 import { useSearchParams, useNavigate} from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
+import useWindowSize from 'react-use/lib/useWindowSize'
 
-import {setup, draw} from './components/confettis.js' 
+import Confetti from 'react-confetti'
 
 import getConfig from './config'
 
-import Sketch from "react-p5";
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance= 0.05;
@@ -33,7 +33,7 @@ function genrandomphrase() {
 
 export default function App() {
 
-  
+  const { width, height } = useWindowSize()
 
   img1 = new Image();
   img2 = new Image();
@@ -298,13 +298,18 @@ export default function App() {
               <>
               {txsResult==="true" ?
                 <>
+                <Confetti
+                width={width}
+                height={height}
+                />
+                
+
                 <div className="textinfowin font-weight-normal" style={{fontSize:"2rem"}}>
                   YOU WON!
                 </div>
                 <button className="button button-retro is-primary" onClick={resetGame}>
                   Play Again
                 </button>
-                <Sketch setup={setup} draw={draw} className="App" />
                 </>
               
               :
@@ -330,19 +335,19 @@ export default function App() {
 
           { !window.walletConnection.isSignedIn() ? 
           <>
-            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="250" height="250"/>
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="240" height="240"/>
             <NotLogged/>
           </> :
           <div className='d-flex flex-column '>
             <h4 className='mt-1 mt-sm-1'>I like...</h4>
             
-              <div className="flip-box logo mb-3 mx-auto">
+              <div className="flip-box logo mb-2 mx-auto">
                 <div className={tailsHeads==="heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
                   <div className="flip-box-front">
-                    <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="250" height="250" onClick={() => {toggleHeadsTails();}}/>
+                    <img src={showDoggo ? LOGODOG : LOGOMAIN}  alt="logo" width="240" height="240" onClick={() => {toggleHeadsTails();}}/>
                   </div>
                   <div className="flip-box-back">
-                     <img src={LOGOBACK}  alt="logoback" width="250" height="250" onClick={() => {toggleHeadsTails();}}/>
+                     <img src={LOGOBACK}  alt="logoback" width="240" height="240" onClick={() => {toggleHeadsTails();}}/>
                   </div>
                 </div>
 
