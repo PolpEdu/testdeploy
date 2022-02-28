@@ -293,7 +293,7 @@ export default function App() {
                     </div>
                   </Modal.Body>
                   <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                      <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
                       <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
                   </div>
               </Modal>
