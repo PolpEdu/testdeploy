@@ -13,11 +13,11 @@ class Particule {
     this.parent = parent;
     this.gravite = parent.gravite;
     this.reinit(p5);
-    this.forme = round(random(0, 1));
+    this.forme = p5.round(p5.random(0, 1));
     this.etape = 0;
     this.prise = 0;
-    this.priseFacteur = random(-0.02, 0.02);
-    this.multFacteur = random(0.01, 0.08);
+    this.priseFacteur = p5.random(-0.02, 0.02);
+    this.multFacteur =p5.random(0.01, 0.08);
     this.priseAngle = 0;
     this.priseVitesse = 0.05;
   }
