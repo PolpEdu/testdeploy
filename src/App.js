@@ -106,6 +106,8 @@ export default function App() {
 
   const togglesetshowwhosplayin = () => {
     console.log("HEY")
+    console.log(showwhosplayin)
+
     setshowwhosplayin(!showwhosplayin)
   }
 
@@ -233,8 +235,7 @@ export default function App() {
                     <span className='content-wrapper'>
                       <span className='btn-content'  >
                         <span className='btn-content-inner' label="WHO'S PLAYIN">
-                          {showwhosplayin && 
-                          <Modal show={show} onHide={togglesetshowwhosplayin} aria-labelledby="contained-modal-title-vcenter" centered>
+                          <Modal show={showwhosplayin} onHide={togglesetshowwhosplayin} aria-labelledby="contained-modal-title-vcenter" centered>
                             <Modal.Body className='p-0' style={{color:"black"}}>
                               <div className='d-flex flex-column '>
                                 <div className="card-body text-center">
@@ -243,11 +244,10 @@ export default function App() {
                               </div>
                             </Modal.Body>
                             <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                                <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                                <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
                                 <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
                             </div>
                           </Modal>
-                        }
                         </span>
                       </span>
                     </span>
@@ -293,7 +293,7 @@ export default function App() {
                     </div>
                   </Modal.Body>
                   <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                      <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
                       <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
                   </div>
               </Modal>
@@ -359,6 +359,7 @@ export default function App() {
           <>
             <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="240" height="240"/>
             <NotLogged/>
+                   
           </> :
           <div className='d-flex flex-column '>
             <h4 className='mt-1 mt-sm-1'>I like...</h4>
@@ -394,7 +395,7 @@ export default function App() {
               </div>
               
             </div>
-            <div className="row my-3">
+            <div className="row mt-3">
               <div className="col-4">
               <button className={ammoutNEAR==="5.0" ? "button button-retro is-selected": "button button-retro is-warning"}  onClick={() => setPrice("5.0")}>5.0 NEAR</button>
 
