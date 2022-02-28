@@ -724,7 +724,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   text-align: center;
   min-height: 2rem;
   color:rgb(116, 194, 0);
-  text-shadow: 1px 1px 0px rgb(255, 214, 125);
+  text-shadow: 1px 1px 0px rgb(177, 255, 125);
   animation: opacityPulse 1s ease-out;
   animation-iteration-count: infinite;
  }
@@ -732,8 +732,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   text-align: center;
   min-height: 2rem;
   color:rgb(194, 23, 0);
-  text-shadow: 1px 1px 0px rgb(236 162 0);
-  animation: opacityPulse 2s linear;
+  text-shadow: 1px 1px 0px rgb(100, 38, 19);
+  animation: opacityPulse 1.5s linear;
   animation-iteration-count: infinite;
  }
 
