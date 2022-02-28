@@ -438,6 +438,7 @@ h1 {
   width: 100%;
   max-width: 1070px;
   margin: auto;
+  margin-bottom: 0px;
 }
 
 .toast-container {
@@ -583,7 +584,8 @@ li{
 
 .textsurprese {
   text-align: center;
-  min-height: 2rem;
+  min-height: 1.5rem;
+  max-height: 3rem;
 }
 .button-retro::before {
   top: -4px;
@@ -731,7 +733,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
  .textinfolose {
   text-align: center;
   min-height: 2rem;
-  color:rgb(194, 23, 0);
+  color:rgb(255, 50, 23);
   text-shadow: 1px 1px 0px rgb(100, 38, 19);
   animation: opacityPulse 1.5s linear;
   animation-iteration-count: infinite;

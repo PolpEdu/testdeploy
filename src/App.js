@@ -239,13 +239,12 @@ export default function App() {
                             <Modal.Body className='p-0' style={{color:"black"}}>
                               <div className='d-flex flex-column '>
                                 <div className="card-body text-center">
-                                  <h4 style={{fontWeight:"bold"}}>Who's playin this shit game?</h4>
+                                  <h4 style={{fontWeight:"bold", fontSize:"1.3rem"}}>Who's playin this shit game?</h4>
                                 </div>
                               </div>
                             </Modal.Body>
                             <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                                <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
-                                <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
+                                <button className='w-80 my-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-primary' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Ok Cool.</button>
                             </div>
                           </Modal>
                         </span>
@@ -321,8 +320,8 @@ export default function App() {
               {txsResult==="true" ?
                 <>
                 <Confetti
-                width={width}
-                height={height}
+                width={width-1}
+                height={height-1}
                 />
                 
 
@@ -352,7 +351,7 @@ export default function App() {
           <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"860px"}: {maxWidth:"650px"}}>
           
 
-          <h1 className="textsurprese font-weight-normal" style={{fontSize:"1.8rem"}}>{surprisePhrase}</h1>
+          <h1 className="textsurprese font-weight-normal" style={{fontSize:"1.5rem"}}>{surprisePhrase}</h1>
           <div className='maincenter text-center'>
 
           { !window.walletConnection.isSignedIn() ? 
@@ -362,7 +361,7 @@ export default function App() {
                    
           </> :
           <div className='d-flex flex-column '>
-            <h4 className='mt-1 mt-sm-1'>I like...</h4>
+            <h4 className='mt-1 mt-sm-1' fontSize="1.3rem">I like...</h4>
             
               <div className="flip-box logo mb-2 mx-auto">
                 <div className={tailsHeads==="heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
