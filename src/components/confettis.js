@@ -9,10 +9,10 @@ let themeCouleur = [
   '#FF5722'
 ];
 class Particule {
-  constructor(parent) {
+  constructor(parent, p5) {
     this.parent = parent;
     this.gravite = parent.gravite;
-    this.reinit();
+    this.reinit(p5);
     this.forme = round(random(0, 1));
     this.etape = 0;
     this.prise = 0;
@@ -21,16 +21,16 @@ class Particule {
     this.priseAngle = 0;
     this.priseVitesse = 0.05;
   }
-  reinit() {
+  reinit(p5) {
 
     this.position = this.parent.position.copy();
-    this.position.y = random(-20, -100);
-    this.position.x = random(0, width);
-    this.velocite = createVector(random(-6, 6), random(-10, 2));
-    this.friction = random(0.995, 0.98);
-    this.taille = round(random(5, 15));
+    this.position.y = p5.random(-20, -100);
+    this.position.x = p5.random(0, width);
+    this.velocite = p5.createVector(p5.random(-6, 6), p5.random(-10, 2));
+    this.friction = p5.random(0.995, 0.98);
+    this.taille = p5.round(p5.random(5, 15));
     this.moitie = this.taille / 2;
-    this.couleur = color(random(themeCouleur));
+    this.couleur = p5.color(p5.random(themeCouleur));
 
   }
   dessiner() {
@@ -59,14 +59,14 @@ class Particule {
     this.velocite.mult(this.friction);
     this.position.add(this.velocite);
     if (this.position.y > height) {
-      this.reinit();
+      this.reinit(p5);
     }
 
     if (this.position.x < 0) {
-      this.reinit();
+      this.reinit(p5);
     }
     if (this.position.x > width + 10) {
-      this.reinit();
+      this.reinit(p5);
     }
   }
   rendu() {
@@ -76,47 +76,59 @@ class Particule {
   }
 }
 class SystemeDeParticules {
-  constructor(nombreMax, position, gravite) {
+  constructor(nombreMax, position, gravite, creatVector, p5) {
     this.position = position.copy();
     this.nombreMax = nombreMax;
-    this.gravite = createVector(0, 0.1);
+    this.gravite =creatVector;
     this.friction = 0.98;
     // le tableau 
     this.particules = [];
     for (var i = 0; i < this.nombreMax; i++) {
-      this.particules.push(new Particule(this));
+      this.particules.push(new Particule(this, p5));
     }
   }
-  rendu() {
+  rendu(p5) {
     if (pression) {
       var force = p5.Vector.sub(nouvelle, ancienne);
       this.gravite.x = force.x / 20;
       this.gravite.y = force.y / 20;
     }
 
-    this.particules.forEach(particules => particules.rendu());
+    this.particules.forEach(particules => particules.rendu(p5));
   }
 }
 let confettis;
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  frameRate(60);
-  ancienne = createVector(0, 0);
-  nouvelle = createVector(0, 0);
-  confettis = new SystemeDeParticules(500, createVector(width / 2, -20));
+export function setup(p5) {
+  p5.createCanvas(p5.windowWidth, p5.windowHeight);
+  p5.frameRate(60);
+  ancienne = p5.createVector(0, 0);
+  nouvelle = p5.createVector(0, 0);
+  confettis = new SystemeDeParticules(500, p5.createVector(p5.width / 2, -20), p5.createVector(0, 0.1));
 }
 
-function draw() {
-  background(color("#111"));
+export function draw(p5) {
+  
+  //background(color("#111"));
   nouvelle.x = mouseX;
   nouvelle.y = mouseY;
-  confettis.rendu();
+  confettis.rendu(p5);
   ancienne.x = nouvelle.x;
   ancienne.y = nouvelle.y;
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  confettis.position = createVector(width / 2, -40);
+function windowResized(p5) {
+  p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+  confettis.position = p5.createVector(p5.width / 2, -40);
+}
+
+function mousePressed() {
+  next = 0;
+  pression = true;
+}
+
+function mouseReleased() {
+  pression = false;
+  confettis.gravite.y = 0.1;
+  confettis.gravite.x = 0;
 }

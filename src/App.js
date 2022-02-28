@@ -16,7 +16,12 @@ import { useSearchParams, useNavigate} from "react-router-dom";
 
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 
+import {setup, draw} from './components/confettis.js' 
+
 import getConfig from './config'
+
+import Sketch from "react-p5";
+
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance= 0.05;
 
@@ -133,7 +138,7 @@ export default function App() {
       }
 
       console.log("decoded won ammount: "+decodedWonAmmountstr)
-      console.log("decoded result: "+ decodedstr)
+      //console.log("decoded result: "+ decodedstr)
       
     }).catch(e => {
       if(!e instanceof TypeError) {
@@ -292,14 +297,15 @@ export default function App() {
             {txsResult==="" ? <Loading/> :
               <>
               {txsResult==="true" ?
-              <>
-              <div className="textinfowin font-weight-normal" style={{fontSize:"2rem"}}>
-                YOU WON!
-              </div>
-              <button className="button button-retro is-primary" onClick={resetGame}>
-                Play Again
-              </button>
-              </>
+                <>
+                <div className="textinfowin font-weight-normal" style={{fontSize:"2rem"}}>
+                  YOU WON!
+                </div>
+                <button className="button button-retro is-primary" onClick={resetGame}>
+                  Play Again
+                </button>
+                <Sketch setup={setup} draw={draw} className="App" />
+                </>
               
               :
               <>
@@ -328,7 +334,7 @@ export default function App() {
             <NotLogged/>
           </> :
           <div className='d-flex flex-column '>
-            <h4 className='mt-1 mt-sm-1'>I choose...</h4>
+            <h4 className='mt-1 mt-sm-1'>I like...</h4>
             
               <div className="flip-box logo mb-3 mx-auto">
                 <div className={tailsHeads==="heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
