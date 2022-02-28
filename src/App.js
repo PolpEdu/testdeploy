@@ -5,7 +5,7 @@ import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip, gettxsRes, menusayings, fees} from './utils'
-import { NotLogged, Loading, RecentPlays } from './components/logged';
+import { NotLogged, Loading } from './components/logged';
 
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
@@ -100,6 +100,13 @@ export default function App() {
 
   const setPrice = (price) => {
     setammout(price)
+  }
+
+  const [showwhosplayin, setshowwhosplayin] = React.useState(false);
+
+  const togglesetshowwhosplayin = () => {
+    console.log("HEY")
+    setshowwhosplayin(!showwhosplayin)
   }
 
   const resetGame = () => {
@@ -221,11 +228,26 @@ export default function App() {
                 </a>
               </div>
               <div role='button' className='retro-btn'>
-                <a className='buttoncool'> 
+                <a className='buttoncool' onClick={togglesetshowwhosplayin}> 
                   <span className='btn-inner'>
                     <span className='content-wrapper'>
-                      <span className='btn-content'>
+                      <span className='btn-content'  >
                         <span className='btn-content-inner' label="WHO'S PLAYIN">
+                          {showwhosplayin && 
+                          <Modal show={show} onHide={togglesetshowwhosplayin} aria-labelledby="contained-modal-title-vcenter" centered>
+                            <Modal.Body className='p-0' style={{color:"black"}}>
+                              <div className='d-flex flex-column '>
+                                <div className="card-body text-center">
+                                  <h4 style={{fontWeight:"bold"}}>Who's playin this shit game?</h4>
+                                </div>
+                              </div>
+                            </Modal.Body>
+                            <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
+                                <button className='w-80 mt-3 ms-3 me-3 wallet-adapter-button justify-content-center mx-auto btnhover' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                                <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
+                            </div>
+                          </Modal>
+                        }
                         </span>
                       </span>
                     </span>
@@ -327,7 +349,7 @@ export default function App() {
             }
             </div>
             :
-          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"870px"}: {maxWidth:"650px"}}>
+          <div className='menumain' style={ !window.walletConnection.isSignedIn() ? {maxWidth:"860px"}: {maxWidth:"650px"}}>
           
 
           <h1 className="textsurprese font-weight-normal" style={{fontSize:"1.8rem"}}>{surprisePhrase}</h1>

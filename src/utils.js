@@ -183,3 +183,29 @@ function rngTest() {
   }
 }
   
+async function getblockdetails () {
+  const blockDetails = await Promise.all(
+    blockArr.map((blockId) =>
+      near.connection.provider.block({
+        blockId,
+      })
+    )
+  );
+console.log(blockDetails);
+
+}
+
+export function RecentPlays() {
+  getblockdetails();
+  return(
+      <>
+          <div className="accordion text-center mb-2" id="myAccordion">
+            <h6 className="mt-3 w-60" style={{transition:"color 0.4 ease-in-out"}}>
+              <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
+                <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
+              </small>
+            </h6>
+          </div>
+          </>
+  );
+}
