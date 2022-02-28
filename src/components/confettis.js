@@ -39,19 +39,19 @@ class Particule {
 
     this.prise = this.priseFacteur + Math.cos(this.priseAngle) * this.multFacteur;
     this.priseAngle += this.priseVitesse;
-    translate(this.position.x, this.position.y);
-    rotate(this.velocite.x * 2);
-    scale(1, this.etape);
-    noStroke();
-    fill(this.couleur);
+    p5.translate(this.position.x, this.position.y);
+    p5.rotate(this.velocite.x * 2);
+    p5.scale(1, this.etape);
+    p5.noStroke();
+    p5.fill(this.couleur);
 
     if (this.forme === 0) {
-      rect(-this.moitie, -this.moitie, this.taille, this.taille);
+      p5.rect(-this.moitie, -this.moitie, this.taille, this.taille);
     } else {
-      ellipse(0, 0, this.taille, this.taille);
+      p5.ellipse(0, 0, this.taille, this.taille);
     }
 
-    resetMatrix();
+    p5.resetMatrix();
   }
   integration() {
     this.velocite.add(this.gravite);
