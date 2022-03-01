@@ -17,8 +17,6 @@ import { useSearchParams, useNavigate} from "react-router-dom";
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 import useWindowSize from 'react-use/lib/useWindowSize'
 
-import Confetti from 'react-confetti'
-
 import getConfig from './config'
 
 
