@@ -438,7 +438,6 @@ h1 {
   width: 100%;
   max-width: 1070px;
   margin: auto;
-  margin-bottom: 0px;
 }
 
 .toast-container {
@@ -705,38 +704,36 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   transform: rotateY(180deg);
 }
 
- .button-retro.is-error {
-	 color: #fff;
-	 background-color: #e76e55;
-	 box-shadow: inset -3px -3px #8c2022;
-	 will-change: transform;
-	 transition: transform 0.1s ease-in-out;
+.button-retro.is-error {
+  color: #fff;
+  background-color: #e76e55;
+  box-shadow: inset -3px -3px #8c2022;
+  will-change: transform;
+  transition: transform 0.1s ease-in-out;
 }
- .button-retro.is-error:hover {
-	 background-color: #ce372b;
-	 box-shadow: inset -4px -4px #8c2022;
-	 transform: translateY(-1px);
+.button-retro.is-error:hover {
+  background-color: #ce372b;
+  box-shadow: inset -4px -4px #8c2022;
+  transform: translateY(-1px);
 }
- .button-retro.is-error:active {
-	 box-shadow: inset -4px -4px #b6292c;
-   transform: translateY(1px);
- }
+.button-retro.is-error:active {
+  box-shadow: inset -4px -4px #b6292c;
+  transform: translateY(1px);
+}
 
- .textinfowin {
-  text-align: center;
-  min-height: 2rem;
-  color:rgb(116, 194, 0);
-  text-shadow: 1px 1px 0px rgb(177, 255, 125);
-  animation: opacityPulse 1s ease-out;
-  animation-iteration-count: infinite;
- }
- .textinfolose {
-  text-align: center;
-  min-height: 2rem;
-  color:rgb(255, 50, 23);
-  text-shadow: 1px 1px 0px rgb(100, 38, 19);
-  animation: opacityPulse 1.5s linear;
-  animation-iteration-count: infinite;
- }
-
-
+.textinfowin {
+text-align: center;
+min-height: 2rem;
+color:rgb(116, 194, 0);
+text-shadow: 1px 1px 0px rgb(177, 255, 125);
+animation: opacityPulse 1s ease-out;
+animation-iteration-count: infinite;
+}
+.textinfolose {
+text-align: center;
+min-height: 2rem;
+color:rgb(255, 50, 23);
+text-shadow: 1px 1px 0px rgb(100, 38, 19);
+animation: opacityPulse 1.5s linear;
+animation-iteration-count: infinite;
+}

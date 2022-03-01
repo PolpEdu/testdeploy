@@ -4,9 +4,9 @@ import './global.css'
 import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, flip, gettxsRes, menusayings, fees} from './utils'
+import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay} from './utils'
 import { NotLogged, Loading } from './components/logged';
-
+import Confetti from 'react-confetti';
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
 import LOGOMAIN from './assets/result.svg';
@@ -103,7 +103,6 @@ export default function App() {
   const [showwhosplayin, setshowwhosplayin] = React.useState(false);
 
   const togglesetshowwhosplayin = () => {
-    console.log("HEY")
     console.log(showwhosplayin)
 
     setshowwhosplayin(!showwhosplayin)
@@ -136,6 +135,8 @@ export default function App() {
       decodedstr = decoded.toString("ascii");
 
       let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit/fees;
+      
+      sendpostwithplay(txsHashes);
 
       try {
         decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', {useGrouping:false}));
@@ -153,6 +154,7 @@ export default function App() {
       }
       
     })
+
     settxsResult(decodedstr);
     setWonAmmount(decodedWonAmmountstr)
   }

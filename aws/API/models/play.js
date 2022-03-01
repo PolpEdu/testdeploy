@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const playschema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId, 
     walletaccount: {
         type: String,
         required: true,

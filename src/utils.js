@@ -1,5 +1,7 @@
 import { connect, Contract, keyStores, WalletConnection, utils,providers } from 'near-api-js'
 import getConfig from './config'
+import axios from 'axios';
+
 
 let node_env = process.env.NODE_ENV || 'testnet';
 //console.log(node_env)
@@ -67,6 +69,19 @@ export async function initContract() {
   })
 }
 
+export function sendpostwithplay(txHash) {
+
+    axios.post(process.env.DATABASE_URL+'/plays', {
+      txhash: txHash,
+      accountid: window.accountId,
+    }).then(res => {
+      console.log(res)
+    }).catch(e => {
+      console.log("Error Storing flip :(((");
+      console.log(e)
+    })
+}
+
 export function convertYocto(YOCTO){
   return utils.format.formatNearAmount(YOCTO);
 }
@@ -87,7 +102,8 @@ export function login() {
   // user's behalf.
   // This works by creating a new access key for the user's account and storing
   // the private key in localStorage.
-  window.walletConnection.requestSignIn(nearConfig.contractName)
+
+  window.walletConnection.requestSignIn(nearConfig.contractName);
 }
 
 export async function getState(txHash, accountId) {
