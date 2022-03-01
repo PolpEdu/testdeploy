@@ -199,14 +199,3 @@ function rngTest() {
   }
 }
   
-async function getblockdetails () {
-  const blockDetails = await Promise.all(
-    blockArr.map((blockId) =>
-      near.connection.provider.block({
-        blockId,
-      })
-    )
-  );
-console.log(blockDetails);
-
-}

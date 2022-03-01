@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const Play = require('../models/play');
 const path = require('path');
 const {keyStores ,providers} = require('near-api-js');
+let providerurl = "https://archival-rpc."+process.env.netinfo+".near.org";
+const provider = new providers.JsonRpcProvider(providerurl);
 const homedir = require("os").homedir();
 const CREDENTIALS_DIR = ".near-credentials";
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
@@ -11,18 +13,6 @@ require("dotenv").config();
 
 console.log("NET: " + process.env.netinfo); 
 
-const url =  "https://archival-rpc."+process.env.netinfo+".near.org";
-const config = {
-  nodeUrl: url,
-  deps: {
-    keyStore: new keyStores.UnencryptedFileSystemKeyStore(credentialsPath),
-  },
-};
-
-//network config (replace testnet with mainnet or betanet)
-const provider = new providers.JsonRpcProvider(
-  config
-);
 
 
 async function gettxsStatus(hash, id)  {
@@ -35,8 +25,7 @@ async function gettxsStatus(hash, id)  {
             throw new Error("HASH or ID is empty");
         } 
 
-        const result = await provider.txStatus(hash.toString(), id.toString());
-        console.log(result);
+        const result = await provider.txStatus(hash, id);
         return result;
     } catch (err) {
         console.log("Error getting transaction status!");
@@ -47,22 +36,26 @@ async function gettxsStatus(hash, id)  {
 }
 
 exports.postPlay = (req, res, next) => {
-    console.log(req.body);
     
     gettxsStatus(req.body.txhash, req.body.accountid)
     .then(result => {
         console.log(result);
-        if (result.status === "committed") {
+        // result.status.SuccessValue convert base64 to ascii
+        let asciisucess = Buffer.from(result.status.SuccessValue, 'base64').toString('ascii');
+
+        
+
+        if (asciisucess === 'false' || asciisucess === 'true') {
             const play = new Play({
             _id: new mongoose.Types.ObjectId(),
             walletaccount: req.body.accountid,
             txsHashes: req.body.txsHashes,
 
 
-            ammount: req.body.ammount,
+            /*ammount: req.body.ammount,
             streak: req.body.streak,
             size: req.body.size,
-            won: req.body.won,
+            won: req.body.won,*/
         });
         play.save().then(result => {
             res.status(201).json({
