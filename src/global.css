@@ -737,3 +737,10 @@ text-shadow: 1px 1px 0px rgb(100, 38, 19);
 animation: opacityPulse 1.5s linear;
 animation-iteration-count: infinite;
 }
+
+.form-signin2 {
+    width: 100%;
+    max-width: 600px;
+    padding: 15px;
+    margin: auto;
+}

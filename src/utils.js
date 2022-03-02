@@ -41,11 +41,6 @@ export const menusayings = [
   "one sec, let me call drake brb"
 ]
 
-
-export const buttonReddem = [
-  "I took the L",
-]
-
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
@@ -77,7 +72,7 @@ export function sendpostwithplay(txHash) {
     }).then(res => {
       console.log(res)
     }).catch(e => {
-      console.log("Error Storing flip :(((");
+      console.log("Error Storing flip :((( Don't worry, you still recieve your NEAR!");
       console.log(e)
     })
 }

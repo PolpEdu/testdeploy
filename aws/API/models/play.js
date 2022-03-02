@@ -22,7 +22,7 @@ const playschema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    size: {
+    side: {
         type: String,
         required: true,
     },

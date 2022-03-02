@@ -114,6 +114,7 @@ export default function App() {
     settxsResult("")
     setErrormsg("")
     setWonAmmount("")
+    setprocessing(false)
     
 
     searchParams.delete("transactionHashes")
@@ -121,6 +122,8 @@ export default function App() {
     searchParams.delete("errorMessage")
     navigate(searchParams.toString());
   }
+
+  const [processing, setprocessing] = React.useState(false);
 
   
   const getTxsResult = async () => {
@@ -292,7 +295,7 @@ export default function App() {
                     </div>
                   </Modal.Body>
                   <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                      <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Save</button>
+                      <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"1.1rem"}} onClick={handleClose}>Save</button>
                       <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{fontWeight: "semibold", fontSize:"1.1rem"}}>Disconnect Wallet</button>
                   </div>
               </Modal>
@@ -413,7 +416,8 @@ export default function App() {
           <button
             className="button button-retro is-warning"
             onClick={event => {
-              setButtonDisabled(true)
+              setButtonDisabled(true);
+              setprocessing(true);
               console.log(tailsHeads);
               console.log(ammoutNEAR);
               flip(tailsHeads==="heads", ammoutNEAR)
@@ -421,7 +425,7 @@ export default function App() {
               /*code doesnt reach here*/
             }}
             disabled={buttonDisabled || tailsHeads==="" || ammoutNEAR===""}
-          >Flip!</button>
+          >{processing ? <Loading size={"1.5rem"} color={"text-warning"}/> : "Flip!"}</button>
             
           </div>
           }

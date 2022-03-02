@@ -24,18 +24,39 @@ export function NotLogged() {
 
 
 export function RecentPlays() {
+    const[plays, setPlays] = React.useState([]);
+
+    React.useEffect(() => {
+        // GET request using fetch inside useEffect React hook
+        fetch(process.env.DATABASE_URL+"/plays")
+            .then(response => response.json())
+            .then(data => setPlays(data.total))
+            .catch(error => console.log("Error fetching Plays: ", error));
+    }, []);
+
     return(
-        <div>
-            yo
-            </div>
+        <>
+        <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
+            Recent Plays
+            
+        </div>
+        <div class="form-signin2 text-start">
+            <ul class="list-group">
+                <li class="list-group-item d-flex p-2 cursor-pointer">
+                    
+
+                </li>
+            </ul>
+        </div>
+        </>
     );
   }
 
 
 
-export function Loading() {
+export function Loading(props) {
     return (
-        <div className='spinner-border text-dark' role='status'><span className='sr-only'></span></div>
+        <div className={props.color === undefined ? 'spinner-border text-warning' : 'spinner-border '+ props.color} role='status' style={{width: props.size, height:props.size}}><span className='sr-only'></span></div>
     );
 } 
 
