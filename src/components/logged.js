@@ -1,9 +1,12 @@
 import React from 'react'
-import { login } from '../utils.js'
+import { getRecentPlays, login } from '../utils.js'
 import NearLogo from '../assets/logo-black.svg';
 
 
 export function NotLogged() {
+
+
+
     return (
         <>
         <div className="mt-5 mb-3">
@@ -28,17 +31,13 @@ export function RecentPlays() {
 
     React.useEffect(() => {
         // GET request using fetch inside useEffect React hook
-        fetch(process.env.DATABASE_URL+"/plays")
-            .then(response => response.json())
-            .then(data => setPlays(data.total))
-            .catch(error => console.log("Error fetching Plays: ", error));
+        setPlays(getRecentPlays());
     }, []);
 
     return(
         <>
         <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
             Recent Plays
-            
         </div>
         <div class="form-signin2 text-start">
             <ul class="list-group">

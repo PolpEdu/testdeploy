@@ -14,7 +14,6 @@ require("dotenv").config();
 console.log("NET: " + process.env.netinfo); 
 
 
-
 async function gettxsStatus(hash, id)  {
     try {
         //console.log("HASH: " + hash);
@@ -29,7 +28,7 @@ async function gettxsStatus(hash, id)  {
         return result;
     } catch (err) {
         console.log("Error getting transaction status!");
-        console.log(err);
+        
     }
 
 
@@ -141,19 +140,19 @@ exports.postPlay = (req, res, next) => {
 
 exports.getRecentPlays = (req, res, next) => {
 
-    Play.find({
-        walletaccount: id
-    }).sort({
-        date: -1
-    }).limit(10).exec().then(result => {
+    /* Get the 12 recent plays */
+    Play.find().sort({
+        _id: -1
+    }).limit(12).then(plays => {
         res.status(200).json({
-            message: "Plays fetched successfully!",
-            plays: result
+            message: "Fetched plays successfully!",
+            plays: plays
         });
-    }).catch(err => {
+    }
+    ).catch(err => {
         console.log(err);
         res.status(500).json({
             error: err
         });
     });
-}
+};

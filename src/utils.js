@@ -139,6 +139,42 @@ function NotificationTRANS(status) {
   )
 }
 
+export function getRecentPlays() {
+  axios.get(process.env.DATABASE_URL+"/plays")
+    .then(res => {
+      console.log(res.data)
+      return res.data.plays;
+    }).catch(error =>{
+       console.log("Error fetching Plays: ", error)
+
+    });
+}
+
+export function RecentPlays() {
+  const[plays, setPlays] = React.useState([]);
+
+  React.useEffect(() => {
+    
+  }, []);
+
+  return(
+      <>
+      <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
+          Recent Plays
+      </div>
+      <div class="form-signin2 text-start">
+          <ul class="list-group">
+              <li class="list-group-item d-flex p-2 cursor-pointer">
+                  
+
+              </li>
+          </ul>
+      </div>
+      </>
+  );
+}
+
+
 
 function rngTest() {
   console.log("Starting!")

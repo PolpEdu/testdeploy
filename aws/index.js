@@ -18,6 +18,9 @@ app.use(express.json());
 app.use("/plays", playsRoutes);
 //app.use("/user", userRoutes);
 
+console.log("DB: "+ process.env.DB_CONNECTION);
+
+
 mongoose.connect(
   process.env.DB_CONNECTION,
   {
