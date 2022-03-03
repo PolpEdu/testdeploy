@@ -740,7 +740,19 @@ animation-iteration-count: infinite;
 
 .form-signin2 {
     width: 100%;
-    max-width: 600px;
+    max-width: 750px;
     padding: 15px;
     margin: auto;
+}
+
+.time-in-row {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}
+
+.urltrx {
+  position: absolute;
+  left: 40px;
+  bottom: 5px;
 }

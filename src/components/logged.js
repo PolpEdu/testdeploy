@@ -5,8 +5,8 @@ import NearLogo from '../assets/logo-black.svg';
 
 
 
-function generatephrase(ammount, won) {
-    let ammount = ammount/2;
+function generatephrase(ammount, won, account) {
+    ammount = ammount/2;
     const congratulation = [
         "My homie ",
         "My boi ",
@@ -29,56 +29,70 @@ function generatephrase(ammount, won) {
         "",
         "",
         "",
-
+        "",
+        "",
+        "",
     ]
     const ruggedphrases = [
-        "didn't need "+ammount +" Near.",
-        "donated "+ammount+" Near.",
-        "wasted "+ammount+" Near.",
-        "could have bought something with "+ammount+" Near.",
-        "felt the need to lose "+ammount+" Near.",
-        "lost "+ammount+" Near.",
-        "could have saved "+ammount+" Near.",
-        "wished that he didn't bet "+ammount+" Near.",
-        "could have won "+ammount+" Near.",
-        "sent us "+ammount+" Near. Thanks!",
-        "should have donated to charity "+ammount+" Near.",
-        "bet "+ammount+" Near and got rugged.",
-        "needs "+ammount+" Near. Cause he got rugged.",
-        "lost "+ammount+" Near.",
-
-
-        
-
+        " didn't need "+ammount +" Near.",
+        " donated "+ammount+" Near.",
+        " wasted "+ammount+" Near.",
+        " felt the need to lose "+ammount+" Near.",
+        " lost "+ammount+" Near.",
+        " could have saved "+ammount+" Near.",
+        " wished that he didn't bet "+ammount+" Near.",
+        " could have won "+ammount+" Near.",
+        " sent us "+ammount+" Near. Thanks!",
+        " should have donated to charity "+ammount+" Near.",
+        " bet "+ammount+" Near and got rugged.",
+        " needs "+ammount+" Near. Cause he got rugged.",
+        " lost "+ammount+" Near.",
+        " should have given "+ammount+" Near to me.",
+        " maybe should stop after losing "+ammount+" Near.",
+        " should have bought something with "+ammount+" Near.",
+        " got unlucky and lost "+ammount+" Near.",
+        " won't get scared of losing "+ammount+" Near.",
+        " really likes losing "+ammount+" Near.",
+        " should have gone to the park or something with "+ammount+" Near...",
     ]
     const wonphrases = [
-        "fought for and won "+ammount+" Near.",
-        "bet and won "+ammount+" Near.",
-        "sensed the need to win "+ammount+" Near.",
-        "won "+ammount+" Near.",
-        "finally won "+ammount+" Near.",
-        "didn't think much of it and won "+ammount+" Near.",
-        "has a new friend and won "+ammount+" Near.",
-        "maybe has a cristall ball and won "+ammount+" Near.",
-        "should go to the shopping mall with "+ammount+" Near.",
-        "threw a party with "+ammount+" Near.",
-        "will share with me "+ammount+" Near.",
-        "doubled "+ammount+" Near.",
-        "duplicated "+ammount+" Near.",
-        "won "+ammount+" Near.",
-        "won "+ammount+" Near.",
-
+        " fought for and won "+ammount+" Near.",
+        " bet and won "+ammount+" Near.",
+        " sensed the need to win "+ammount+" Near.",
+        " won "+ammount+" Near.",
+        " finally won "+ammount+" Near.",
+        " didn't think much of it and won "+ammount+" Near.",
+        " has a new friend and won "+ammount+" Near.",
+        " maybe has a cristall ball since he won "+ammount+" Near.",
+        " should go to the shopping mall with "+ammount+" Near.",
+        " threw a party with "+ammount+" Near.",
+        " will share with me "+ammount+" Near.",
+        " doubled "+ammount+" Near.",
+        " duplicated "+ammount+" Near.",
+        " won "+ammount+" Near.",
+        " will spent wisely "+ammount+" Near.",
+        " called it and won "+ammount+" Near.",
+        " likes his new "+ammount+" Near.",
+        " got lucky and won "+ammount+" Near.",
+        
     ]
     /* returns a random rugged phrase */
 
+    return(
+        <>
+            {won ? congratulation[Math.floor(Math.random() * congratulation.length)] + account +  wonphrases[Math.floor(Math.random() * wonphrases.length)] : congratulation[Math.floor(Math.random() * congratulation.length)] + account +ruggedphrases[Math.floor(Math.random() * ruggedphrases.length)]}
+        </>
+    )
 }
 
 
 function RecentPlays() {
     const[plays, setPlays] = React.useState([]);
     const[errormsg, setErrormsg] = React.useState("");
+    var currentDate = new Date();
   
     React.useEffect(() => {
+        
       axios.get(process.env.DATABASE_URL+"/plays")
       .then(res => {
         setPlays(res.data.plays);
@@ -95,21 +109,26 @@ function RecentPlays() {
         <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
             Recent Plays
         </div>
-        <div className="form-signin2 text-start">
+        <div className="form-signin2 text-start mx-auto">
             <ul className="list-group">
               {plays===undefined ? <Loading/> :
               errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :
               plays.map((play,i) => {
+                  const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/`+play.tx;
                   return(
-                    <li key={i} className='list-group-item d-flex p-2 cursor-pointer'>
+                      <a href={url} class="text-decoration-none" target='_blank'>
+                          <li key={i} className='list-group-item d-flex p-2 cursor-pointer'>
                         <div className="profile-picture">
                             <img src={NearLogo} height={30} width={30} alt="logoback"/>
                         </div>
-                        <div className='title mb-auto'>
-                            {play.ammount >=10 ? <span style={{color: rgb(244, 162, 0),fontWeight: 900}}>{generatephrase(play.ammount, play.won)}</span> : <span>{generatephrase(play.ammount, play.won)}</span>}
-
+                        <div className='title mt-1' style={{fontSize:"0.78rem"}}>
+                            {play.ammount >=10 ? <span style={{color:"#f4a300"}}>{generatephrase(play.ammount, play.won, play.walletaccount)}</span> : <span color=''>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>}
                         </div>
+                        <small className="ms-auto mt-auto urltrx" style={{fontSize:"0.38rem", color:"grey", fontWeight:"lighter"}}>{url}</small>
+                        <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.7rem", fontWeight:"lighter"}}>{currentDate-Date.parse(play.date)}</small>
                     </li>
+                      </a>
+                    
                   )
                 }
               )

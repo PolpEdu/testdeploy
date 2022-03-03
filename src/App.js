@@ -359,9 +359,7 @@ export default function App() {
 
           { !window.walletConnection.isSignedIn() ? 
           <>
-            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240"/>
-            <NotLogged/>
-                   
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240"/>                   
           </> :
           <div className='d-flex flex-column '>
             <h4 className='mt-1 mt-sm-1' fontSize="1.3rem">I like...</h4>
@@ -433,6 +431,7 @@ export default function App() {
           </div>
         }
         </div>
+        {!window.walletConnection.isSignedIn() ? <NotLogged/> : <></>}
       </div>
       <div className="social-icons-bottom-right">
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
