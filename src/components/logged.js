@@ -4,6 +4,76 @@ import { login } from '../utils.js'
 import NearLogo from '../assets/logo-black.svg';
 
 
+
+function generatephrase(ammount, won) {
+    let ammount = ammount/2;
+    const congratulation = [
+        "My homie ",
+        "My boi ",
+        "My friend ",
+        "The legend ",
+        "The king ",
+        "Queen ",
+        "The one and only ",
+        "He who goes by ",
+        "The mysterious ",
+        "The one who ",
+        "The smartass ",
+        "The generous ",
+        "The brave ",
+        "The mighty ",
+        "The great ",
+        "The suspicious ",
+        "Sir ",
+        "Lord ",
+        "",
+        "",
+        "",
+
+    ]
+    const ruggedphrases = [
+        "didn't need "+ammount +" Near.",
+        "donated "+ammount+" Near.",
+        "wasted "+ammount+" Near.",
+        "could have bought something with "+ammount+" Near.",
+        "felt the need to lose "+ammount+" Near.",
+        "lost "+ammount+" Near.",
+        "could have saved "+ammount+" Near.",
+        "wished that he didn't bet "+ammount+" Near.",
+        "could have won "+ammount+" Near.",
+        "sent us "+ammount+" Near. Thanks!",
+        "should have donated to charity "+ammount+" Near.",
+        "bet "+ammount+" Near and got rugged.",
+        "needs "+ammount+" Near. Cause he got rugged.",
+        "lost "+ammount+" Near.",
+
+
+        
+
+    ]
+    const wonphrases = [
+        "fought for and won "+ammount+" Near.",
+        "bet and won "+ammount+" Near.",
+        "sensed the need to win "+ammount+" Near.",
+        "won "+ammount+" Near.",
+        "finally won "+ammount+" Near.",
+        "didn't think much of it and won "+ammount+" Near.",
+        "has a new friend and won "+ammount+" Near.",
+        "maybe has a cristall ball and won "+ammount+" Near.",
+        "should go to the shopping mall with "+ammount+" Near.",
+        "threw a party with "+ammount+" Near.",
+        "will share with me "+ammount+" Near.",
+        "doubled "+ammount+" Near.",
+        "duplicated "+ammount+" Near.",
+        "won "+ammount+" Near.",
+        "won "+ammount+" Near.",
+
+    ]
+    /* returns a random rugged phrase */
+
+}
+
+
 function RecentPlays() {
     const[plays, setPlays] = React.useState([]);
     const[errormsg, setErrormsg] = React.useState("");
@@ -33,10 +103,10 @@ function RecentPlays() {
                   return(
                     <li key={i} className='list-group-item d-flex p-2 cursor-pointer'>
                         <div className="profile-picture">
-                            <img src={NearLogo}  alt="logoback"/>
+                            <img src={NearLogo} height={30} width={30} alt="logoback"/>
                         </div>
-                        <div className='title mb-auto ms-2'>
-                        My boi {play.walletaccount}
+                        <div className='title mb-auto'>
+                            {play.ammount >=10 ? <span style={{color: rgb(244, 162, 0),fontWeight: 900}}>{generatephrase(play.ammount, play.won)}</span> : <span>{generatephrase(play.ammount, play.won)}</span>}
 
                         </div>
                     </li>
