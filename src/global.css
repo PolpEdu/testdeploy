@@ -210,7 +210,17 @@ code {
     flex-direction: column!important;
 }
 
+.card-body {
+    flex: 1 1 auto;
+    padding: 1rem 0rem 0rem 0rem;
+}
 
+@media (min-width: 576px){
+  .modal-dialog {
+      max-width: 800px;
+      margin: 1.75rem auto;
+  }
+}
 /* min widh*/
 @media (min-width: 650px) {
   .balance-text {
@@ -264,7 +274,6 @@ code {
     width: auto;
     z-index: 10;
   }
-
   .maincenter, .play {
     padding-left: 15px;
     padding-right: 15px;
@@ -739,10 +748,11 @@ animation-iteration-count: infinite;
 }
 
 .form-signin2 {
-    width: 100%;
-    max-width: 650px;
-    padding: 15px;
-    margin: auto;
+  width: 100%;
+  max-width: 750px;
+  margin-bottom: 15px;
+  margin: auto;
+
 }
 
 .time-in-row {
@@ -753,6 +763,6 @@ animation-iteration-count: infinite;
 
 .urltrx {
   position: absolute;
-  left: 40px;
+  left: 50px;
   bottom: 5px;
 }

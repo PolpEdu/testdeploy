@@ -41,7 +41,6 @@ function generatephrase(ammount, won, account) {
         " lost "+ammount+" Near.",
         " could have saved "+ammount+" Near.",
         " wished that he didn't bet "+ammount+" Near.",
-        " could have won "+ammount+" Near.",
         " sent us "+ammount+" Near. Thanks!",
         " should have donated to charity "+ammount+" Near.",
         " bet "+ammount+" Near and got rugged.",
@@ -54,6 +53,7 @@ function generatephrase(ammount, won, account) {
         " won't get scared of losing "+ammount+" Near.",
         " really likes losing "+ammount+" Near.",
         " should have gone to the park or something with "+ammount+" Near...",
+        
     ]
     const wonphrases = [
         " fought for and won "+ammount+" Near.",
@@ -74,6 +74,7 @@ function generatephrase(ammount, won, account) {
         " called it and won "+ammount+" Near.",
         " likes his new "+ammount+" Near.",
         " got lucky and won "+ammount+" Near.",
+        " will give me a ride to dubai with "+ammount+" Near.",
         
     ]
     /* returns a random rugged phrase */
@@ -86,10 +87,9 @@ function generatephrase(ammount, won, account) {
 }
 
 
-function RecentPlays() {
+export function RecentPlays() {
     const[plays, setPlays] = React.useState([]);
     const[errormsg, setErrormsg] = React.useState("");
-    var currentDate = new Date();
   
     React.useEffect(() => {
         
@@ -105,15 +105,13 @@ function RecentPlays() {
     }, []);
   
     return(
-        <>
-        <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
-            Recent Plays
-        </div>
+        
         <div className="form-signin2 text-start mx-auto">
             <ul className="list-group">
-              {plays===undefined ? <Loading/> :
+              {plays===undefined ? <Loading size={12}/> :
               errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :
               plays.map((play,i) => {
+                  //console.log(i)
                   const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/`+play.tx;
                   return(
                       <a href={url} class="text-decoration-none" target='_blank'>
@@ -121,11 +119,11 @@ function RecentPlays() {
                         <div className="profile-picture">
                             <img src={NearLogo} height={30} width={30} alt="logoback"/>
                         </div>
-                        <div className='title mt-1' style={{fontSize:"0.78rem"}}>
+                        <div className='title mt-1' style={{fontSize:"0.75rem"}}>
                             {play.ammount >=10 ? <span style={{color:"#f4a300"}}>{generatephrase(play.ammount, play.won, play.walletaccount)}</span> : <span color=''>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>}
                         </div>
-                        <small className="ms-auto mt-auto urltrx" style={{fontSize:"0.38rem", color:"grey", fontWeight:"lighter"}}>{url}</small>
-                        <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.7rem", fontWeight:"lighter"}}>{currentDate-Date.parse(play.date)}</small>
+                        <small className="ms-auto mt-auto urltrx" style={{fontSize:"0.42rem", color:"grey", fontWeight:"lighter"}}>Transaction: {play.tx}</small>
+                        <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.68rem", fontWeight:"lighter"}}>{get_time_diff(play.date)}</small>
                     </li>
                       </a>
                     
@@ -135,7 +133,6 @@ function RecentPlays() {
               }  
             </ul>
         </div>
-        </>
     );
   }
 
@@ -145,12 +142,15 @@ export function NotLogged() {
 
     return (
         <>
+        
         <div className="mt-5 mb-3">
               <button className='wallet-adapter-button justify-content-center mx-auto btnhover' onClick={login}>LOG IN NEAR<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
         </div>
-        <RecentPlays/>
+        <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
+            Recent Plays
+        </div>
          <div className="accordion text-center mb-2" id="myAccordion">
-            <h6 className="mt-3 w-60" style={{transition:"color 0.4 ease-in-out"}}>
+            <h6 className="mt-3 mx-auto" style={{transition:"color 0.4 ease-in-out", width:"100%"}}>
                 <small style={{fontSize:"0.8rem", letterSpacing:"0.005rem"}}>
                     <a href="#">wtf is this shit</a> | <a href="#">bro i have a question.</a> | <a href="#">Tutorial pls</a> | <a href="#" >TestNet Demo</a> | <a href="#">Am I dumb?</a>
                 </small>
@@ -170,7 +170,43 @@ export function Loading(props) {
     );
 } 
 
+function get_time_diff( datetime )
+{
+    var date1 = new Date(datetime);
+    var date2 = new Date();
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 
+    var days = Math.floor(timeDiff / 86400000); // days
+var hours = Math.floor((timeDiff % 86400000) / 3600000); // hours
+var minutes = Math.round(((timeDiff % 86400000) % 3600000) / 60000); // minutes
+var seconds = Math.round((((timeDiff % 86400000) % 3600000) % 60000) / 1000); // seconds
+    /* for some reason I think this condition is trash, but im to tired to even think about it so fuck it, yeah!? */
+    if(days===0){
+        if(hours === 0){
+            if(minutes === 0){
+                if(seconds === 0){
+                    return "just now";
+                }else if(seconds === 1){
+                    return seconds + " second ago";
+                }
+                return seconds + " seconds ago";
+            }else if(minutes === 1){
+                return minutes + " minute ago";
+            }
+            return minutes + " Minutes "
+        }
+        else if(hours ===1) {
+            return hours + " Hour " + minutes + " Minutes "
+        }
+
+        return hours + " hours ago";
+    }else if(days===1){
+        return days + " day ago";
+    }
+    else {
+        return days + " days ago";
+    }
+}
 
 document.querySelectorAll('.logo').forEach(button => {
 

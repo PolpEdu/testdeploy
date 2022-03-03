@@ -5,7 +5,7 @@ import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay} from './utils'
-import { NotLogged, Loading } from './components/logged';
+import { NotLogged, Loading,RecentPlays } from './components/logged';
 import Confetti from 'react-confetti';
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
@@ -67,7 +67,6 @@ export default function App() {
   const [ammoutNEAR, setammout] = React.useState("")
 
   const [ammountWon, setWonAmmount] = React.useState("")
-
 
 
   const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
@@ -161,7 +160,6 @@ export default function App() {
     settxsResult(decodedstr);
     setWonAmmount(decodedWonAmmountstr)
   }
-
   
   React.useEffect(
     () => {
@@ -308,7 +306,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      <div className='text-center body-wrapper h-100vh h-100'>
+      <div className='text-center body-wrapper h-100'>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
         <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
@@ -433,6 +431,8 @@ export default function App() {
         </div>
         {!window.walletConnection.isSignedIn() ? <NotLogged/> : <></>}
       </div>
+
+      <RecentPlays/>
       <div className="social-icons-bottom-right">
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
           <div className="text-center justify-content-center d-flex">
@@ -463,6 +463,7 @@ export default function App() {
             </div>
           </div>
       </div>
+
     </div>
   )
 }

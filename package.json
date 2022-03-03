@@ -45,7 +45,8 @@
     "react-router-dom": "^6.2.1",
     "react-use": "^17.3.2",
     "regenerator-runtime": "~0.13.5",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "sweetalert2-react": "^0.8.3"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

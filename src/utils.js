@@ -73,7 +73,7 @@ export function sendpostwithplay(txHash) {
       console.log(res)
     }).catch(e => {
       console.log("Error Storing flip :((( Don't worry, you still recieve your NEAR!");
-      console.log(e)
+      console.error(e)
     })
 }
 
