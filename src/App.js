@@ -359,7 +359,7 @@ export default function App() {
 
           { !window.walletConnection.isSignedIn() ? 
           <>
-            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mb-3 mx-auto" alt="logo" width="240" height="240"/>
+            <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240"/>
             <NotLogged/>
                    
           </> :

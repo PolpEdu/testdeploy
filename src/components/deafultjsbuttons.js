@@ -3,13 +3,12 @@ document.querySelectorAll('.wallet-adapter-button').forEach(button => {
     const bounding = button.getBoundingClientRect();
 
     button.addEventListener('mousemove', e => {
-
         let dy = (e.clientY - bounding.top - bounding.height / 2) / -1
         let dx = (e.clientX - bounding.left - bounding.width / 2)  / 10
 
+        dy=dy-50;
         dy = dy > 10 ? 10 : (dy < -10 ? -10 : dy);
         dx = dx > 4 ? 4 : (dx < -4 ? -4 : dx);
-        
 
         button.style.setProperty('--rx', dy);
         button.style.setProperty('--ry', dx);

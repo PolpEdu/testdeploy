@@ -1,11 +1,58 @@
 import React from 'react'
-import { getRecentPlays, login } from '../utils.js'
+import axios from 'axios';
+import { login } from '../utils.js'
 import NearLogo from '../assets/logo-black.svg';
 
 
+function RecentPlays() {
+    const[plays, setPlays] = React.useState([]);
+    const[errormsg, setErrormsg] = React.useState("");
+  
+    React.useEffect(() => {
+      axios.get(process.env.DATABASE_URL+"/plays")
+      .then(res => {
+        setPlays(res.data.plays);
+      }).catch(error =>{
+        setErrormsg("Couldn't get the latest plays :(");
+        console.log("Error fetching Plays: ", error)
+  
+      });
+      
+    }, []);
+  
+    return(
+        <>
+        <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
+            Recent Plays
+        </div>
+        <div className="form-signin2 text-start">
+            <ul className="list-group">
+              {plays===undefined ? <Loading/> :
+              errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :
+              plays.map((play,i) => {
+                  return(
+                    <li key={i} className='list-group-item d-flex p-2 cursor-pointer'>
+                        <div className="profile-picture">
+                            <img src={NearLogo}  alt="logoback"/>
+                        </div>
+                        <div className='title mb-auto ms-2'>
+                        My boi {play.walletaccount}
+
+                        </div>
+                    </li>
+                  )
+                }
+              )
+              }  
+            </ul>
+        </div>
+        </>
+    );
+  }
+
+  
+
 export function NotLogged() {
-
-
 
     return (
         <>
@@ -25,31 +72,6 @@ export function NotLogged() {
     );
 }
 
-
-export function RecentPlays() {
-    const[plays, setPlays] = React.useState([]);
-
-    React.useEffect(() => {
-        // GET request using fetch inside useEffect React hook
-        setPlays(getRecentPlays());
-    }, []);
-
-    return(
-        <>
-        <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}>
-            Recent Plays
-        </div>
-        <div class="form-signin2 text-start">
-            <ul class="list-group">
-                <li class="list-group-item d-flex p-2 cursor-pointer">
-                    
-
-                </li>
-            </ul>
-        </div>
-        </>
-    );
-  }
 
 
 
