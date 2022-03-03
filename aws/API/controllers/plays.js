@@ -143,16 +143,33 @@ exports.getRecentPlays = (req, res, next) => {
     /* Get the 12 recent plays */
     Play.find().sort({
         _id: -1
-    }).limit(12).then(plays => {
+    })
+    .limit(12).then(plays => {
         res.status(200).json({
             message: "Fetched plays successfully!",
             plays: plays
         });
-    }
-    ).catch(err => {
+    }).catch(err => {
         console.log(err);
         res.status(500).json({
             error: err
         });
     });
 };
+
+exports.gettopplays = (req, res, next) => {
+    /* Get the plays with the biggest winstreak */
+    Play.find().sort({
+        streak: -1
+    }).limit(12).then(plays => {
+        res.status(200).json({
+            message: "Fetched plays successfully!",
+            plays: plays
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}

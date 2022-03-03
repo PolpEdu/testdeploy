@@ -6,4 +6,7 @@ const router = express.Router();
 router.post("/", PlaysController.postPlay);
 
 router.get("/", PlaysController.getRecentPlays);
+
+router.get("/top", PlaysController.gettopplays);
+
 module.exports = router;

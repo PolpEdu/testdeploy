@@ -77,6 +77,7 @@ export function sendpostwithplay(txHash) {
     })
 }
 
+
 export function convertYocto(YOCTO){
   return utils.format.formatNearAmount(YOCTO);
 }
@@ -113,33 +114,6 @@ export function flip(args, ammoutNEAR) {
   const result = window.walletConnection.account().functionCall({
     contractId:contractID.toString(), methodName:'coin_flip', args:{option:args}, gas: "300000000000000",attachedDeposit:yoctoNEAR})
 }
-
-
-
-
-
-function NotificationTRANS(status) {
-  const urlPrefix = `https://explorer.${networkId}.near.org/accounts`
-  return (
-    <aside>
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
-        {window.accountId}
-      </a>
-      {' '/* React trims whitespace around tags; insert literal space character when needed */}
-      Transfered:
-      {' '}
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
-        {window.contract.contractId}
-      </a>
-      <footer>
-        <div>✔ Succeeded</div>
-        <div>Just now</div>
-      </footer>
-    </aside>
-  )
-}
-
-
 
 
 function rngTest() {

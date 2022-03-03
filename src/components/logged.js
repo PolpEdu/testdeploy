@@ -86,6 +86,24 @@ function generatephrase(ammount, won, account) {
     )
 }
 
+export function TopPlays() {
+    React.useEffect(() => {
+        
+      axios.get(process.env.DATABASE_URL+"/plays/top")
+      .then(res => {
+          console.log(res);
+        
+      }).catch(error =>{
+        
+      });
+    }, []);
+
+    return (
+        <>
+        
+        </>
+    )
+}
 
 export function RecentPlays() {
     const[plays, setPlays] = React.useState([]);
@@ -134,7 +152,7 @@ export function RecentPlays() {
             </ul>
         </div>
     );
-  }
+}
 
   
 
