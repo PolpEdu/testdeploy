@@ -158,18 +158,62 @@ exports.getRecentPlays = (req, res, next) => {
 };
 
 exports.gettopplays = (req, res, next) => {
-    /* Get the plays with the biggest winstreak */
-    Play.find().sort({
-        streak: -1
-    }).limit(12).then(plays => {
+    /* Get the plays with the biggest winstreak, dont show repeated players and recieve also the streak number from the distinct players */
+    
+    
+    Play.aggregate([
+        {
+            $group: {
+                _id: "$walletaccount",
+                streak: {
+                    $max: "$streak"
+                },
+                won: {
+                    $sum: {
+                        $cond: [
+                            {
+                                $eq: ["$won", "true"]
+                            },
+                            1,
+                            0
+                        ]
+                        
+                    }
+                },
+                lost: {
+                    $sum: {
+                        $cond: [
+                            {
+                                $eq: ["$won", "false"]
+                            },
+                            1,
+                            0
+                        ]
+                    }
+                }
+
+            }
+        },
+        {
+            $sort: {
+                streak: -1
+            }
+        },
+        {
+            $limit: 12
+        }
+    ]).then(plays => {
         res.status(200).json({
             message: "Fetched plays successfully!",
             plays: plays
         });
-    }).catch(err => {
+    }
+    ).catch(err => {
         console.log(err);
         res.status(500).json({
             error: err
         });
-    });
-}
+    }
+    );
+};
+                
