@@ -5,7 +5,7 @@ import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay} from './utils'
-import { NotLogged, Loading,RecentPlays } from './components/logged';
+import { NotLogged, Loading,RecentPlays, TopPlays,TopPlayers } from './components/logged';
 import Confetti from 'react-confetti';
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
@@ -100,12 +100,6 @@ export default function App() {
   }
 
   const [showwhosplayin, setshowwhosplayin] = React.useState(false);
-
-  const togglesetshowwhosplayin = () => {
-    console.log(showwhosplayin)
-
-    setshowwhosplayin(!showwhosplayin)
-  }
 
   const resetGame = () => {
     setTailsHeads(Math.random()<0.5 ? "tails" : "heads")
@@ -246,31 +240,29 @@ export default function App() {
               >
                 <RecentPlays />
               </Popup>
-                
-              <div role='button' className='retro-btn'>
-                <a className='buttoncool' onClick={togglesetshowwhosplayin}> 
-                  <span className='btn-inner'>
-                    <span className='content-wrapper'>
-                      <span className='btn-content'  >
-                        <span className='btn-content-inner' label="WHO'S PLAYIN">
-                          <Modal show={showwhosplayin} onHide={togglesetshowwhosplayin} aria-labelledby="contained-modal-title-vcenter" centered>
-                            <Modal.Body className='p-0' style={{color:"black"}}>
-                              <div className='d-flex flex-column '>
-                                <div className="card-body text-center">
-                                  <h4 style={{fontWeight:"bold", fontSize:"1.3rem"}}>Who's playin this shit game?</h4>
-                                </div>
-                              </div>
-                            </Modal.Body>
-                            <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{margin:"0px"}}>
-                                <button className='w-80 my-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-primary' style={{fontFamily:"VCR_OSD_MONO", fontWeight:"normal", fontSize:"20px"}} onClick={handleClose}>Ok Cool.</button>
-                            </div>
-                          </Modal>
+
+
+              <Popup trigger={
+                <div role='button' className='retro-btn'>
+                  <a className='buttoncool'> 
+                    <span className='btn-inner'>
+                      <span className='content-wrapper'>
+                        <span className='btn-content'  >
+                          <span className='btn-content-inner' label="WHO'S PLAYIN">
+                          </span>
                         </span>
                       </span>
                     </span>
-                  </span>
-                </a>
-              </div>
+                  </a>
+                </div>
+                } position="center center"
+                modal
+                contentStyle={contentStyle}
+                >
+                  <TopPlays />
+                </Popup>
+              
+              <Popup trigger={
               <div role='button' className='retro-btn info'>
                 <a className='buttoncool'> 
                   <span className='btn-inner'>
@@ -283,6 +275,12 @@ export default function App() {
                   </span>
                 </a>
               </div>
+              } position="center center"
+              modal
+              contentStyle={contentStyle}
+              >
+                <TopPlayers />
+              </Popup>
 
               { !window.walletConnection.isSignedIn() ? <></>: <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow}/>
               </div>

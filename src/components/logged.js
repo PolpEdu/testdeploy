@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import { login } from '../utils.js'
 import NearLogo from '../assets/logo-black.svg';
+import { Trophy } from 'react-bootstrap-icons';
 
 
 
@@ -95,22 +96,54 @@ function generatephrase(ammount, won, account) {
 }
 
 export function TopPlays() {
+    const[plays, setPlays] = React.useState([]);
+    const[errormsg, setErrormsg] = React.useState("");
+
     React.useEffect(() => {
         
       axios.get(process.env.DATABASE_URL+"/plays/top")
       .then(res => {
-          console.log(res);
+            console.log(res);
+            setPlays(res.data.plays);
         
       }).catch(error =>{
             console.error(error);
-        
+            setErrormsg("Error loading top plays");
       });
     }, []);
-
     return (
-        <>
-        
-        </>
+        <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#697A21"}}>
+        <h4 className='text-center p-1 rounded' style={{fontWeight:"800", color:"white"}}>🏆 Top Players 🏆</h4>
+        <ul className="list-group">
+          {plays===undefined || plays===[] ? <Loading size={11}/> :
+          errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :
+          plays.map((play,i) => {
+              //console.log(i)
+              const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/`+play.tx;
+              return(
+                  <a href={url} className="text-decoration-none" target='_blank'>
+                      <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
+                    <div className="profile-picture">
+                          {
+                              i===0 ? <Trophy size={30}/> :
+                              i===1 ? <Trophy size={30}/> :
+                                i===2 ? <Trophy size={30}/> :
+                                <></>
+                          }
+                    </div>
+                    <div className='title mt-1' style={{fontSize:"0.73rem"}}>
+                        <span>{play._id} with the streak: {play.streak}</span>
+                    </div>
+                    <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.68rem", fontWeight:"lighter"}}>Last Played: {get_time_diff(play.date)}</small>
+                </li>
+                  </a>
+                
+              )
+            }
+          )
+          }  
+        </ul>
+    </div>
     )
 }
 
@@ -130,19 +163,20 @@ export function RecentPlays() {
       });
       
     }, []);
-  
     return(
         
-        <div className="form-signin2 text-start mx-auto rounded-2">
-            <h4 className='text-center text-light p-1 rounded'>🔥 Fire 🔥</h4>
+        <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#E63946"}}>
+            <h4 className='text-center p-1 rounded' style={{fontWeight:"800", color:"white"}}>🔥 Fire 🔥</h4>
             <ul className="list-group">
-              {plays===undefined || plays===[] ? <Loading size={11}/> :
+              {(plays===undefined || plays===[] ||plays.length===0) ? <div className='mx-auto'>
+                <Loading size={20} color/>
+              </div> :
               errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :
               plays.map((play,i) => {
                   //console.log(i)
                   const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/`+play.tx;
                   return(
-                      <a href={url} class="text-decoration-none" target='_blank'>
+                      <a href={url} className="text-decoration-none" target='_blank'>
                           <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
                         <div className="profile-picture">
                             <img src={NearLogo} height={30} width={30} alt="logoback"/>
@@ -167,7 +201,60 @@ export function RecentPlays() {
     );
 }
 
+export function TopPlayers() {
+    const[players, setPlayers] = React.useState([]);
+    const[errormsg, setErrormsg] = React.useState("");
   
+    React.useEffect(() => {
+        
+      axios.get(process.env.DATABASE_URL+"/plays/bestplayers")
+      .then(res => {
+        setPlayers(res.data.players);
+      }).catch(error =>{
+        setErrormsg("Couldn't get the top players :(");
+        console.log("Error fetching Plays: ", error)
+  
+      });
+      
+    }, []);
+    //money emoji: 💰
+    //money fly emoji: 💸
+    //bank emoji: 💵
+    return(
+        
+        <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#e59233"}}>
+            <h4 className='text-center p-1 rounded' style={{fontWeight:"800", color:"white"}}>💵 MVPs 💵</h4>
+            <ul className="list-group">
+              {players===undefined || players===[] ? <Loading size={11}/> :
+              errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching players :/ </div> :
+              players.map((play,i) => {
+                  //console.log(i)
+                  const url = `https://explorer.${process.env.NODE_ENV}.near.org/account/`+play.walletaccount;
+                  return(
+                      <a href={url} className="text-decoration-none" target='_blank'>
+                          <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
+                        <div className="profile-picture">
+                            <img src={NearLogo} height={30} width={30} alt="logoback"/>
+                        </div>
+                        <div className='title mt-1' style={{fontSize:"0.73rem"}}>
+                            {play.ammount >=10 ? 
+                            <span style={{fontWeight:"500"}}>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>
+                             :
+                             <span>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>}
+                        </div>
+                        <small className="ms-auto mt-auto urltrx" style={{fontSize:"0.42rem", color:"grey", fontWeight:"lighter"}}>Transaction: {play.tx}</small>
+                        <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.68rem", fontWeight:"lighter"}}>{get_time_diff(play.date)}</small>
+                    </li>
+                      </a>
+                    
+                  )
+                }
+              )
+              }  
+            </ul>
+        </div>
+    );
+}
 
 export function NotLogged() {
 

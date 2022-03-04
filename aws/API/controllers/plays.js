@@ -168,6 +168,9 @@ exports.gettopplays = (req, res, next) => {
                 streak: {
                     $max: "$streak"
                 },
+                date: {
+                    $max: "$date"
+                }
             }
         },
         {
@@ -192,4 +195,6 @@ exports.gettopplays = (req, res, next) => {
     }
     );
 };
+
+
                 

@@ -58,11 +58,8 @@ body, html {
   min-height: 100vh;
 }
 
-.list-group { 
-  background-color: #e49781;
-}
-.list-group-item {
-  
+.popup-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 
@@ -756,7 +753,6 @@ animation-iteration-count: infinite;
   margin-bottom: 15px;
   margin: auto;
   padding: 15px;
-  background-color: #E63946;
 }
 
 .time-in-row {
