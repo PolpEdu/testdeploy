@@ -7,6 +7,7 @@ import NearLogo from '../assets/logo-black.svg';
 
 function generatephrase(ammount, won, account) {
     ammount = ammount/2;
+    account = account.split(".")[0]
     const congratulation = [
         "My homie ",
         "My boi ",
@@ -32,12 +33,14 @@ function generatephrase(ammount, won, account) {
         "",
         "",
         "",
+        "The wise ",
+        "The brave ",
+        
     ]
     const ruggedphrases = [
         " didn't need "+ammount +" Near.",
         " donated "+ammount+" Near.",
         " wasted "+ammount+" Near.",
-        " felt the need to lose "+ammount+" Near.",
         " lost "+ammount+" Near.",
         " could have saved "+ammount+" Near.",
         " wished that he didn't bet "+ammount+" Near.",
@@ -48,11 +51,10 @@ function generatephrase(ammount, won, account) {
         " lost "+ammount+" Near.",
         " should have given "+ammount+" Near to me.",
         " maybe should stop after losing "+ammount+" Near.",
-        " should have bought something with "+ammount+" Near.",
         " got unlucky and lost "+ammount+" Near.",
         " won't get scared of losing "+ammount+" Near.",
         " really likes losing "+ammount+" Near.",
-        " should have gone to the park or something with "+ammount+" Near...",
+        " is sad cause he lost "+ammount+" Near...",
         
     ]
     const wonphrases = [
@@ -63,8 +65,6 @@ function generatephrase(ammount, won, account) {
         " finally won "+ammount+" Near.",
         " didn't think much of it and won "+ammount+" Near.",
         " has a new friend and won "+ammount+" Near.",
-        " maybe has a cristall ball since he won "+ammount+" Near.",
-        " should go to the shopping mall with "+ammount+" Near.",
         " threw a party with "+ammount+" Near.",
         " will share with me "+ammount+" Near.",
         " doubled "+ammount+" Near.",
@@ -75,13 +75,21 @@ function generatephrase(ammount, won, account) {
         " likes his new "+ammount+" Near.",
         " got lucky and won "+ammount+" Near.",
         " will give me a ride to dubai with "+ammount+" Near.",
+        " is happy cause he won "+ammount+" Near.",
+        " will hodl "+ammount+" Near.",
+        " is filling up his wallet with "+ammount+" Near.",
+        " got "+ammount+" Near.",
+
         
     ]
     /* returns a random rugged phrase */
 
     return(
         <>
-            {won ? congratulation[Math.floor(Math.random() * congratulation.length)] + account +  wonphrases[Math.floor(Math.random() * wonphrases.length)] : congratulation[Math.floor(Math.random() * congratulation.length)] + account +ruggedphrases[Math.floor(Math.random() * ruggedphrases.length)]}
+            {won ?
+             <span style={{color:'#05F140'}}>{congratulation[Math.floor(Math.random() * congratulation.length)] + account +  wonphrases[Math.floor(Math.random() * wonphrases.length)]}</span> :
+            
+            <span style={{color:"#E71D36"}}>{congratulation[Math.floor(Math.random() * congratulation.length)] + account +ruggedphrases[Math.floor(Math.random() * ruggedphrases.length)]}</span>}
         </>
     )
 }
@@ -94,6 +102,7 @@ export function TopPlays() {
           console.log(res);
         
       }).catch(error =>{
+            console.error(error);
         
       });
     }, []);
@@ -124,22 +133,25 @@ export function RecentPlays() {
   
     return(
         
-        <div className="form-signin2 text-start mx-auto">
-            <h4 className='text-center'>🔥 Fire 🔥</h4>
+        <div className="form-signin2 text-start mx-auto rounded-2">
+            <h4 className='text-center text-light p-1 rounded'>🔥 Fire 🔥</h4>
             <ul className="list-group">
-              {plays===undefined ? <Loading size={12}/> :
+              {plays===undefined || plays===[] ? <Loading size={11}/> :
               errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :
               plays.map((play,i) => {
                   //console.log(i)
                   const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/`+play.tx;
                   return(
                       <a href={url} class="text-decoration-none" target='_blank'>
-                          <li key={i} className='list-group-item d-flex p-2 cursor-pointer'>
+                          <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
                         <div className="profile-picture">
                             <img src={NearLogo} height={30} width={30} alt="logoback"/>
                         </div>
-                        <div className='title mt-1' style={{fontSize:"0.75rem"}}>
-                            {play.ammount >=10 ? <span style={{color:"#f4a300"}}>{generatephrase(play.ammount, play.won, play.walletaccount)}</span> : <span color=''>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>}
+                        <div className='title mt-1' style={{fontSize:"0.73rem"}}>
+                            {play.ammount >=10 ? 
+                            <span style={{fontWeight:"500"}}>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>
+                             :
+                             <span>{generatephrase(play.ammount, play.won, play.walletaccount)}</span>}
                         </div>
                         <small className="ms-auto mt-auto urltrx" style={{fontSize:"0.42rem", color:"grey", fontWeight:"lighter"}}>Transaction: {play.tx}</small>
                         <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.68rem", fontWeight:"lighter"}}>{get_time_diff(play.date)}</small>
