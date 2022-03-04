@@ -168,30 +168,6 @@ exports.gettopplays = (req, res, next) => {
                 streak: {
                     $max: "$streak"
                 },
-                won: {
-                    $sum: {
-                        $cond: [
-                            {
-                                $eq: ["$won", "true"]
-                            },
-                            1,
-                            0
-                        ]
-                        
-                    }
-                },
-                lost: {
-                    $sum: {
-                        $cond: [
-                            {
-                                $eq: ["$won", "false"]
-                            },
-                            1,
-                            0
-                        ]
-                    }
-                }
-
             }
         },
         {

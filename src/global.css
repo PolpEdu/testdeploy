@@ -202,10 +202,6 @@ code {
   position: relative;
   z-index: 2;
 }
-
-.body-wrapper {
-    padding-top: 20px;
-}
 .flex-sm-column {
     flex-direction: column!important;
 }
@@ -284,16 +280,13 @@ code {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 45px;
+    padding-top: 75px;
   }
 
   .form-signin, .play {
     padding-left: 15px;
     padding-right: 15px;
-    padding-bottom: 15px;
     padding-top: 5px
-
-
   }
 }
 
@@ -319,7 +312,6 @@ code {
 .menumain{
   width: 69vw;
   max-width: 870px;
-  padding: 15px;
   margin: auto;
 }
 
@@ -444,9 +436,10 @@ h1 {
 }
 
 .form-signin {
+  margin-top:15px;
   width: 100%;
   max-width: 1070px;
-  margin: auto;
+
 }
 
 .toast-container {

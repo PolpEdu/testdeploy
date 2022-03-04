@@ -13,7 +13,7 @@ import LOGOMAIN from './assets/result.svg';
 import LOGODOG from './assets/nearcoindoggo.svg';
 import LOGOBACK from './assets/nearcoin.svg';
 import { useSearchParams, useNavigate} from "react-router-dom";
-
+import Popup from 'reactjs-popup';
 import { Twitter, Discord, Sun , Moon} from 'react-bootstrap-icons';
 import useWindowSize from 'react-use/lib/useWindowSize'
 
@@ -218,18 +218,26 @@ export default function App() {
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
+              <Popup trigger={
               <div role='button' className='retro-btn danger'>
+
                 <a className='buttoncool'> 
-                  <span className='btn-inner'>
-                    <span className='content-wrapper'>
-                      <span className='btn-content'>
-                        <span className='btn-content-inner' label="ON FIRE">
+                    <span className='btn-inner'>
+                      <span className='content-wrapper'>
+                        <span className='btn-content'>
+                          <span className='btn-content-inner' label="ON FIRE">
+                          
+                          </span>
                         </span>
                       </span>
                     </span>
-                  </span>
-                </a>
-              </div>
+                  </a>
+                </div>
+
+              } position="center center">
+                <RecentPlays />
+              </Popup>
+                
               <div role='button' className='retro-btn'>
                 <a className='buttoncool' onClick={togglesetshowwhosplayin}> 
                   <span className='btn-inner'>
@@ -377,8 +385,9 @@ export default function App() {
             
 
             <div id="game" className="game">
-                <h4 className="start text-uppercase mb-3">insert coin</h4>
-              </div>
+              <h4 className="start text-uppercase mb-3">insert coin</h4>
+            </div>
+
             <div className="row">
               <div className="col-4">
                 
@@ -414,8 +423,8 @@ export default function App() {
             onClick={event => {
               setButtonDisabled(true);
               setprocessing(true);
-              console.log(tailsHeads);
-              console.log(ammoutNEAR);
+              //console.log(tailsHeads);
+              //console.log(ammoutNEAR);
               flip(tailsHeads==="heads", ammoutNEAR)
               
               /*code doesnt reach here*/
@@ -431,8 +440,6 @@ export default function App() {
         </div>
         {!window.walletConnection.isSignedIn() ? <NotLogged/> : <></>}
       </div>
-
-      <RecentPlays/>
       <div className="social-icons-bottom-right">
         <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
           <div className="text-center justify-content-center d-flex">
