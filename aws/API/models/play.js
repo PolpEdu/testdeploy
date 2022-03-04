@@ -29,8 +29,11 @@ const playschema = new mongoose.Schema({
     won: {
         type: Boolean,
         required: true,
+    },
+    totalammountwon: {
+        type: Number,
+        required: true,
     }
-
 });
 
 module.exports = new mongoose.model('Play', playschema);

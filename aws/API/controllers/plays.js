@@ -75,8 +75,13 @@ exports.postPlay = (req, res, next) => {
                         _id: -1
                     }).then(play => {
                         let currentwinstreak = 0;
-                        let streakofplayer = play.streak;
+                        let streakofplayer = 0;
+                        let totalwon =req.body.ammount;
+
+
                         if(play) {
+                            streakofplayer = play.streak;
+                            totalwon =  play.totalammountwon;
                             if (asciisucess === 'true' && streakofplayer >= 0) {
                                 currentwinstreak = play.streak + 1;
                             }
@@ -91,7 +96,8 @@ exports.postPlay = (req, res, next) => {
                             ammount: asciiammount,
                             streak:currentwinstreak,
                             side: asciichoosen,
-                            won:asciisucess
+                            won:asciisucess,
+                            totalammountwon:totalwon
                         });
                         //console.log("New Play created!");
                         newplay.save().then(result => {
@@ -194,6 +200,10 @@ exports.gettopplays = (req, res, next) => {
         });
     }
     );
+};
+
+exports.getBestPlayers = (req, res, next) => {
+    /* get the players who are  */
 };
 
 

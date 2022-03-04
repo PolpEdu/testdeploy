@@ -141,12 +141,11 @@ export default function App() {
         console.log("Error converting ammount bet to string.");
       }
 
-      console.log("decoded won ammount: "+decodedWonAmmountstr)
       //console.log("decoded result: "+ decodedstr)
       
     }).catch(e => {
       if(!e instanceof TypeError) {
-        console.log(e);
+        console.error(e);
       }
       
     })
@@ -238,7 +237,7 @@ export default function App() {
               modal
               contentStyle={contentStyle}
               >
-                <RecentPlays />
+                <TopPlays/>
               </Popup>
 
 
@@ -259,7 +258,8 @@ export default function App() {
                 modal
                 contentStyle={contentStyle}
                 >
-                  <TopPlays />
+                <RecentPlays />
+
                 </Popup>
               
               <Popup trigger={
