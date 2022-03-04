@@ -9,4 +9,6 @@ router.get("/", PlaysController.getRecentPlays);
 
 router.get("/top", PlaysController.gettopplays);
 
+router.get("/best", PlaysController.getBestPlayers);
+
 module.exports = router;

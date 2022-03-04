@@ -208,11 +208,11 @@ export function TopPlayers() {
   
     React.useEffect(() => {
         
-      axios.get(process.env.DATABASE_URL+"/plays/bestplayers")
+      axios.get(process.env.DATABASE_URL+"/plays/best")
       .then(res => {
         setPlayers(res.data.players);
       }).catch(error =>{
-        setErrormsg("Couldn't get the top players :(");
+        setErrormsg("Couldn't get the best players :(");
         console.log("Error fetching Plays: ", error)
   
       });

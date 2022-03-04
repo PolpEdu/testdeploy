@@ -44,7 +44,7 @@ exports.postPlay = (req, res, next) => {
         if(contract !== process.env.CONTRACT_NAME) {
             res.status(500).json({
                 error: "Invalid contract! What are you trying to do? :eyes: :eyes:",
-                message: "Please, if you find any bugs report them to the NearFlip team!"
+                message: "Please, if you find any bugs report them to the FlipNear team!"
             });
         }
 
@@ -205,7 +205,39 @@ exports.gettopplays = (req, res, next) => {
 };
 
 exports.getBestPlayers = (req, res, next) => {
-    /* get the players who are  */
+    /* sort players with the biggest total won */
+    Play.aggregate([
+        {
+            $group: {
+                _id: "$walletaccount",
+                totalwon: {
+                    $sum: "$totalammountwon"
+                },
+                date: {
+                    $max: "$date"
+                }
+            }
+        },
+        {
+            $sort: {
+                totalwon: -1
+            }
+        },
+        {
+            $limit: 12
+        }
+    ]).then(plays => {
+        res.status(200).json({
+            message: "Fetched plays successfully!",
+            plays: plays
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+    
 };
 
 
