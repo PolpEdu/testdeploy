@@ -7,7 +7,6 @@ import { Trophy } from 'react-bootstrap-icons';
 
 
 function generatephrase(ammount, won, account) {
-    ammount = ammount/2;
     account = account.split(".")[0]
     const congratulation = [
         "My homie ",
@@ -109,6 +108,7 @@ export function TopPlays() {
             setErrormsg("Error loading top plays");
       });
     }, []);
+
     return (
         <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#DD403A"}}>
         <h4 className='text-center p-1 rounded' style={{fontWeight:"800", color:"white"}}>🔥 On Fire 🔥</h4>
@@ -127,7 +127,7 @@ export function TopPlays() {
                           {
                               i===0 ? <Trophy size={30}/> :
                               i===1 ? <Trophy size={30}/> :
-                                i===2 ? <Trophy size={30}/> :
+                              i===2 ? <Trophy size={30}/> :
                                 <></>
                           }
                     </div>
@@ -210,7 +210,7 @@ export function TopPlayers() {
         
       axios.get(process.env.DATABASE_URL+"/plays/best")
       .then(res => {
-        setPlayers(res.data.players);
+        setPlayers(res.data.plays);
       }).catch(error =>{
         setErrormsg("Couldn't get the best players :(");
         console.log("Error fetching Plays: ", error)
@@ -222,13 +222,16 @@ export function TopPlayers() {
     //money fly emoji: 💸
     //bank emoji: 💵
     //play emoji: 🎮
+    console.log(players);
+
     return(
         
         <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#f80"}}>
             <h4 className='text-center p-1 rounded' style={{fontWeight:"800", color:"white"}}>💵 MVPs 💵</h4>
             <ul className="list-group">
-            {(players===undefined || players===[] ||players.length===0) ? <div className='mx-auto'>
-            <Loading size={25} color={"text-light"}/>
+            {(players===undefined || players===[] ||players.length===0) ?
+             <div className='mx-auto'>
+                <Loading size={25} color={"text-light"}/>
             </div>  :
               errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching players :/ </div> :
               players.map((play,i) => {
@@ -246,8 +249,8 @@ export function TopPlayers() {
                                 <></>
                             }
                     </div>
-                    <div className='title mt-1' style={{fontSize:"0.73rem"}}>
-                        <span>{play._id} with the streak: {play.streak}</span>
+                    <div className='title mt-1 ms-1' style={{fontSize:"0.73rem"}}>
+                        <span>{play._id} won a total ammount of {play.totalammountwon} Near!</span>
                     </div>
                     <small className="ms-auto mt-auto time-in-row" style={{fontSize:"0.68rem", fontWeight:"lighter"}}>Last Played: {get_time_diff(play.date)}</small>
                 </li>

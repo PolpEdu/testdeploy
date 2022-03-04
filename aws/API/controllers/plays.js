@@ -64,7 +64,6 @@ exports.postPlay = (req, res, next) => {
                 tx: req.body.txhash
             }).then(play => {
                 if (play) {
-                    console.log(play);
                     return res.status(400).json({
                         error: "Play already exists"
                     });
@@ -83,13 +82,17 @@ exports.postPlay = (req, res, next) => {
                         if(play) {
                             streakofplayer = play.streak;
                             totalwon =  play.totalammountwon;
-                            if (asciisucess === 'true' && streakofplayer >= 0) {
-                                currentwinstreak = play.streak + 1;
+                            if(asciisucess==='true') {
                                 totalwon = play.totalammountwon + asciiammount;
+                                if (streakofplayer >= 0) {
+                                    currentwinstreak = play.streak + 1;
+                                }
+                            } else {
+                                if(streakofplayer <= 0) {
+                                    currentwinstreak = play.streak - 1;
+                                }
                             }
-                            if(asciisucess === 'false' && streakofplayer <= 0) {
-                                currentwinstreak = play.streak - 1;
-                            }
+                            
                         }
                         const newplay = new Play({
                             _id: new mongoose.Types.ObjectId(),
@@ -205,13 +208,13 @@ exports.gettopplays = (req, res, next) => {
 };
 
 exports.getBestPlayers = (req, res, next) => {
-    /* sort players with the biggest total won */
+    /* sort by the players with the biggest total won */
     Play.aggregate([
         {
             $group: {
                 _id: "$walletaccount",
-                totalwon: {
-                    $sum: "$totalammountwon"
+                totalammountwon: {
+                    $max: "$totalammountwon"
                 },
                 date: {
                     $max: "$date"
