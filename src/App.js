@@ -208,6 +208,13 @@ export default function App() {
       setTailsHeads("heads")
     }
   }
+
+  
+  const contentStyle = {
+    maxWidth: "660px",
+    width: "90%"
+  };
+
   
   return (
     <div className={darkMode}>
@@ -220,7 +227,6 @@ export default function App() {
 
               <Popup trigger={
               <div role='button' className='retro-btn danger'>
-
                 <a className='buttoncool'> 
                     <span className='btn-inner'>
                       <span className='content-wrapper'>
@@ -234,7 +240,10 @@ export default function App() {
                   </a>
                 </div>
 
-              } position="center center">
+              } position="center center"
+              modal
+              contentStyle={contentStyle}
+              >
                 <RecentPlays />
               </Popup>
                 

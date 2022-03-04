@@ -125,6 +125,7 @@ export function RecentPlays() {
     return(
         
         <div className="form-signin2 text-start mx-auto">
+            <h4 className='text-center'>🔥 Fire 🔥</h4>
             <ul className="list-group">
               {plays===undefined ? <Loading size={12}/> :
               errormsg!== "" ? <div className='textsurprese font-weight-normal' style={{fontSize:"1.2rem"}}> Error fetching plays :/ </div> :

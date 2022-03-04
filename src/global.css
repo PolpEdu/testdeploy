@@ -742,10 +742,8 @@ animation-iteration-count: infinite;
 
 .form-signin2 {
   width: 100%;
-  max-width: 750px;
   margin-bottom: 15px;
   margin: auto;
-
 }
 
 .time-in-row {
@@ -758,4 +756,9 @@ animation-iteration-count: infinite;
   position: absolute;
   left: 50px;
   bottom: 5px;
+}
+
+.popup {
+  position: absolute;
+  left: 50%;
 }
