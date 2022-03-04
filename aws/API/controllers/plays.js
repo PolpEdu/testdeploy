@@ -76,14 +76,16 @@ exports.postPlay = (req, res, next) => {
                     }).then(play => {
                         let currentwinstreak = 0;
                         let streakofplayer = 0;
-                        let totalwon =req.body.ammount;
+                        let totalwon =asciiammount;
 
-
+                        //trophy emoji: 🏆
+                        //eyes emoji: 👀 
                         if(play) {
                             streakofplayer = play.streak;
                             totalwon =  play.totalammountwon;
                             if (asciisucess === 'true' && streakofplayer >= 0) {
                                 currentwinstreak = play.streak + 1;
+                                totalwon = play.totalammountwon + asciiammount;
                             }
                             if(asciisucess === 'false' && streakofplayer <= 0) {
                                 currentwinstreak = play.streak - 1;
