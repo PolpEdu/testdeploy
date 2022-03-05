@@ -157,7 +157,7 @@ export function RecentPlays() {
         setPlays(res.data.plays);
       }).catch(error =>{
         setErrormsg("Couldn't get the latest plays :(");
-        console.log("Error fetching Plays: ", error)
+        console.error("Error fetching Plays: ", error)
   
       });
       
@@ -204,7 +204,7 @@ export function RecentPlays() {
 export function TopPlayers() {
     const[players, setPlayers] = React.useState([]);
     const[errormsg, setErrormsg] = React.useState("");
-  
+    
     React.useEffect(() => {
         
       axios.get(process.env.DATABASE_URL+"/plays/best")
@@ -212,7 +212,7 @@ export function TopPlayers() {
         setPlayers(res.data.plays);
       }).catch(error =>{
         setErrormsg("Couldn't get the best players :(");
-        console.log("Error fetching Plays: ", error)
+        console.error("Error fetching Plays: ", error)
   
       });
       
@@ -221,7 +221,6 @@ export function TopPlayers() {
     //money fly emoji: 💸
     //bank emoji: 💵
     //play emoji: 🎮
-    console.log(players);
 
     return(
         
