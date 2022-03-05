@@ -77,7 +77,6 @@ exports.postPlay = (req, res, next) => {
                         let streakofplayer = 0;
                         let totalwon =asciiammount;
 
-                        //trophy emoji: 🏆
                         //eyes emoji: 👀 
                         if(play) {
                             streakofplayer = play.streak;

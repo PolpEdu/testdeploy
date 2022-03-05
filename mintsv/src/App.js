@@ -4,7 +4,6 @@ import React from 'react'
 import { login, logout } from './utils'
 import './global.css'
 import NearLogo from './assets/logo-black.svg';
-import './components/deafultjsbuttons.js';
 
 
 import getConfig from './config'
@@ -45,22 +44,11 @@ export default function App() {
   if (!window.walletConnection.isSignedIn()) {
     return (
       <main>
-        <h1>Welcome to NEAR!</h1>
-        <p>
-          To make use of the NEAR blockchain, you need to sign in. The button
-          below will sign you in using NEAR Wallet.
-        </p>
-        <p>
-          By default, when your app runs in "development" mode, it connects
-          to a test network ("testnet") wallet. This works just like the main
-          network ("mainnet") wallet, but the NEAR Tokens on testnet aren't
-          convertible to other currencies – they're just for testing!
-        </p>
-        <p>
-          Go ahead and click the button below to try it out:
-        </p>
+        yo
+
+        
         <div className="mt-2 mb-3">
-              <button className='wallet-adapter-button justify-content-center mx-auto' onClick={login}>LOG IN NEAR<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
+              <button className='wallet-adapter-button justify-content-center mx-auto' onClick={login}>Connect Wallet<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
         </div>
       </main>
     )

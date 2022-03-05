@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios';
 import { login } from '../utils.js'
 import NearLogo from '../assets/logo-black.svg';
-import { Trophy } from 'react-bootstrap-icons';
 
 
 
@@ -125,9 +124,9 @@ export function TopPlays() {
                       <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
                     <div className="profile-picture">
                           {
-                              i===0 ? <Trophy size={30}/> :
-                              i===1 ? <Trophy size={30}/> :
-                              i===2 ? <Trophy size={30}/> :
+                              i===0 ? "🥇" :
+                              i===1 ? "🥈" :
+                              i===2 ? "🥉" :
                                 <></>
                           }
                     </div>
@@ -243,9 +242,9 @@ export function TopPlayers() {
                         <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
                     <div className="profile-picture">
                             {
-                                i===0 ? <Trophy size={30}/> :
-                                i===1 ? <Trophy size={30}/> :
-                                i===2 ? <Trophy size={30}/> :
+                                 i===0 ? "🥇" :
+                              i===1 ? "🥈" :
+                              i===2 ? "🥉" :
                                 <></>
                             }
                     </div>
