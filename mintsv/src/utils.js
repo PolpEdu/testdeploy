@@ -37,3 +37,5 @@ export function login() {
   // the private key in localStorage.
   window.walletConnection.requestSignIn(nearConfig.contractName)
 }
+
+

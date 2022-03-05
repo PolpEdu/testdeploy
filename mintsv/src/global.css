@@ -186,3 +186,56 @@ aside footer *:last-child {
     box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
   }
 }
+
+
+.wallet-adapter-button {
+    background-color: #404144;
+
+    --background: #F6F8FF;
+    --colorwalletadapter: #1E2235;
+    --shadow: #00093d38;
+    --z-before: -6;
+    display: block;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    border: 0;
+    background: none;
+    padding: 9px 22px 9px 16px;
+    line-height: 26px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--colorwalletadapter);
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--transform-duration, .4s);
+    will-change: transform;
+    transform-style: preserve-3d;
+    transform: perspective(440px) rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg)) translateZ(0);
+}
+
+.wallet-adapter-button:hover {
+    --transform-duration: .16s;
+}
+
+.wallet-adapter-button:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    transform: translateZ(calc(var(--z-before) * 1px));
+    background: var(--background);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
+.nearlogo {
+  background-position: center 1em;
+  background-repeat: no-repeat;
+  background-size: auto 1.5em;
+  text-align: center;
+  width: 1.7rem;
+}

@@ -87,7 +87,7 @@ function generatephrase(ammount, won, account) {
     return(
         <>
             {won ?
-             <span style={{color:'#05F140'}}>{congratulation[Math.floor(Math.random() * congratulation.length)] + account +  wonphrases[Math.floor(Math.random() * wonphrases.length)]}</span> :
+             <span style={{color:'#0cb025'}}>{congratulation[Math.floor(Math.random() * congratulation.length)] + account +  wonphrases[Math.floor(Math.random() * wonphrases.length)]}</span> :
             
             <span style={{color:"#E71D36"}}>{congratulation[Math.floor(Math.random() * congratulation.length)] + account +ruggedphrases[Math.floor(Math.random() * ruggedphrases.length)]}</span>}
         </>
@@ -166,7 +166,7 @@ export function RecentPlays() {
     //🔥 Fire 🔥
     return(
         
-        <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#697A21"}}>
+        <div className="form-signin2 text-start mx-auto rounded-2" style={{backgroundColor: "#829922"}}>
             <h4 className='text-center p-1 rounded' style={{fontWeight:"800", color:"white"}}>🎮 Who's Playin? 🎮</h4>
             <ul className="list-group">
               {(plays===undefined || plays===[] ||plays.length===0) ? <div className='mx-auto'>
@@ -270,7 +270,7 @@ export function NotLogged() {
     return (
         <>
         
-        <div className="mt-2 mb-3">
+        <div className="mt-5 mb-3">
               <button className='wallet-adapter-button justify-content-center mx-auto btnhover' onClick={login}>LOG IN NEAR<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
         </div>
          <div className="accordion text-center mb-2" id="myAccordion">

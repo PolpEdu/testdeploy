@@ -1,7 +1,11 @@
 import 'regenerator-runtime/runtime'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react'
 import { login, logout } from './utils'
 import './global.css'
+import NearLogo from './assets/logo-black.svg';
+import './components/deafultjsbuttons.js';
+
 
 import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
@@ -55,9 +59,9 @@ export default function App() {
         <p>
           Go ahead and click the button below to try it out:
         </p>
-        <p style={{ textAlign: 'center', marginTop: '2.5em' }}>
-          <button onClick={login}>Sign in</button>
-        </p>
+        <div className="mt-2 mb-3">
+              <button className='wallet-adapter-button justify-content-center mx-auto' onClick={login}>LOG IN NEAR<img src={NearLogo} alt="Near Logo" className='nearlogo mb-1' style={{width:"40px", height:"40px"}}/></button>
+        </div>
       </main>
     )
   }

@@ -214,7 +214,7 @@ export default function App() {
       {showNotification && <Notification />}
       {errormsg && <NotificationError err={errormsg}/>}
       <div className='social-icons'>
-        <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100'>
+        <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-row mb-2 toolbar'>
 
