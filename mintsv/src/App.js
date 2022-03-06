@@ -384,14 +384,14 @@ function AuthButton() {
     < >
       {
         window.walletConnection.isSignedIn() ?
-          <>
+          <div className='d-flex flex-column'>
 
-            <button onClick={mintmeup} disabled={!window.walletConnection.isSignedIn()}> YOOOO</button>
+            <button className='mx-auto' onClick={mintmeup}> Mint!</button>
             <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={logout} style={{ width: "350px" }} >
               Disconnect Wallet
               <img src={NearLogo} alt="Near Logo" className='nearlogo' style={{ width: "40px", height: "40px" }} />
             </button>
-          </>
+          </div>
           :
           <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={login} style={{ width: "350px" }} >
             Connect Wallet
