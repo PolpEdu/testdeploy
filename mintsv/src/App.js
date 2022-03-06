@@ -85,9 +85,9 @@ export default function App() {
 
 
   return (
-    <div className="max-w-screen-3xl mx-auto my-4 w-full px-8">
+    <div className="max-w-screen-3xl mx-auto w-full px-8 ">
       {errormsg && <NotificationError err={errormsg} />}
-      <div className="flex flex-1 flex-col-reverse md:flex-row mx-auto gap-8 justify-between">
+      <div className="flex flex-1 flex-col-reverse md:flex-row mx-auto gap-8 justify-between my-4">
         <div className="flex flex-col gap-4 flex-grow md:max-w-[40%]">
 
           <div className="text-center text-sm border border-solid rounded-md px-2 py-1 w-fit-content tracking-widest" style={{ borderColor: "#F58F29" }}>
@@ -291,7 +291,7 @@ export default function App() {
               <img src="https://c.tenor.com/YebbLUmkg9YAAAAM/among-us.gif" alt="Flip Near" className="object-cover aspect-square tw w-screen flex-grow rounded-3xl overflow-hidden" />
               <img src="https://c.tenor.com/YebbLUmkg9YAAAAM/among-us.gif" width="1" height="1" className="absolute invisible" /></div>
           </div>
-          <div className="w-full mt-4 border border-solid p-2 bg-blue-400 rounded-3xl" >
+          <div className="w-full mt-4 border border-solid p-2 bg-blue-400 rounded-3xlz" >
             <div className="flex flex-col gap-1 flex-grow 3xl:hidden">
               <div className="flex items-center justify-between text-[14px] text-gray-5">
                 <span >Total minted</span>
@@ -302,7 +302,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-4 items-center justify-between flex-wrap rounded-lg bg-purple-200 p-4 mt-4">
+            <div className="flex gap-4 items-center justify-between flex-wrap rounded-lg p-4 mt-4">
               <div className="flex gap-4 mx-auto flex-col w-full items-center">
                 <div className="flex justify-between gap-6 3xl:w-full">
                   <AuthButton />
@@ -323,118 +323,17 @@ export default function App() {
         </div>
       </div>
       <div >
-        <div className="w-full h-[1px] border border-solid border-purple-1 mt-12 mb-4 lg:mt-32 lg:mb-10"></div></div>
-      <div>
-        <div className="flex flex-1 flex-col md:flex-row mx-auto gap-32 pb-20 justify-between">
-          <div className="flex flex-col gap-4 flex-grow md:w-[40%]">
-            <h1 className="mt-1 text-[58px] font-extrabold leading-none">Flip Near</h1>
-            <div className="flex flex-wrap gap-4">
-              <a href="https://docs.magpiemoguls.com/" target="_blank" rel="noreferrer noopener" className="border border-solid border-purple-1 flex items-center gap-2 w-fit rounded-full px-2.5 py-1.5 text-white-2">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" color="#e42575"><path stroke="#F5F3F7" strokeLinecap="round" strokeLinejoin="round" d="M15 10.833v5a1.666 1.666 0 01-1.667 1.667H4.167A1.667 1.667 0 012.5 15.833V6.667A1.667 1.667 0 014.167 5h5M12.5 2.5h5v5M8.332 11.667L17.499 2.5"></path></svg>
-
-                <span>Whitepaper</span></a><a href="https://www.magpiemoguls.com/" target="_blank" rel="noreferrer noopener" className="border border-solid border-purple-1 flex items-center gap-2 w-fit rounded-full px-2.5 py-1.5 text-white-2">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" color="#e42575">
-                  <path stroke="#F5F3F7" strokeLinecap="round" strokeLinejoin="round" d="M15 10.833v5a1.666 1.666 0 01-1.667 1.667H4.167A1.667 1.667 0 012.5 15.833V6.667A1.667 1.667 0 014.167 5h5M12.5 2.5h5v5M8.332 11.667L17.499 2.5"></path></svg>
-
-
-                <span>Website</span>
-
-              </a>
-              <a href="https://discord.gg/b7NJPuV5pk" target="_blank" rel="noreferrer noopener" className="border border-solid border-purple-1 flex items-center gap-2 w-fit rounded-full px-2.5 py-1.5 text-white-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" color="#e42575"><path stroke="#F5F3F7" strokeLinecap="round" strokeLinejoin="round" d="M15 10.833v5a1.666 1.666 0 01-1.667 1.667H4.167A1.667 1.667 0 012.5 15.833V6.667A1.667 1.667 0 014.167 5h5M12.5 2.5h5v5M8.332 11.667L17.499 2.5"></path></svg>
-
-                <span>Discord</span>
-              </a>
-              <a href="https://twitter.com/MagpieMoguls" target="_blank" rel="noreferrer noopener" className="border border-solid border-purple-1 flex items-center gap-2 w-fit rounded-full px-2.5 py-1.5 text-white-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" color="#e42575"><path stroke="#F5F3F7" strokeLinecap="round" strokeLinejoin="round" d="M15 10.833v5a1.666 1.666 0 01-1.667 1.667H4.167A1.667 1.667 0 012.5 15.833V6.667A1.667 1.667 0 014.167 5h5M12.5 2.5h5v5M8.332 11.667L17.499 2.5"></path></svg>
-
-                <span>Twitter</span></a>
-
-              <a href="https://explorer.solana.com/address/9UaTjLVUTtJF3n9sG8VfvYt4pdYGf7Y59qYZFBRx4kLo" target="_blank" rel="noreferrer noopener" className="border border-solid border-purple-1 flex items-center gap-2 w-fit rounded-full px-2.5 py-1.5 text-white-2">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" color="#e42575"><path stroke="#F5F3F7" strokeLinecap="round" strokeLinejoin="round" d="M15 10.833v5a1.666 1.666 0 01-1.667 1.667H4.167A1.667 1.667 0 012.5 15.833V6.667A1.667 1.667 0 014.167 5h5M12.5 2.5h5v5M8.332 11.667L17.499 2.5"></path></svg>
-                <span>Contract 9UaT...4kLo</span>
-              </a>
-            </div>
-            <div>
-              <h2 className="text-white-1 text-xl pt-1 pb-3" level="1">Description</h2>
-
-              <p className="text-gray-light mb-3 text-[16] tx-line-[24]">Flip Near is a generative art collection of 4,444 characters on Solana, intended to be used as profile pictures or collected as artwork.  Our project focuses on high quality art that the NFT community will love to display, and innovative utilities.  Our collection will feature a companion app that allows our community to connect their wallet and grow their Magpies Nest.</p>
-              <p className="text-gray-light mb-3 text-[16] tx-line-[24]">The more space available in a holders nest, the more room for airdrops.  Airdrops will be rewarded uniquely to our holders and will not be all the same.  We will also be launching our own token $NEST.  Our token will be rewarded daily to our holders who use their Magpie Mogul as their Twitter profile picture, and we will verify this via image recognition.  It will also be available on a DEX.  Using our Token our holders will be able to expand the room in their nest, collect unique airdrops, and get ready for the launch of our companion collection.  The airdrops in a holders nest will directly impact the rarity of the mate they get when we release the female collection.  All of this is based on how Magpies in the real world behave.</p>
-              <p className="text-gray-light mb-3 text-[16] tx-line-[24]">
-                <img className="rounded-xl" src="https://dl.airtable.com/.attachmentThumbnails/2b4b3bb9ecc5fe8717d689c30fcf5692/14d426cb" alt="Flip Near" />
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-4 flex-grow md:w-[50%]">
-            <div className="w-full self-stretch">
-              <div className="flex gap-8 lg:gap-16">
-                <div className="relative me-tab2 flex cursor-pointer mr-2 py-2 px-4 is-active text-white-2 font-medium text-lg">
-                  <span className="me-tab2-title">Roadmap</span>
-                </div>
-                <div className="relative me-tab2 flex cursor-pointer mr-2 py-2 px-4 text-white-2 font-medium text-lg"><span className="me-tab2-title">Team</span>
-                </div>
-              </div>
-            </div>
-            <div className="p-4">
-              <div className="my-1">
-                <p className="text-gray-light text-md text-[14px]">
-                  After our public mint we will be working to release our dAPP + Token.  With this, our holders will be rewarded with $NEST and Airdrops simply by having their Magpie Mogul as their profile picture on social media.
-                </p>
-                <br />
-              </div>
-              <div className="my-1">
-                <p className="text-gray-light text-md text-[14px]">
-                  Using our companion app you will be able to stake your airdrops to earn more $NEST.  In order to stake more airdrops you must increase the capacity of your Nest by obtaining our $NEST Token.  The airdrops you receive will also come with multipliers and bonuses to help you earn more tokens and other rewards!
-                </p>
-                <br />
-              </div>
-              <div className="my-1">
-                <p className="text-gray-light text-md text-[14px]">
-                  The airdrops you stake will also directly impact the mate you attract when we launch our Magpie Mates collection.  Magpies collect all kinds of cool, shiny objects and put them in their nests to attract mates and, well, just look cool.  Now you can do this too, in a rewarding and utility focused ecosystem.
-                </p>
-                <br />
-              </div>
-              <div className="my-1">
-                <p className="text-gray-light text-md text-[14px]">
-                  As you evolve your nest, collect airdrops, and build up your token balance our holders will be able to unlock more benefits in the near future.  We plan on launching the Magpie Mates collection, and several other utility based collections after that!  Our goal for this project is to create a sustainable and rewarding ecosystem for our holders.</p>
-                <br />
-              </div>
-              <div className="my-1">
-                <p className="text-gray-light text-md text-[14px]">
-                  <a className="text-pink-hot block text-md text-[14px]" href="https://docs.magpiemoguls.com/roadmap" target="_blank" rel="noreferrer">Roadmap</a>
-                </p>
-                <br />
-              </div>
-            </div>
-          </div>
+        <div className="w-full h-[1px] border border-solid border-purple-1 mt-8 mb-2 lg:mt-22 lg:mb-8">
         </div>
       </div>
-      <div className="modal fade" tabIndex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" style={{ backdropFilter: "blur(20px)" }}><div className="modal-dialog modal-dialog-centered" role="document">
-
-      </div>
+      <div className="modal fade" tabIndex="-1" role="dialog" style={{ backdropFilter: "blur(20px)" }}>
       </div>
     </div>
 
   )
 }
-/*
-      <div className='max-w-screen-2xl mx-auto my-4 w-full px-8' >
-        
-        <div className='flex flex-1 flex-col-reverse md:flex-row mx-auto gap-8 justify-between' >
 
-        </div>
 
-        
-        <main>
-          <button onClick={mintmeup} disabled={!window.walletConnection.isSignedIn()}>
-            YOOOO
-
-          </button>
-        </main>
-      </div>*/
 // this component gets rendered by App after the form is submitted
 function Notification() {
   const urlPrefix = `https://explorer.${networkId}.near.org/accounts`
@@ -485,10 +384,14 @@ function AuthButton() {
     < >
       {
         window.walletConnection.isSignedIn() ?
-          <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={logout} style={{ width: "350px" }} >
-            Disconnect Wallet
-            <img src={NearLogo} alt="Near Logo" className='nearlogo' style={{ width: "40px", height: "40px" }} />
-          </button>
+          <>
+
+            <button onClick={mintmeup} disabled={!window.walletConnection.isSignedIn()}> YOOOO</button>
+            <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={logout} style={{ width: "350px" }} >
+              Disconnect Wallet
+              <img src={NearLogo} alt="Near Logo" className='nearlogo' style={{ width: "40px", height: "40px" }} />
+            </button>
+          </>
           :
           <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={login} style={{ width: "350px" }} >
             Connect Wallet
