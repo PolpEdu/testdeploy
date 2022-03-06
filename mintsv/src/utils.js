@@ -1,6 +1,7 @@
 import { connect, Contract, keyStores, WalletConnection, utils, providers } from 'near-api-js'
 import getConfig from './config'
 
+const mintammount = "1";
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
 // Initialize contract & set global variables
@@ -40,7 +41,7 @@ export function login() {
 
 
 export function mintmeup() {
-  let yoctoNEAR = utils.format.parseNearAmount("1");
+  let yoctoNEAR = utils.format.parseNearAmount(mintammount);
   let contractID = process.env.CONTRACT_MINT || 'dev-1646526212589-74798020278785';
   const result = window.walletConnection.account().functionCall({
     contractId: contractID.toString(), methodName: 'nft_mint', gas: "300000000000000", attachedDeposit: yoctoNEAR
@@ -50,11 +51,17 @@ export function mintmeup() {
 
 export const maintitlesayings = [
   "yay minting site awoo, look at me im such a great minting site",
-  "this mint do be looking kinda cool doe",
-  "you get a mint, i get a mint, EVERYONE GETS A MINT",
+  "you get a mint, i get a mint, EVERYONE GETS A MINT (not really though)",
   "i'm a cute minting site, i'm a cute minting site, i'm a cute minting site",
   "amongus Nft when 🥱🥱🥱🥱",
   "this art do be looking kinda fire 🔥🔥🔥 (i need to stop with this meme)",
   "fuck man, I don't have anymore ideias for phrases just refresh the page",
   "its fucking 4 am and I'm writting random ass phrases for this shitty ass minting site",
+  "BlessRNG BlessRNG BlessRNG BlessRNG",
+  "Hewwo im youw mintinguw siteuw mastew, uwu wanna mint me? uwu",
+  "wtf am i doing with my life",
+  "Add Me On League after the mint",
+  "So tell me, how good were the flips today?",
+  "If I were anime character, I'd be amongus yellow crewmate or a minting site idk...",
+  "Any askers?",
 ]

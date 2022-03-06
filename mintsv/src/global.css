@@ -14,7 +14,7 @@
 }
 
 html {
-  --bg: #3E363F;
+  --bg: #0D1321;
   --fg: #efefef;
   --gray: #aaa;
   --shadow: #2a2a2a;
@@ -39,9 +39,12 @@ body, html {
   height: 100vh !important;
   color: var(--text-color-default);
 }
-
-main {
-  margin: 0 auto;
+img { 
+  -webkit-user-drag: none; 
+  -khtml-user-drag: none; 
+  -moz-user-drag: none; 
+  -o-user-drag: none; 
+  user-drag: none; 
 }
 
 a,
@@ -126,13 +129,6 @@ aside footer *:last-child {
 }
 
 @media (prefers-color-scheme: dark) {
-  html {
-    --bg: #1e1e1e;
-    --fg: #efefef;
-    --gray: #aaa;
-    --shadow: #2a2a2a;
-    --light-gray: #444;
-  }
   input:focus {
     box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
   }
@@ -140,7 +136,7 @@ aside footer *:last-child {
 
 
 .wallet-adapter-button {
-    background-color: #404144;
+    background-color: #383a3f;
 
     --background: #F6F8FF;
     --colorwalletadapter: #1E2235;
