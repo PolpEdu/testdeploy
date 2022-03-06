@@ -337,7 +337,6 @@ h1 {
     --colorwalletadapter: #1E2235;
     --shadow: #00093d38;
     --z-before: -6;
-    display: block;
     outline: none;
     cursor: pointer;
     position: relative;
@@ -355,10 +354,6 @@ h1 {
     will-change: transform;
     transform-style: preserve-3d;
     transform: perspective(440px) rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg)) translateZ(0);
-}
-
-.wallet-adapter-button:hover {
-    --transform-duration: .16s;
 }
 
 .wallet-adapter-button:before {

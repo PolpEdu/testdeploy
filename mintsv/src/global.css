@@ -1,3 +1,8 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: 'VCR_OSD_MONO';
   src: url(./assets/fonts/VCR_OSD_MONO_1.001.ttf) format('truetype');
@@ -37,16 +42,6 @@ body, html {
 
 main {
   margin: 0 auto;
-}
-
-h1 {
-  background-image: url(assets/logo-black.svg);
-  background-position: center 1em;
-  background-repeat: no-repeat;
-  background-size: auto 1.5em;
-  margin-top: 0;
-  padding: 3.5em 0 0.5em;
-  text-align: center;
 }
 
 a,
@@ -138,9 +133,6 @@ aside footer *:last-child {
     --shadow: #2a2a2a;
     --light-gray: #444;
   }
-  h1 {
-    background-image: url(assets/logo-white.svg);
-  }
   input:focus {
     box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
   }
@@ -154,7 +146,6 @@ aside footer *:last-child {
     --colorwalletadapter: #1E2235;
     --shadow: #00093d38;
     --z-before: -6;
-    display: block;
     outline: none;
     cursor: pointer;
     position: relative;
@@ -172,10 +163,6 @@ aside footer *:last-child {
     will-change: transform;
     transform-style: preserve-3d;
     transform: perspective(440px) rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg)) translateZ(0);
-}
-
-.wallet-adapter-button:hover {
-    --transform-duration: .16s;
 }
 
 .wallet-adapter-button:before {
@@ -203,25 +190,5 @@ aside footer *:last-child {
     color: rgb(252, 0, 0)!important;
 }
 
-    .row.content {height: 100$}
+
     
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-    
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-    }
-    
-    /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
-      .sidenav {
-        height: auto;
-        padding: 15px;
-      }
-      .row.content {height: auto;} 
-    }
