@@ -34,9 +34,12 @@ html {
 body {
   margin: 0;
   top: 0;
-
+   position: fixed;
 }
-body, html {
+html {
+  height: 100%;
+}
+body {
   margin: 0;
   padding: 0;
   top: 0;
