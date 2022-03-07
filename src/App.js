@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './global.css'
 import './cointopright.css'
-import React from 'react'
+import React, { Component } from 'react'
 import { Modal } from 'react-bootstrap';
 import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup } from './utils'
 import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged';
@@ -17,9 +17,13 @@ import Popup from 'reactjs-popup';
 import { Twitter, Discord, Sun, Moon } from 'react-bootstrap-icons';
 import useWindowSize from 'react-use/lib/useWindowSize'
 import getConfig from './config'
-
-
 import { Link } from 'react-router-dom';
+
+//for flips animation
+import $ from 'jquery';
+import { render } from 'react-dom';
+import { TimelineMax, TweenLite, TweenMax, Power1, Bounce } from "gsap";
+
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance = 0.05;
@@ -33,7 +37,6 @@ function genrandomphrase() {
 
 export default function App() {
   startup();
-  const { width, height } = useWindowSize()
 
   img1 = new Image();
   img2 = new Image();
@@ -42,6 +45,7 @@ export default function App() {
   img1.src = LOGOMAIN;
   img2.src = LOGOBACK;
   img3.src = LOGODOG;
+  const { width, height } = useWindowSize();
 
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
@@ -347,37 +351,7 @@ export default function App() {
         <div className='play form-signin'>
           {txsHashes ?
             <div className='maincenter text-center'>
-              {txsResult === "" ? <Loading /> :
-                <>
-                  {txsResult === "true" ?
-                    <>
-                      <Confetti
-                        width={width - 1}
-                        height={height - 1}
-                      />
-
-
-                      <div className="textinfowin font-weight-normal" style={{ fontSize: "2rem" }}>
-                        YOU WON!
-                      </div>
-                      <button className="button button-retro is-primary" onClick={resetGame}>
-                        Play Again
-                      </button>
-                    </>
-
-                    :
-                    <>
-                      <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
-                        Game Over!
-                      </div>
-                      <button className="button button-retro is-error" onClick={resetGame}>
-                        Try Again
-                      </button>
-                    </>
-
-                  }
-                </>
-              }
+              <FlipCoin result={tailsHeads} loading={false} won={txsResult} width={width} height={height} reset={resetGame} />
             </div>
             :
             <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "650px" }}>
@@ -541,3 +515,295 @@ export function NotificationError(props) {
     </aside>
   )
 }
+
+class FlipCoin extends Component {
+
+
+  componentDidMount() {
+
+    // Returns an array of coin objects
+    function createCoins(count) {
+
+      var coins = [];
+
+      for (var i = 0; i < count; i++) {
+
+        // Copy the template
+        var clone = template.clone().attr("class", "coinBox");
+        container.append(clone);
+
+        // Finds the images inside the clone
+        var img = clone.find("img");
+
+        var coin = {
+          index: i,
+          box: clone,
+          heads: img[0],
+          edge: img[1],
+          line: img[2],
+          tails: img[3],
+          flip: function (side) {
+            side === true ? headFlip(this) : tailFlip(this);
+            return getFlippage(this.box, side);
+          }
+        };
+
+        coins.push(coin);
+
+        TweenLite.set(clone, { x: i * 100, y: 100, autoAlpha: 1 });
+      }
+
+      return coins;
+    }
+    // Animation setup
+    function getFlippage(coin, whatSide) {
+
+      //define jumping
+      jumpTime = (Math.random() * .6) + .8;
+      var jumpTl = new TimelineMax();
+      var jumpUp = new TweenMax(coin, jumpTime / 2, {
+        y: -100,
+        rotation: 10,
+        ease: Power1.easeOut
+      });
+      var jumpDown = new TweenMax(coin, jumpTime / 2, {
+        y: 100,
+        rotation: -10,
+        ease: Bounce.easeOut
+      });
+
+      jumpTl
+        .add(jumpUp.play())
+        .add(jumpDown.play())
+        .to(coin, .1, {
+          rotation: 0
+        }, "-=.2");
+
+      // timeline for each
+      var coinFlipTl = new TimelineMax();
+      coinFlipTl
+        .add(whatSide, 0) //picks whether to land on heads or tails
+        .add(jumpTl, 0);
+      return coinFlipTl;
+    };
+
+    // gets called when you click the button
+    function callIt() {
+      //container.html('');
+      coinTl.clear();
+      buildTimeline();
+      //coinTl.seek(0).invalidate().restart(); //don't seem to need this.
+    };
+
+    //makes a new animation for a coin that's heads
+    function headFlip(coin) {
+
+      var flipTime = 1 / 4;
+      var headsTl = new TimelineMax({ repeat: 1 });
+
+      headsTl
+        .fromTo(coin.heads, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, {
+          scaleY: 0,
+          y: 0
+        }, "headEnd")
+        .fromTo(coin.heads, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, {
+          scaleY: 0,
+          y: 8
+        }, "headEnd")
+        .fromTo(coin.line, flipTime, {
+          height: 0,
+          y: 0
+        }, {
+          height: 8,
+          y: 0
+        }, "headEnd")
+
+        .to(coin.heads, 0, {
+          y: 0
+        }, "tailStart")
+        .fromTo(coin.tails, flipTime, {
+          opacity: 1,
+          scaleY: 0,
+          y: 8
+        }, {
+          opacity: 1,
+          scaleY: 1,
+          y: 0
+        }, "tailStart")
+        .to(coin.edge, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, "tailStart")
+        .to(coin.line, flipTime, {
+          height: 0,
+          y: 0
+        }, "tailStart")
+
+        .to(coin.tails, flipTime, {
+          scaleY: 0
+        }, "tailEnd")
+        .fromTo(coin.edge, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, {
+          scaleY: 0,
+          y: 8
+        }, "tailEnd")
+        .to(coin.line, flipTime, {
+          height: 8,
+          y: 0
+        }, "tailEnd")
+        .fromTo(coin.heads, flipTime, {
+          scaleY: 0,
+          y: 8
+        }, {
+          scaleY: 1,
+          y: 0
+        }, "headStart")
+        .fromTo(coin.edge, flipTime, {
+          scaleY: 0,
+          y: 0
+        }, {
+          scaleY: 1,
+          y: 0
+        }, "headStart")
+        .to(coin.line, flipTime, {
+          height: 0,
+          y: 0
+        }, "headStart");
+
+      return headsTl;
+    };
+
+    //makes a new animation for a coin that's tails
+    function tailFlip(coin) {
+
+      var flipTime = 1 / 3;
+      var tailsTl = new TimelineMax({ repeat: 1 });
+
+      tailsTl
+        .fromTo(coin.heads, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, {
+          scaleY: 0,
+          y: 0
+        }, "headEnd2")
+        .fromTo(coin.edge, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, {
+          scaleY: 0,
+          y: 8
+        }, "headEnd2")
+        .fromTo(coin.line, flipTime, {
+          height: 0,
+          y: 0
+        }, {
+          height: 8,
+          y: 0
+        }, "headEnd2")
+
+        .to(coin.edge, 0, {
+          y: 0
+        }, "tailStart2")
+        .fromTo(coin.tails, flipTime, {
+          opacity: 1,
+          scaleY: 0,
+          y: 8
+        }, {
+          opacity: 1,
+          scaleY: 1,
+          y: 0
+        }, "tailStart2")
+        .to(coin.edge, flipTime, {
+          scaleY: 1,
+          y: 0
+        }, "tailStart2")
+        .to(coin.line, flipTime, {
+          height: 0,
+          y: 0
+        }, "tailStart2");
+
+      return tailsTl;
+    };
+
+    function buildTimeline(side) {
+
+      // forEach is an array method
+      coins.forEach(function (coin) {
+        coinTl.add(coin.flip(side), 0);
+      });
+    };
+
+    var container = $("#cointainer"); //canvas area
+    var $coinBox = $("#coinBox");
+    var coinTl = new TimelineMax(); // master timeline
+    var jumpTime = (Math.random() * .6) + .8;
+
+    // The HTML for the coins to use
+    var template = $(".template").remove();
+
+    var count = 1;
+    var coins = createCoins(count);
+
+    buildTimeline(this.props.result);
+    callIt();
+
+
+  }
+  res = () => {
+    this.props.reset();
+  }
+
+  render() {
+    console.log(this.props.result);
+    console.log(this.props.won);
+
+    return (
+      <>
+        <div id="cointainer" className='mx-auto  w-full h-full'>
+          <div className="template" style={{ visibility: "hidden" }}>
+            <img className="coinHeads" src={LOGOMAIN} />
+            <img className="coinEdge" src="http://www.joshworth.com/dev/78coins/img/cf/coin-edge.svg" />
+            <img className="coinLine" src="http://www.joshworth.com/dev/78coins/img/cf/coin-line.svg" />
+            <img className="coinTails" src={LOGOBACK} />
+          </div>
+        </div>
+        {this.props.won === "true" ? <>
+          <Confetti
+            width={this.props.width - 1}
+            height={this.props.height - 1}
+          />
+
+          <div className="textinfowin font-weight-normal" style={{ fontSize: "2rem" }}>
+            YOU WON!
+          </div>
+
+          <button className="button button-retro is-primary" onClick={this.res}>
+            Play Again
+          </button>
+        </>
+          : <>
+
+            <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
+              Game Over!
+            </div>
+            <button className="button button-retro is-error" onClick={this.res}>
+              Try Again
+            </button>
+          </>}
+      </>
+
+    );
+  }
+}
+
+
+

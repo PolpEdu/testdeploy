@@ -273,6 +273,7 @@ export default function Mult() {
                                 <>
                                     {txsResult === "true" ?
                                         <>
+
                                             <Confetti
                                                 width={width - 1}
                                                 height={height - 1}

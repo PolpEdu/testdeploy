@@ -17,7 +17,9 @@ window.nearInitPromise = initContract()
     ReactDOM.render(
       <Router>
         <Routes>
-          <Route exact path="/" element={<App />} ></Route>
+          <Route path="/" element={<App />} >
+            <Route path="/:transactionHashes" element={<App />} />
+          </Route>
           <Route path='/play' element={<Mult />}></Route>
         </Routes>
       </Router>,
