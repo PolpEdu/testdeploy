@@ -526,11 +526,14 @@ function FlipCoin(props) {
     // The HTML for the coins to use
     var container = $("#cointainer"); //canvas area
     var $coinBox = $("#coinBox");
-    var template = $(".template").remove();
-    var count = 1;
-    var coins = createCoins(count);
     var coinTl = new TimelineMax(); // master timeline
     var jumpTime = (Math.random() * .75) + .8;
+
+    // The HTML for the coins to use
+    var template = $(".template").remove();
+
+    var count = 1;
+    var coins = createCoins(count);
 
 
     // Returns an array of coin objects
@@ -555,7 +558,7 @@ function FlipCoin(props) {
           line: img[2],
           tails: img[3],
           flip: function (side) {
-            side === true ? headFlip(this) : tailFlip(this);
+            side ? headFlip(this) : tailFlip(this);
             return getFlippage(this.box, side);
           }
         };
@@ -567,6 +570,7 @@ function FlipCoin(props) {
 
       return coins;
     }
+    // Animation setup
     // Animation setup
     function getFlippage(coin, whatSide) {
 
@@ -600,13 +604,14 @@ function FlipCoin(props) {
     };
 
     // gets called when you click the button
-    function callIt() {
+    function callIt(side) {
       //container.html('');
       coinTl.clear();
-      buildTimeline();
+      buildTimeline(side);
       //coinTl.seek(0).invalidate().restart(); //don't seem to need this.
     };
 
+    //makes a new animation for a coin that's heads
     //makes a new animation for a coin that's heads
     function headFlip(coin) {
 
@@ -755,7 +760,7 @@ function FlipCoin(props) {
     };
 
     setTimeout(function () {
-      callIt();
+      callIt(props.tailsHeads === "heads");
 
     }, 1000);
 
@@ -786,7 +791,7 @@ function FlipCoin(props) {
             height={props.height - 1}
           />
 
-          <div className="textinfowin font-weight-normal" style={{ fontSize: "2rem" }}>
+          <div className="textinfowin font-weight-normal mb-2" style={{ fontSize: "2rem" }}>
             YOU WON!
           </div>
 
@@ -799,7 +804,7 @@ function FlipCoin(props) {
             <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
               Game Over!
             </div>
-            <button className="button button-retro is-error" onClick={this.res}>
+            <button className="button button-retro is-error mb-2" onClick={this.res}>
               Try Again
             </button>
           </>
