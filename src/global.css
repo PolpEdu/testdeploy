@@ -467,7 +467,7 @@ h1 {
 
 aside {
   position: absolute;
-  animation: notify ease-in-out 4s;
+  animation: notify ease-in-out 6s;
   background-color: #020024;
   border-radius: 5px;
   bottom: 0;
@@ -867,4 +867,13 @@ img {
 	width:100px;
 	z-index:40;
 	opacity:0;
+}
+
+.fadein{
+   transition: opacity 0.5s;
+  opacity: 1;
+}
+.fadein.fadeout {
+  opacity: 0;
+  pointer-events:none;
 }

@@ -516,10 +516,22 @@ export function NotificationError(props) {
   )
 }
 
-class FlipCoin extends Component {
+function FlipCoin(props) {
+
+  const [processing, setprocessing] = React.useState(true);
 
 
-  componentDidMount() {
+
+  React.useEffect(() => {
+    // The HTML for the coins to use
+    var container = $("#cointainer"); //canvas area
+    var $coinBox = $("#coinBox");
+    var template = $(".template").remove();
+    var count = 1;
+    var coins = createCoins(count);
+    var coinTl = new TimelineMax(); // master timeline
+    var jumpTime = (Math.random() * .75) + .8;
+
 
     // Returns an array of coin objects
     function createCoins(count) {
@@ -559,7 +571,7 @@ class FlipCoin extends Component {
     function getFlippage(coin, whatSide) {
 
       //define jumping
-      jumpTime = (Math.random() * .6) + .8;
+      jumpTime = (Math.random() * .75) + .8;
       var jumpTl = new TimelineMax();
       var jumpUp = new TweenMax(coin, jumpTime / 2, {
         y: -100,
@@ -742,74 +754,59 @@ class FlipCoin extends Component {
       });
     };
 
-    var container = $("#cointainer"); //canvas area
-    var $coinBox = $("#coinBox");
-    var coinTl = new TimelineMax(); // master timeline
-    var jumpTime = (Math.random() * .6) + .8;
-
-    // The HTML for the coins to use
-    var template = $(".template").remove();
-
-    var count = 1;
-    var coins = createCoins(count);
-
-
-
-    //wait 1 second
     setTimeout(function () {
-    buildTimeline(this.props.result);
       callIt();
+
     }, 1000);
 
+    setTimeout(function () {
+      setprocessing(false);
+    }, 3000);
+  }, []);
 
-  }
   res = () => {
-    this.props.reset();
+    props.reset();
   }
 
-  
-
-  render() {
-    console.log(this.props.result);
-    console.log(this.props.won);
-
-    return (
-      <>
-        <div id="cointainer" className='mx-auto  w-full h-full'>
-          <div className="template" style={{ visibility: "hidden" }}>
-            <img className="coinHeads" src={LOGOMAIN} />
-            <img className="coinEdge" src="http://www.joshworth.com/dev/78coins/img/cf/coin-edge.svg" />
-            <img className="coinLine" src="http://www.joshworth.com/dev/78coins/img/cf/coin-line.svg" />
-            <img className="coinTails" src={LOGOBACK} />
-          </div>
+  return (
+    <>
+      <div id="cointainer" className='mx-auto  w-full h-full'>
+        <div className="template" style={{ visibility: "hidden" }}>
+          <img className="coinHeads" src={LOGOMAIN} />
+          <img className="coinEdge" src="http://www.joshworth.com/dev/78coins/img/cf/coin-edge.svg" />
+          <img className="coinLine" src="http://www.joshworth.com/dev/78coins/img/cf/coin-line.svg" />
+          <img className="coinTails" src={LOGOBACK} />
         </div>
-        {this.props.won === "true" ? <>
+      </div>
+      <div className={processing === false ? 'fadein' : 'fadein fadeout'}>
+        {props.won === "true" ? <>
+
           <Confetti
-            width={this.props.width - 1}
-            height={this.props.height - 1}
+            width={props.width - 1}
+            height={props.height - 1}
           />
 
           <div className="textinfowin font-weight-normal" style={{ fontSize: "2rem" }}>
             YOU WON!
           </div>
 
-          <button className="button button-retro is-primary" onClick={this.res}>
+          <button className="button button-retro is-primary" onClick={res}>
             Play Again
           </button>
         </>
-          : <>
-
+          :
+          <>
             <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
               Game Over!
             </div>
             <button className="button button-retro is-error" onClick={this.res}>
               Try Again
             </button>
-          </>}
-      </>
-
-    );
-  }
+          </>
+        }
+      </div>
+    </>
+  );
 }
 
 
