@@ -831,10 +831,10 @@ img {
 
 .coinBox {
   display:block;
-	position:absolute;
 	height: 100px;
 	width: 100px;
   border: 0px solid white;
+  margin-left: 25%;
 }
 
 .coinHeads {
@@ -853,6 +853,8 @@ img {
 
 #cointainer{
   overflow:visible;
+  height: 500px;
+  width:50%;
 }
 .coinLine {
 	top: 50px;
@@ -870,7 +872,7 @@ img {
 }
 
 .fadein{
-   transition: opacity 0.5s;
+  transition: opacity 0.5s;
   opacity: 1;
 }
 .fadein.fadeout {
