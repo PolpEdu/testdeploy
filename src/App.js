@@ -753,14 +753,21 @@ class FlipCoin extends Component {
     var count = 1;
     var coins = createCoins(count);
 
+
+
+    //wait 1 second
+    setTimeout(function () {
     buildTimeline(this.props.result);
-    callIt();
+      callIt();
+    }, 1000);
 
 
   }
   res = () => {
     this.props.reset();
   }
+
+  
 
   render() {
     console.log(this.props.result);
