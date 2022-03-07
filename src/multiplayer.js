@@ -135,89 +135,92 @@ export default function Mult() {
             {showNotification && <Notification />}
             {errormsg && <NotificationError err={errormsg} />}
             <div className='social-icons'>
-                <div className='d-flex flex-md-column justify-content-start align-items-center h-100 mt-auto'>
+                <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
                     <div className='mt-3 d-flex flex-column shortcut-row'>
-                        <div className='d-flex flex-row mb-2 toolbar'>
+                        <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
+                            <div className='d-flex flex-row'>
 
-                            <div role='button' className='retro-btn warning'>
-                                <Link to="/" id="RouterNavLink">
-                                    <div className='buttoncool'>
-                                        <span className='btn-inner'>
-                                            <span className='content-wrapper'>
-                                                <span className='btn-content'>
+                                <div role='button' className='retro-btn warning'>
+                                    <Link to="/" id="RouterNavLink">
+                                        <div className='buttoncool'>
+                                            <span className='btn-inner'>
+                                                <span className='content-wrapper'>
+                                                    <span className='btn-content'>
 
-                                                    <span className='btn-content-inner' label="Flip Alone">
+                                                        <span className='btn-content-inner' label="Flip Alone">
+                                                        </span>
                                                     </span>
                                                 </span>
                                             </span>
-                                        </span>
+                                        </div>
+                                    </Link>
+                                </div>
+                                <Popup trigger={
+                                    <div role='button' className='retro-btn danger'>
+                                        <a className='buttoncool'>
+                                            <span className='btn-inner'>
+                                                <span className='content-wrapper'>
+                                                    <span className='btn-content'>
+                                                        <span className='btn-content-inner' label="ON FIRE">
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </a>
                                     </div>
-                                </Link>
+
+                                } position="center center"
+                                    modal
+                                    contentStyle={contentStyle}
+                                >
+                                    <TopPlays />
+                                </Popup>
+
                             </div>
-                            <Popup trigger={
-                                <div role='button' className='retro-btn danger'>
-                                    <a className='buttoncool'>
-                                        <span className='btn-inner'>
-                                            <span className='content-wrapper'>
-                                                <span className='btn-content'>
-                                                    <span className='btn-content-inner' label="ON FIRE">
+                            <div className='d-flex flex-row'>
+                                <Popup trigger={
+                                    <div role='button' className='retro-btn'>
+                                        <a className='buttoncool'>
+                                            <span className='btn-inner'>
+                                                <span className='content-wrapper'>
+                                                    <span className='btn-content'  >
+                                                        <span className='btn-content-inner' label="WHO'S PLAYIN">
+                                                        </span>
                                                     </span>
                                                 </span>
                                             </span>
-                                        </span>
-                                    </a>
-                                </div>
+                                        </a>
+                                    </div>
+                                } position="center center"
+                                    modal
+                                    contentStyle={contentStyle}
+                                >
+                                    <RecentPlays />
 
-                            } position="center center"
-                                modal
-                                contentStyle={contentStyle}
-                            >
-                                <TopPlays />
-                            </Popup>
+                                </Popup>
 
-
-                            <Popup trigger={
-                                <div role='button' className='retro-btn'>
-                                    <a className='buttoncool'>
-                                        <span className='btn-inner'>
-                                            <span className='content-wrapper'>
-                                                <span className='btn-content'  >
-                                                    <span className='btn-content-inner' label="WHO'S PLAYIN">
+                                <Popup trigger={
+                                    <div role='button' className='retro-btn info'>
+                                        <a className='buttoncool'>
+                                            <span className='btn-inner'>
+                                                <span className='content-wrapper'>
+                                                    <span className='btn-content'>
+                                                        <span className='btn-content-inner' label="TOP PLAYERS">
+                                                        </span>
                                                     </span>
                                                 </span>
                                             </span>
-                                        </span>
-                                    </a>
-                                </div>
-                            } position="center center"
-                                modal
-                                contentStyle={contentStyle}
-                            >
-                                <RecentPlays />
+                                        </a>
+                                    </div>
+                                } position="center center"
+                                    modal
+                                    contentStyle={contentStyle}
+                                >
+                                    <TopPlayers />
+                                </Popup>
+                            </div>
 
-                            </Popup>
-
-                            <Popup trigger={
-                                <div role='button' className='retro-btn info'>
-                                    <a className='buttoncool'>
-                                        <span className='btn-inner'>
-                                            <span className='content-wrapper'>
-                                                <span className='btn-content'>
-                                                    <span className='btn-content-inner' label="TOP PLAYERS">
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </a>
-                                </div>
-                            } position="center center"
-                                modal
-                                contentStyle={contentStyle}
-                            >
-                                <TopPlayers />
-                            </Popup>
-
-                            {!window.walletConnection.isSignedIn() ? <></> : <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow} />
+                            {!window.walletConnection.isSignedIn() ? <></> : <><div className="profile-picture-md"><img className="image rounded-circle cursor-pointer border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow} />
                             </div>
                                 <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
                                     <Modal.Body className='p-0' style={{ color: "black" }}>

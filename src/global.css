@@ -217,12 +217,20 @@ code {
     flex: 1 1 auto;
     padding: 1rem 0rem 0rem 0rem;
 }
-
+.profile-picture-md {
+  margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
 @media (min-width: 576px){
   .modal-dialog {
       max-width: 800px;
       margin: 1.75rem auto;
+  }
+  .profile-picture-md {
+    margin-top: 0px;
+    margin-left: 1rem;
   }
 }
 /* min widh*/
