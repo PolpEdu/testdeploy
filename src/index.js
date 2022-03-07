@@ -7,13 +7,19 @@ import {
   Routes,
   Route,
   useRoutes,
+  Link,
 } from "react-router-dom";
+
+import Mult from './multiplayer.js';
 
 window.nearInitPromise = initContract()
   .then(() => {
     ReactDOM.render(
       <Router>
-      <App />
+        <Routes>
+          <Route exact path="/" element={<App />} ></Route>
+          <Route path='/play' element={<Mult />}></Route>
+        </Routes>
       </Router>,
       document.querySelector('#root')
     )

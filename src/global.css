@@ -218,6 +218,7 @@ code {
     padding: 1rem 0rem 0rem 0rem;
 }
 
+
 @media (min-width: 576px){
   .modal-dialog {
       max-width: 800px;
@@ -353,6 +354,7 @@ h1 {
     transition: transform var(--transform-duration, .4s);
     will-change: transform;
     transform-style: preserve-3d;
+    z-index: 10;
     transform: perspective(440px) rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg)) translateZ(0);
 }
 
@@ -516,6 +518,20 @@ ul.ba {
 }
 li{
   list-style:none ;
+}
+.start-mult {
+  z-index: 2;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  color: white;
+  justify-content: center;
+  text-shadow: 1px 1px 0px rgb(236, 0, 0);
+  transition: transform opacity 1.5s ease-out;
+  animation: opacityPulse 1.2s ease-out;
+  animation-iteration-count: infinite;
 }
 
 .start {

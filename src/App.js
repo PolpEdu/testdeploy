@@ -4,7 +4,7 @@ import './global.css'
 import './cointopright.css'
 import React from 'react'
 import { Modal } from 'react-bootstrap';
-import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay } from './utils'
+import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup } from './utils'
 import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged';
 import Confetti from 'react-confetti';
 import ParasLogoB from './assets/paras-black.svg';
@@ -16,9 +16,10 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Twitter, Discord, Sun, Moon } from 'react-bootstrap-icons';
 import useWindowSize from 'react-use/lib/useWindowSize'
-
 import getConfig from './config'
 
+
+import { Link } from 'react-router-dom';
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance = 0.05;
@@ -29,8 +30,9 @@ function genrandomphrase() {
   return menusayings[Math.floor(Math.random() * menusayings.length)];
 }
 
-export default function App() {
 
+export default function App() {
+  startup();
   const { width, height } = useWindowSize()
 
   img1 = new Image();
@@ -57,13 +59,11 @@ export default function App() {
   // Dark Theme
   const [darkMode, setDarkMode] = React.useState("light")
 
-  //
   const [tailsHeads, setTailsHeads] = React.useState(Math.random() < 0.5 ? "tails" : "heads")
 
   // surprise phrase
   const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
 
-  //
   const [ammoutNEAR, setammout] = React.useState("")
 
   const [ammountWon, setWonAmmount] = React.useState("")
@@ -214,10 +214,24 @@ export default function App() {
       {showNotification && <Notification />}
       {errormsg && <NotificationError err={errormsg} />}
       <div className='social-icons'>
-        <div className='d-flex flex-row flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
+        <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
           <div className='mt-3 d-flex flex-column shortcut-row'>
-            <div className='d-flex flex-row mb-2 toolbar'>
+            <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
 
+              <div role='button' className='retro-btn warning'>
+                <Link id="RouterNavLink" to='/play'><div className='buttoncool'>
+                  <span className='btn-inner'>
+                    <span className='content-wrapper'>
+                      <span className='btn-content'>
+                        <span className='btn-content-inner' label="More Games">
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </div></Link>
+
+
+              </div>
               <Popup trigger={
                 <div role='button' className='retro-btn danger'>
                   <a className='buttoncool'>
@@ -225,7 +239,6 @@ export default function App() {
                       <span className='content-wrapper'>
                         <span className='btn-content'>
                           <span className='btn-content-inner' label="ON FIRE">
-
                           </span>
                         </span>
                       </span>
@@ -282,7 +295,7 @@ export default function App() {
                 <TopPlayers />
               </Popup>
 
-              {!window.walletConnection.isSignedIn() ? <></> : <><div className="ms-3 profile-picture-md"><img className="image rounded-circle cursor-pointer border border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow} />
+              {!window.walletConnection.isSignedIn() ? <></> : <><div className="mx-auto profile-picture-md"><img className="image rounded-circle cursor-pointer border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow} />
               </div>
                 <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
                   <Modal.Body className='p-0' style={{ color: "black" }}>
@@ -479,11 +492,12 @@ export default function App() {
       </div>
 
     </div>
+
   )
 }
 
 // this component gets rendered by App after the form is submitted
-function Notification() {
+export function Notification() {
   const urlPrefix = "https://explorer." + networkId + ".near.org/accounts"
   return (
     <aside>
@@ -503,7 +517,7 @@ function Notification() {
   )
 }
 
-function NotificationError(props) {
+export function NotificationError(props) {
   const urlPrefix = "https://explorer." + networkId + ".near.org/accounts";
 
   return (
