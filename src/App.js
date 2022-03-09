@@ -12,6 +12,8 @@ import ParasLogoW from './assets/paras-white.svg';
 import LOGOMAIN from './assets/result.svg';
 import LOGODOG from './assets/nearcoindoggo.svg';
 import LOGOBACK from './assets/nearcoin.svg';
+import MIDDLE from './assets/coinmiddle.svg';
+import LINE from './assets/coinflipped.svg';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Twitter, Discord, Sun, Moon } from 'react-bootstrap-icons';
@@ -523,7 +525,8 @@ function FlipCoin(props) {
 
 
   React.useEffect(() => {
-    // The HTML for the coins to use
+    //why won't the last coin animate??
+
     var container = $("#cointainer"); //canvas area
     var $coinBox = $("#coinBox");
     var coinTl = new TimelineMax(); // master timeline
@@ -532,9 +535,8 @@ function FlipCoin(props) {
     // The HTML for the coins to use
     var template = $(".template").remove();
 
-    var count = 1;
+    var count = 5;
     var coins = createCoins(count);
-
 
     // Returns an array of coin objects
     function createCoins(count) {
@@ -558,7 +560,7 @@ function FlipCoin(props) {
           line: img[2],
           tails: img[3],
           flip: function (side) {
-            side ? headFlip(this) : tailFlip(this);
+            var side = side ? headFlip(this) : tailFlip(this);
             return getFlippage(this.box, side);
           }
         };
@@ -570,7 +572,7 @@ function FlipCoin(props) {
 
       return coins;
     }
-    // Animation setup
+
     // Animation setup
     function getFlippage(coin, whatSide) {
 
@@ -604,14 +606,13 @@ function FlipCoin(props) {
     };
 
     // gets called when you click the button
-    function callIt(side) {
+    function callIt() {
       //container.html('');
       coinTl.clear();
-      buildTimeline(side);
+      buildTimeline();
       //coinTl.seek(0).invalidate().restart(); //don't seem to need this.
     };
 
-    //makes a new animation for a coin that's heads
     //makes a new animation for a coin that's heads
     function headFlip(coin) {
 
@@ -760,13 +761,13 @@ function FlipCoin(props) {
     };
 
     setTimeout(function () {
-      callIt(props.tailsHeads === "heads");
+      buildTimeline(props.tailsHeads === "heads");
 
-    }, 1000);
+    }, 2000);
 
     setTimeout(function () {
       setprocessing(false);
-    }, 3000);
+    }, 4000);
   }, []);
 
   res = () => {
@@ -778,8 +779,8 @@ function FlipCoin(props) {
       <div id="cointainer" className='mx-auto  w-full h-full'>
         <div className="template" style={{ visibility: "hidden" }}>
           <img className="coinHeads" src={LOGOMAIN} />
-          <img className="coinEdge" src="http://www.joshworth.com/dev/78coins/img/cf/coin-edge.svg" />
-          <img className="coinLine" src="http://www.joshworth.com/dev/78coins/img/cf/coin-line.svg" />
+          <img className="coinEdge" src={MIDDLE} />
+          <img className="coinLine" src={LINE} />
           <img className="coinTails" src={LOGOBACK} />
         </div>
       </div>

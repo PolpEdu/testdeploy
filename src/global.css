@@ -835,6 +835,8 @@ img {
 	width: 100px;
   border: 0px solid white;
   margin-left: 25%;
+  bottom: 0px;
+  margin-bottom: 0px;
 }
 
 .coinHeads {
@@ -855,6 +857,8 @@ img {
   overflow:visible;
   height: 500px;
   width:50%;
+  margin-bottom: 0;
+  bottom: 0;
 }
 .coinLine {
 	top: 50px;
