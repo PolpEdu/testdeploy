@@ -12,8 +12,6 @@ import ParasLogoW from './assets/paras-white.svg';
 import LOGOMAIN from './assets/result.svg';
 import LOGODOG from './assets/nearcoindoggo.svg';
 import LOGOBACK from './assets/nearcoin.svg';
-import MIDDLE from './assets/coinmiddle.svg';
-import LINE from './assets/coinflipped.svg';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Twitter, Discord, Sun, Moon } from 'react-bootstrap-icons';
@@ -22,10 +20,8 @@ import getConfig from './config'
 import { Link } from 'react-router-dom';
 
 //for flips animation
-import $ from 'jquery';
-import { render } from 'react-dom';
-import { TimelineMax, TweenLite, TweenMax, Power1, Bounce } from "gsap";
-
+import logo from './assets/Coin Animation.gif'
+import ReactPlayer from 'react-player'
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance = 0.05;
@@ -541,13 +537,8 @@ function FlipCoin(props) {
 
   return (
     <>
-      <div id="cointainer" className='mx-auto  w-full h-full'>
-        <div className="template" style={{ visibility: "hidden" }}>
-          <img className="coinHeads" src={LOGOMAIN} />
-          <img className="coinEdge" src={MIDDLE} />
-          <img className="coinLine" src={LINE} />
-          <img className="coinTails" src={LOGOBACK} />
-        </div>
+      <div id="cointainer" className=''>
+        <img style={{ width: "600px", height: "auto" }} src={logo} />
       </div>
       <div className={processing === false ? 'fadein' : 'fadein fadeout'}>
         {props.won === "true" ? <>
