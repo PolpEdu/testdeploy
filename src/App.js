@@ -1,52 +1,52 @@
 import 'regenerator-runtime/runtime'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './global.css'
 import './cointopright.css'
 import React, { Component } from 'react'
-import { Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap'
 import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup } from './utils'
-import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged';
-import Confetti from 'react-confetti';
-import ParasLogoB from './assets/paras-black.svg';
-import ParasLogoW from './assets/paras-white.svg';
-import LOGOMAIN from './assets/result.svg';
-import LOGODOG from './assets/nearcoindoggo.svg';
-import LOGOBACK from './assets/nearcoin.svg';
-import { useSearchParams, useNavigate } from "react-router-dom";
-import Popup from 'reactjs-popup';
-import { Twitter, Discord, Sun, Moon } from 'react-bootstrap-icons';
+import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged'
+import Confetti from 'react-confetti'
+import ParasLogoB from './assets/paras-black.svg'
+import ParasLogoW from './assets/paras-white.svg'
+import LOGOMAIN from './assets/result.svg'
+import LOGODOG from './assets/nearcoindoggo.svg'
+import LOGOBACK from './assets/nearcoin.svg'
+import { useSearchParams, useNavigate } from "react-router-dom"
+import Popup from 'reactjs-popup'
+import { Twitter, Discord, Sun, Moon } from 'react-bootstrap-icons'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import getConfig from './config'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 //for flips animation
 import logo from './assets/Coin Animation.gif'
 import ReactPlayer from 'react-player'
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
-const doggochance = 0.05;
+const doggochance = 0.05
 
 
-//import { ThemeProvider } from 'styled-components';
+//import { ThemeProvider } from 'styled-components'
 function genrandomphrase() {
-  return menusayings[Math.floor(Math.random() * menusayings.length)];
+  return menusayings[Math.floor(Math.random() * menusayings.length)]
 }
 
 
 export default function App() {
-  startup();
+  startup()
 
-  img1 = new Image();
-  img2 = new Image();
-  img3 = new Image();
+  img1 = new Image()
+  img2 = new Image()
+  img3 = new Image()
 
-  img1.src = LOGOMAIN;
-  img2.src = LOGOBACK;
-  img3.src = LOGODOG;
-  const { width, height } = useWindowSize();
+  img1.src = LOGOMAIN
+  img2.src = LOGOBACK
+  img3.src = LOGODOG
+  const { width, height } = useWindowSize()
 
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false)
 
@@ -71,25 +71,24 @@ export default function App() {
   const [ammountWon, setWonAmmount] = React.useState("")
 
 
-  const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
+  const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"))
 
-  let msg = "";
+  let msg = ""
   if (searchParams.get("errorCode")) {
-    msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + ".";
-
+    msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + "."
   }
 
-  const [errormsg, setErrormsg] = React.useState(msg);
+  const [errormsg, setErrormsg] = React.useState(msg)
 
-  const [txsResult, settxsResult] = React.useState("");
+  const [txsResult, settxsResult] = React.useState("")
 
   //popup
-  const [show, setShow] = React.useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [show, setShow] = React.useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   //
-  const [showDoggo, setShowDogo] = React.useState(false);
+  const [showDoggo, setShowDogo] = React.useState(false)
 
 
   const toogleDarkMode = () => {
@@ -101,7 +100,7 @@ export default function App() {
     setammout(price)
   }
 
-  const [showwhosplayin, setshowwhosplayin] = React.useState(false);
+  const [showwhosplayin, setshowwhosplayin] = React.useState(false)
 
   const resetGame = () => {
     setTailsHeads(Math.random() < 0.5 ? "tails" : "heads")
@@ -115,70 +114,70 @@ export default function App() {
     searchParams.delete("transactionHashes")
     searchParams.delete("errorCode")
     searchParams.delete("errorMessage")
-    navigate(searchParams.toString());
+    navigate(searchParams.toString())
   }
 
-  const [processing, setprocessing] = React.useState(false);
+  const [processing, setprocessing] = React.useState(false)
 
 
   const getTxsResult = async () => {
-    let decodedstr = "";
-    let decodedWonAmmountstr = "";
+    let decodedstr = ""
+    let decodedWonAmmountstr = ""
 
     await gettxsRes(txsHashes).then(res => {
       //console.log(res)
       setShowNotification(true)
 
       let decoded = Buffer.from(res.status.SuccessValue, 'base64')
-      decodedstr = decoded.toString("ascii");
+      decodedstr = decoded.toString("ascii")
 
-      let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees;
+      let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees
 
-      sendpostwithplay(txsHashes);
+      sendpostwithplay(txsHashes)
 
       try {
-        decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', { useGrouping: false }));
+        decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', { useGrouping: false }))
 
       } catch (e) {
-        console.log("Error converting ammount bet to string.");
+        console.log("Error converting ammount bet to string.")
       }
 
       //console.log("decoded result: "+ decodedstr)
 
     }).catch(e => {
       if (!e instanceof TypeError) {
-        console.error(e);
+        console.error(e)
       }
 
     })
 
-    settxsResult(decodedstr);
+    settxsResult(decodedstr)
     setWonAmmount(decodedWonAmmountstr)
   }
 
   React.useEffect(
     () => {
-      checkifdoggo();
+      checkifdoggo()
 
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
         console.log("LOADING BALANCE AND HEADS OR TAILS")
         window.walletConnection.account().getAccountBalance().then(function (balance) {
-          let fullstr = convertYocto(balance.available).split(".");
-          let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
-          setbalance("NEAR: " + str);
+          let fullstr = convertYocto(balance.available).split(".")
+          let str = fullstr[0] + "." + fullstr[1].substring(0, 4)
+          setbalance("NEAR: " + str)
         }).catch(e => {
-          console.log('There has been a problem with getting your balance: ' + e.message);
-          setbalance("Couldn't Fetch Balance");
-        });
+          console.log('There has been a problem with getting your balance: ' + e.message)
+          setbalance("Couldn't Fetch Balance")
+        })
 
 
-        searchParams.delete("errorCode");
-        searchParams.delete("errorMessage");
-        navigate(searchParams.toString());
+        searchParams.delete("errorCode")
+        searchParams.delete("errorMessage")
+        navigate(searchParams.toString())
 
 
-        getTxsResult(txsHashes);
+        getTxsResult(txsHashes)
       }
 
     },
@@ -192,7 +191,7 @@ export default function App() {
   const checkifdoggo = () => {
     let random = Math.random()
     if (random < doggochance) {
-      setShowDogo(true);
+      setShowDogo(true)
     }
   }
 
@@ -208,9 +207,9 @@ export default function App() {
   const contentStyle = {
     maxWidth: "660px",
     width: "90%"
-  };
+  }
 
-
+  console.log("Hey!!!!!111")
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -368,10 +367,10 @@ export default function App() {
                     <div className="flip-box logo mb-2 mx-auto">
                       <div className={tailsHeads === "heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
                         <div className="flip-box-front">
-                          <img src={showDoggo ? LOGODOG : LOGOMAIN} alt="logo" width="240" height="240" onClick={() => { toggleHeadsTails(); }} />
+                          <img src={showDoggo ? LOGODOG : LOGOMAIN} alt="logo" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
                         </div>
                         <div className="flip-box-back">
-                          <img src={LOGOBACK} alt="logoback" width="240" height="240" onClick={() => { toggleHeadsTails(); }} />
+                          <img src={LOGOBACK} alt="logoback" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
                         </div>
                       </div>
 
@@ -416,10 +415,10 @@ export default function App() {
                     <button
                       className="button button-retro is-warning"
                       onClick={event => {
-                        setButtonDisabled(true);
-                        setprocessing(true);
-                        //console.log(tailsHeads);
-                        //console.log(ammoutNEAR);
+                        setButtonDisabled(true)
+                        setprocessing(true)
+                        //console.log(tailsHeads)
+                        //console.log(ammoutNEAR)
                         flip(tailsHeads === "heads", ammoutNEAR)
 
                         /*code doesnt reach here*/
@@ -477,7 +476,7 @@ export function Notification() {
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
         {window.accountId}
       </a>
-      {' '/* React trims whitespace around tags; insert literal space character when needed */}
+      {' '/* React trims whitespace around tags insert literal space character when needed */}
       <span style={{ color: "#f5f5f5" }}>called method in contract:</span>
       {' '}
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
@@ -490,15 +489,16 @@ export function Notification() {
   )
 }
 
+
 export function NotificationError(props) {
-  const urlPrefix = "https://explorer." + networkId + ".near.org/accounts";
+  const urlPrefix = "https://explorer." + networkId + ".near.org/accounts"
 
   return (
     <aside>
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
         {window.accountId}
       </a>
-      {' '/* React trims whitespace around tags; insert literal space character when needed */}
+      {' '/* React trims whitespace around tags insert literal space character when needed */}
       tried to call a method in Contract:
       {' '}
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
@@ -513,8 +513,7 @@ export function NotificationError(props) {
 }
 
 function FlipCoin(props) {
-
-  const [processing, setprocessing] = React.useState(true);
+  const [processing, setprocessing] = React.useState(true)
 
 
 
@@ -522,17 +521,17 @@ function FlipCoin(props) {
     //why won't the last coin animate??
 
     setTimeout(function () {
-      //buildTimeline(props.tailsHeads === "heads");
+      //buildTimeline(props.tailsHeads === "heads")
       //play animation here
-    }, 2000);
+    }, 2000)
 
     setTimeout(function () {
-      setprocessing(false);
-    }, 4000);
-  }, []);
+      setprocessing(false)
+    }, 4000)
+  }, [])
 
   res = () => {
-    props.reset();
+    props.reset()
   }
 
   return (
@@ -568,7 +567,7 @@ function FlipCoin(props) {
         }
       </div>
     </>
-  );
+  )
 }
 
 
