@@ -15,11 +15,12 @@ import { BsTwitter } from "react-icons/bs";
 import { SiDiscord } from "react-icons/si";
 import { FiCompass } from "react-icons/fi";
 
+import Navbar from '../components/navbar';
 
 
-const projectName = 'Flip Near NFTs';
+const projectName = 'Mint Flip Near NFT';
 const totalnftammount = 555;
-const nftprice = 1;
+const nftprice = 10;
 const info = "Flip Near 😱 is a juicy 💦 collection ❗ of 555 character NFT's 🆕 nesting on Near 😎. You mint the nft 📝, you stake it 🔒 and you win some Near daily 🤴. That's it 😐😐. I think we've covered it all 🥱🥱. hmmm. Let me think.............. OH 😵😵😵 AND YOU CAN ALSO USE IT 😲 TO FLEXD ON THIS KIDS 👀👀👀 WITH YOUR NEW PROFILE PIC LMAO🔥🤣🔥🤣💯💯🔥🤣💯🔥🤣";
 
 const infographic1 = "WHITELIST OPEN";
@@ -85,17 +86,18 @@ export default function App() {
 
 
   return (
+    <>
+    <Navbar/>
     <div className="max-w-screen-3xl mx-auto w-full px-8 ">
       {errormsg && <NotificationError err={errormsg} />}
       <div className="flex flex-1 flex-col-reverse md:flex-row mx-auto gap-8 justify-between my-4">
         <div className="flex flex-col gap-4 flex-grow md:max-w-[40%]">
-
-          <div className="text-center text-sm border border-solid rounded-md px-2 py-1 w-fit-content tracking-widest" style={{ borderColor: "#F58F29" }}>
-            {maintitle}
-          </div>
           <h1 className="text-4xl font-extrabold leading-none" style={{ color: "#fcdd35" }}>
             {projectName}
           </h1>
+          <div className="text-center text-xs border border-solid rounded-md px-2 py-1 w-fit-content tracking-widest" style={{ borderColor: "#F58F29" }}>
+            {maintitle}
+          </div>
           <div className="inline-flex gap-2 content-center w-fit-content flex-wrap">
             <Tippy content={<span style={{ fontSize: "0.8rem" }}>{tooltip1}</span>} className="my-auto" style={{ display: "inline" }} >
               <div className="border border-solid border-purple-1 p-1.5 rounded-md text-white-1 h-fit-content text-sm flex gap-2 whitespace-nowrap" style={{ color: '#f04f63' }}>
@@ -118,7 +120,7 @@ export default function App() {
 
             <div className="flex items-center gap-2">
               <Tippy content={<span style={{ fontSize: "0.8rem" }} animation="perspective" >Flip Near1!11!</span>} style={{ display: "inline" }}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.degennearflip.com/">
+                <a target="_blank" rel="noopener noreferrer" href="https://www.nearcoinflip.com/">
                   <FiCompass className="w-6 h-6 hover:opacity-80" />
                 </a>
               </Tippy>
@@ -134,9 +136,9 @@ export default function App() {
               </Tippy>
             </div>
           </div>
-          <p className="mb-4 text-gray-light">
+          <h6 className="mb-4 text-gray-light text-xs">
             {info}
-          </p>
+          </h6>
           <div className="flex flex-col gap-4"><div style={{ display: "inline" }}>
             <Tippy content={
               <Box>
@@ -203,7 +205,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="flex gap-1.5 text-white-1 tracking-wide text-sm">
+                <div className="flex gap-1.5 text-white-1 tracking-wide text-xs">
                   <span>WHITELIST <b>832</b></span>
                   <b>•</b>
                   <span>MAX <b>1 TOKEN</b></span><b>•</b><span>Price <b>1.00₦</b></span>
@@ -278,7 +280,7 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-1.5 text-white-1 tracking-wide text-sm"><span>MAX <b>10 TOKENS</b></span><b>•</b><span>Price <b>1.00₦</b></span>
+                  <div className="flex gap-1.5 text-white-1 tracking-wide text-xs"><span>MAX <b>10 TOKENS</b></span><b>•</b><span>Price <b>1.00₦</b></span>
                   </div>
                 </div>
               </div>
@@ -302,7 +304,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-4 items-center justify-between flex-wrap rounded-lg p-4 mt-4">
+            <div className="flex gap-4 items-center justify-between flex-wrap rounded-lg p-2">
               <div className="flex gap-4 mx-auto flex-col w-full items-center">
                 <div className="flex justify-between gap-6 3xl:w-full">
                   <AuthButton />
@@ -329,6 +331,7 @@ export default function App() {
       <div className="modal fade" tabIndex="-1" role="dialog" style={{ backdropFilter: "blur(20px)" }}>
       </div>
     </div>
+    </>
 
   )
 }
@@ -384,7 +387,7 @@ function AuthButton() {
     < >
       {
         window.walletConnection.isSignedIn() ?
-          <div className='d-flex flex-column'>
+          <div className='flex-col inline-flex justify-center items-center'>
 
             <button className='mx-auto' onClick={mintmeup}> Mint!</button>
             <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={logout} style={{ width: "350px" }} >

@@ -13,7 +13,12 @@ window.nearInitPromise = initContract()
   .then(() => {
     ReactDOM.render(
       <Router>
-      <App />
+        <Routes>
+        <Route path="/" element={<App />}>
+          <Route path="/:accid" element={<App />} />  
+        </Route>
+          
+          </Routes>
       </Router>,
       document.querySelector('#root')
     )

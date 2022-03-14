@@ -34,10 +34,12 @@ html {
 body {
   margin: 0;
   top: 0;
-   position: fixed;
+   position: absolute;
 }
 html {
   height: 100%;
+  position: absolute;
+  width: 100%;
 }
 body {
   margin: 0;
@@ -159,6 +161,12 @@ aside footer *:last-child {
     box-shadow: 0 4px 8px var(--shadow);
 }
 
+.wallet-adapter-button:hover {
+  background-color: #aaa;
+  transition: all 0.1s;
+
+}
+
 .nearlogo {
   background-position: center 1em;
   background-repeat: no-repeat;
@@ -173,3 +181,6 @@ aside footer *:last-child {
 
 
     
+a:hover {
+    text-decoration: none;
+}
