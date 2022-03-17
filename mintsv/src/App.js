@@ -8,7 +8,6 @@ import 'tippy.js/dist/tippy.css'; // optional
 import Countdown from 'react-countdown';
 
 import NearLogo from './assets/logo-black.svg';
-import selflogo from './assets/result.svg';
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { BsTwitter } from "react-icons/bs";
@@ -388,9 +387,12 @@ function AuthButton() {
       {
         window.walletConnection.isSignedIn() ?
           <div className='flex-col inline-flex justify-center items-center'>
+            <div className='pb-2'>
+            <button className='mx-auto px-4 py-2 font-semibold text-sm bg-white text-gray-900 hover:text-white rounded-md shadow-sm hover:-translate-y-1 hover:scale-125 hover:bg-indigo-500 ease-in-out delay-50 duration-300 pb-2' onClick={mintmeup}> Mint!</button>
 
-            <button className='mx-auto' onClick={mintmeup}> Mint!</button>
-            <button className='wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={logout} style={{ width: "350px" }} >
+            </div>
+
+            <button className='pt-2 hover:text-white wallet-adapter-button inline-flex justify-center items-center rounded-md text-white-1 h-auto min-h-[44px] font-semibold border border-solid' onClick={logout} style={{ width: "350px" }} >
               Disconnect Wallet
               <img src={NearLogo} alt="Near Logo" className='nearlogo' style={{ width: "40px", height: "40px" }} />
             </button>

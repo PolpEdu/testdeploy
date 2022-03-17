@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { Transition } from "@headlessui/react";
+import selflogo from '../src/assets/LOGO.svg';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,7 @@ export default function Navbar() {
               <div className="flex-shrink-0">
                 <img
                   className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                  src={selflogo}
                   alt="Workflow"
                 />
               </div>
@@ -20,37 +21,37 @@ export default function Navbar() {
                 <div className="ml-10 flex items-baseline space-x-4">
                   <a
                     href="#"
-                    className=" hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className="text-gray-300 hover:bg-yellow-700 hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Dashboard
+                    Mint
                   </a>
 
                   <a
-                    href="#"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="#aboutus"
+                    className="text-gray-300 hover:bg-yellow-700 hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Team
+                    About us
                   </a>
 
                   <a
-                    href="#"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="#projects"
+                    className="text-gray-300 hover:bg-yellow-700  hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Projects
+                    Milestones
                   </a>
 
                   <a
-                    href="#"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="#promos"
+                    className="text-gray-300 hover:bg-yellow-700  hover:text-yellow-200 px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Calendar
+                    Partners
                   </a>
 
                   <a
-                    href="#"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    href="#FAQ"
+                    className="text-gray-300 hover:bg-yellow-700 hover:text-yellow-200  px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    Reports
+                    FAQ
                   </a>
                 </div>
               </div>
@@ -118,35 +119,35 @@ export default function Navbar() {
                   href="#"
                   className="hover:bg-gray-700 text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
-                  Dashboard
+                  Mint
                 </a>
 
                 <a
-                  href="#"
+                  href="#aboutus"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
-                  Team
+                  About us
                 </a>
 
                 <a
-                  href="#"
+                  href="#projects"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
-                  Projects
+                  Milestones
                 </a>
 
                 <a
-                  href="#"
+                  href="#promos"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
-                  Calendar
+                  Partners
                 </a>
 
                 <a
-                  href="#"
+                  href="#FAQ"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
-                  Reports
+                  FAQ
                 </a>
               </div>
             </div>
