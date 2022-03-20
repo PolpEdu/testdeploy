@@ -1,8 +1,8 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { logout, convertYocto, flip, gettxsRes, menusayingsmult, fees, sendpostwithplay, startup } from './utils'
+import { logout, convertYocto, gettxsRes, menusayingsmult, fees, sendpostwithplay, startup, getRooms } from './utils'
 import Confetti from 'react-confetti';
-import { Modal } from 'react-bootstrap';
+import { Modal, Row, Container, Col } from 'react-bootstrap';
 import './global.css'
 import './cointopright.css'
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -43,6 +43,8 @@ export default function Mult() {
 
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
 
+    const [rooms, setRooms] = React.useState([]);
+
     const resetGame = () => {
         setTailsHeads(Math.random() < 0.5 ? "tails" : "heads")
         settxsHash("")
@@ -66,6 +68,8 @@ export default function Mult() {
     const [buttonDisabled, setButtonDisabled] = React.useState(false)
     const [ammoutNEAR, setammout] = React.useState("")
     const [processing, setprocessing] = React.useState(false);
+    const [isrefreshing, setisrefreshing] = React.useState(false);
+
     const getTxsResult = async () => {
         let decodedstr = "";
         let decodedWonAmmountstr = "";
@@ -101,8 +105,18 @@ export default function Mult() {
         setWonAmmount(decodedWonAmmountstr)
     }
 
+    const joinRoom = async (roomId) => {
+        setprocessing(true)
+        setButtonDisabled(true)
+    }
+
     React.useEffect(
         () => {
+            getRooms().then(res => {
+                setRooms(res)
+            }).catch(e => {
+                console.error("Couldn't fetch rooms...\n" + e)
+            });
 
             // in this case, we only care to query the contract when signed in
             if (window.walletConnection.isSignedIn()) {
@@ -303,11 +317,11 @@ export default function Mult() {
                             }
                         </div>
                         :
-                        <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "650px" }}>
+                        <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "1000px" }}>
 
 
                             <h1 className="textsurprese font-weight-normal" style={{ fontSize: "1.5rem" }}>{surprisePhrase}</h1>
-                            <div className='maincenter text-center'>
+                            <div className='maincenter-multi text-center'>
 
                                 {!window.walletConnection.isSignedIn() ?
                                     <>
@@ -318,22 +332,48 @@ export default function Mult() {
                                             <h4 className="text-uppercase mb-3 start-mult">Select Player</h4>
                                         </div>
 
+                                        {/* display in a grid system the objects in the rooms array */}
+                                        <Container className="d-flex flex-wrap justify-content-center">
+                                            {console.log(rooms)}
+
+                                            {rooms === undefined ? <div>No rooms available</div> :
+                                                <Row className="justify-content-center align-items-center" >
+
+                                                    {rooms.map((room, index) => {
+                                                        return (
+                                                            <div className='mt-1 col col-sm-6 col-lg-4 '>
+                                                                <button className="button button-retro is-warning bordercool"
+                                                                    style={{ overflow: "hidden", fontSize: "0.8rem", textOverflow: "ellipsis" }}
+                                                                    onClick={() => joinRoom(room.id)}>
+                                                                    {room.creator}</button>
+                                                            </div>
+                                                        )
+
+                                                    })}
+                                                </Row>
+
+                                            }
+                                        </Container>
+
 
 
                                         <hr />
-                                        <button
-                                            className="button button-retro is-warning"
-                                            onClick={event => {
-                                                setButtonDisabled(true);
-                                                setprocessing(true);
-                                                //console.log(tailsHeads);
-                                                //console.log(ammoutNEAR);
-                                                //flip(tailsHeads === "heads", ammoutNEAR)
 
-                                                /*code doesnt reach here*/
-                                            }}
-                                            disabled={buttonDisabled /*|| tailsHeads === "" */ || ammoutNEAR === ""}
-                                        >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>
+                                        <button className="button button-retro button-retro-small is-success"
+                                            style={{ letterSpacing: "2px", width: "8rem" }}
+                                            onClick={event => {
+                                                setisrefreshing(true);
+                                                getRooms().then((res) => {
+
+
+                                                    setisrefreshing(false);
+                                                    setRooms(res);
+                                                }).catch((err) => {
+                                                    setisrefreshing(false);
+                                                    console.log("Couldn't refresh rooms: " + err);
+                                                });
+                                            }}>
+                                            {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}</button>
 
                                     </div>
                                 }

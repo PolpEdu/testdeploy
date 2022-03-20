@@ -1,6 +1,7 @@
 import { connect, Contract, keyStores, WalletConnection, utils, providers } from 'near-api-js'
 import getConfig from './config'
 import axios from 'axios';
+import { async } from 'regenerator-runtime';
 
 
 let node_env = process.env.NODE_ENV || 'testnet';
@@ -75,7 +76,7 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_greeting', 'coin_flip', 'resultslog', 'gen_game'],
+    viewMethods: ['get_greeting', 'coin_flip', 'resultslog', 'gen_game', 'view_all_matches'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['set_greeting'],
     // Sender is the account ID to initialize transactions. It can be omitted if you want to send
@@ -129,7 +130,7 @@ export async function getState(txHash, accountId) {
 export function flip(args, ammoutNEAR) {
   let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
 
-  let contractID = process.env.CONTRACT_NAME || 'dev-1645468760160-26705510783939';
+  let contractID = process.env.CONTRACT_NAME || 'dev-1647722524538-49458896113004';
   const result = window.walletConnection.account().functionCall({
     contractId: contractID.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
@@ -499,4 +500,9 @@ export function startup() {
     }
     return a;
   }
+}
+
+export async function getRooms() {
+  const response = await window.contract.view_all_matches();
+  return response;
 }

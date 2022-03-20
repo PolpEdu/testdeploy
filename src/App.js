@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './global.css'
 import './cointopright.css'
 import React, { Component } from 'react'
-import { Modal } from 'react-bootstrap'
+import { Modal, } from 'react-bootstrap'
 import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup } from './utils'
 import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged'
 import Confetti from 'react-confetti'
@@ -209,7 +209,6 @@ export default function App() {
     width: "90%"
   }
 
-  console.log("Hey!!!!!111")
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}

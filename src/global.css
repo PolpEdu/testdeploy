@@ -520,6 +520,17 @@ aside footer *:last-child {
 	 transform: translateY(1px);
 }
 
+.bordercool {
+  border-color: #0D0A0B;
+  border-style: solid;
+  border-width: 4px;
+}
+
+.maincenter-multi {
+   width: 100%;
+  max-width: 41rem;
+  margin: auto;
+}
  
 ul.ba {
   list-style-type: none;
@@ -571,6 +582,26 @@ li{
   30% { opacity: 0; }
   60% { opacity: 1; }
 }
+.button-retro-small {
+   white-space: normal; 
+  position: relative;
+  display: inline-block;
+  padding: 8px 8px;
+  width: 2rem;
+  
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  color: #141418;
+  background-color: #fff;
+  box-shadow: inset -3px -3px #b8bac5;
+  will-change: transform;
+  transition: transform 0.1s ease-in-out;
+  font-weight: bold;
+  white-space: nowrap;
+  font-size: 0.8em;
+}
 
 .button-retro {
   white-space: normal; 
@@ -610,11 +641,7 @@ li{
   border-width:4px;
 }
 
-.textsurprese {
-  text-align: center;
-  min-height: 1.5rem;
-  max-height: 3rem;
-}
+
 .button-retro::before {
   top: -4px;
   left: 0;
@@ -673,8 +700,27 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   -webkit-animation: mover  0.4s infinite  alternate;
     animation: mover  0.4s infinite  alternate;
 }
-
-
+.button-retro.is-success {
+  color: #fff;
+  background-color: #209cee;
+  box-shadow: inset 0px -3px #006bb3;
+  will-change: transform;
+  transition: transform 0.1s ease-in-out;
+}
+.button-retro.is-success:hover {
+  background-color: #108de0;
+  box-shadow: inset 0px -4px #006bb3;
+  transform: translateY(-1px);
+}
+.button-retro.is-success:active {
+  box-shadow: inset 0px -4px #00568f;
+  transform: translateY(1px);
+}
+.textsurprese {
+  text-align: center;
+  min-height: 1.5rem;
+  max-height: 3rem;
+}
 @-webkit-keyframes mover {
     0% { transform: translateY(0); }
     100% { transform: translateY(-5px); }
