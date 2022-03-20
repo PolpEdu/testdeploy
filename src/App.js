@@ -224,7 +224,7 @@ export default function App() {
                     <span className='btn-inner'>
                       <span className='content-wrapper'>
                         <span className='btn-content'>
-                          <span className='btn-content-inner' label="More Games">
+                          <span className='btn-content-inner' label="Multiplayer">
                           </span>
                         </span>
                       </span>

@@ -317,10 +317,55 @@ export default function Mult() {
                             }
                         </div>
                         :
+
                         <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "1000px" }}>
 
-
                             <h1 className="textsurprese font-weight-normal" style={{ fontSize: "1.5rem" }}>{surprisePhrase}</h1>
+
+                            <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
+                                <button className="button button-retro button-retro-small is-success ms-2"
+                                    style={{ letterSpacing: "2px", width: "8rem" }}
+                                    onClick={event => {
+                                        setisrefreshing(true);
+                                        getRooms().then((res) => {
+
+
+                                            setisrefreshing(false);
+                                            setRooms(res);
+                                        }).catch((err) => {
+                                            setisrefreshing(false);
+                                            console.log("Couldn't refresh rooms: " + err);
+                                        });
+                                    }}>
+                                    {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
+                                </button>
+                                <button className="button button-retro button-retro-small is-primary ms-2"
+                                    style={{ letterSpacing: "2px", width: "8rem" }}
+                                    onClick={event => {
+
+                                    }}>
+                                    Create Room
+                                </button>
+                                <button className="button button-retro button-retro-small is-error ms-2"
+                                    style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
+                                    onClick={event => {
+                                        setisrefreshing(true);
+                                        getRooms().then((res) => {
+
+                                            setisrefreshing(false);
+                                            setRooms(res);
+                                        }
+                                        ).catch((err) => {
+                                            setisrefreshing(false);
+                                            console.log("Couldn't refresh rooms: " + err);
+                                        });
+
+                                    }}>
+                                    Feeling Lucky
+                                </button>
+
+                            </div>
+
                             <div className='maincenter-multi text-center'>
 
                                 {!window.walletConnection.isSignedIn() ?
@@ -328,24 +373,39 @@ export default function Mult() {
                                         <img src={LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240" />
                                     </> :
                                     <div className='d-flex flex-column '>
+
+
+
                                         <div id="game" className="game">
-                                            <h4 className="text-uppercase mb-3 start-mult">Select Player</h4>
+                                            <h4 className="text-uppercase mt-3 start-mult">Select Player</h4>
                                         </div>
+
+                                        <hr className="mt-1" />
+
 
                                         {/* display in a grid system the objects in the rooms array */}
                                         <Container className="d-flex flex-wrap justify-content-center">
                                             {console.log(rooms)}
 
-                                            {rooms === undefined ? <div>No rooms available</div> :
+                                            {rooms === undefined || rooms.length === 0 ? <div>No rooms available</div> :
                                                 <Row className="justify-content-center align-items-center" >
 
                                                     {rooms.map((room, index) => {
+                                                        {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
+                                                        let roomCreator = room.creator;
+                                                        if (roomCreator.length > 18) {
+                                                            roomCreator = roomCreator.substring(0, 17) + "…";
+                                                        }
+
                                                         return (
                                                             <div className='mt-1 col col-sm-6 col-lg-4 '>
-                                                                <button className="button button-retro is-warning bordercool"
-                                                                    style={{ overflow: "hidden", fontSize: "0.8rem", textOverflow: "ellipsis" }}
+                                                                <button className="button button-retro is-warning bordercool d-inline-block text-center"
+                                                                    style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                                     onClick={() => joinRoom(room.id)}>
-                                                                    {room.creator}</button>
+                                                                    <span>{roomCreator}</span>
+                                                                    <p className="mb-0" style={{ color: "#dd403a" }}>{room.entry_price} Near</p>
+
+                                                                </button>
                                                             </div>
                                                         )
 
@@ -355,30 +415,11 @@ export default function Mult() {
                                             }
                                         </Container>
 
-
-
-                                        <hr />
-
-                                        <button className="button button-retro button-retro-small is-success"
-                                            style={{ letterSpacing: "2px", width: "8rem" }}
-                                            onClick={event => {
-                                                setisrefreshing(true);
-                                                getRooms().then((res) => {
-
-
-                                                    setisrefreshing(false);
-                                                    setRooms(res);
-                                                }).catch((err) => {
-                                                    setisrefreshing(false);
-                                                    console.log("Couldn't refresh rooms: " + err);
-                                                });
-                                            }}>
-                                            {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}</button>
-
                                     </div>
                                 }
                             </div>
                         </div>
+
                     }
                 </div>
                 {!window.walletConnection.isSignedIn() ? <NotLogged /> : <></>}

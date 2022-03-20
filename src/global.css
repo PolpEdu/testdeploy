@@ -505,18 +505,18 @@ aside footer *:last-child {
 
  .button-retro.is-primary {
 	 color: #fff;
-	 background-color: #92cc41;
-	 box-shadow: inset -3px -3px #4aa52e;
+	 background-color: #62b52a;
+	 box-shadow: inset 0px -3px #27760f;
 	 will-change: transform;
 	 transition: transform 0.1s ease-in-out;
 }
  .button-retro.is-primary:hover {
-	 background-color: #76c442;
-	 box-shadow: inset -4px -4px #4aa52e;
+	 background-color: #5f9b0c;
+	 box-shadow: inset 0px -4px #33761f;
 	 transform: translateY(-1px);
 }
  .button-retro.is-primary:active {
-	 box-shadow: inset -4px -4px #5ec93d;
+	 box-shadow: inset 0px -4px #3b6320;
 	 transform: translateY(1px);
 }
 
@@ -782,17 +782,17 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
 .button-retro.is-error {
   color: #fff;
   background-color: #e76e55;
-  box-shadow: inset -3px -3px #8c2022;
+  box-shadow: inset 0px -3px #8c2022;
   will-change: transform;
   transition: transform 0.1s ease-in-out;
 }
 .button-retro.is-error:hover {
-  background-color: #ce372b;
-  box-shadow: inset -4px -4px #8c2022;
+  background-color: #bd372d;
+  box-shadow: inset 0px -4px #8c2022;
   transform: translateY(-1px);
 }
 .button-retro.is-error:active {
-  box-shadow: inset -4px -4px #b6292c;
+  box-shadow: inset 0x -4px #5f090a;
   transform: translateY(1px);
 }
 
