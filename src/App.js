@@ -4,7 +4,7 @@ import './global.css'
 import './cointopright.css'
 import React, { Component } from 'react'
 import { Modal, } from 'react-bootstrap'
-import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup } from './utils'
+import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup,rngTest } from './utils'
 import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged'
 import Confetti from 'react-confetti'
 import ParasLogoB from './assets/paras-black.svg'
@@ -178,6 +178,8 @@ export default function App() {
 
 
         getTxsResult(txsHashes)
+
+        rngTest();
       }
 
     },

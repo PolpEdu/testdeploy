@@ -76,12 +76,13 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_greeting', 'coin_flip', 'resultslog', 'gen_game', 'view_all_matches'],
+    viewMethods: ['get_greeting', 'coin_flip', 'gen_game', 'view_all_matches'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['set_greeting'],
     // Sender is the account ID to initialize transactions. It can be omitted if you want to send
     sender: window.walletConnection.account(), // account object to initialize and sign transactions.
   })
+
 }
 
 export function sendpostwithplay(txHash) {
@@ -130,66 +131,12 @@ export async function getState(txHash, accountId) {
 export function flip(args, ammoutNEAR) {
   let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
 
-  let contractID = process.env.CONTRACT_NAME || 'dev-1647722524538-49458896113004';
-  const result = window.walletConnection.account().functionCall({
+  let contractID = process.env.CONTRACT_NAME || 'dev-1648336036786-88225996957816';
+  const result = window.walletConnection.accountresultslog().functionCall({
     contractId: contractID.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
 }
 
-
-function rngTest() {
-  console.log("Starting!")
-  var i = 0;
-  var dict = {};
-  var min = 50;
-  var max = 50;
-
-  if (window.walletConnection.isSignedIn()) {
-    setTimeout(function next() {
-
-
-      window.contract.resultslog() //using the contract to get the greeting
-        .then(result => {
-          let ft = result[0];
-          console.log("it." + i + ": " + ft);
-
-          if (dict[ft] === undefined) {
-            dict[ft] = 1;
-          } else {
-            dict[ft] = dict[ft] + 1;
-          }
-
-
-
-          if (ft > max) {
-            max = ft;
-          }
-          else if (ft < min) {
-            min = ft;
-          }
-
-
-
-
-          if (i % 10 === 0) {
-            console.log("max: " + max);
-            console.log("min: " + min);
-            console.log(dict);
-
-          }
-        })
-        .catch(e => {
-          console.log(e)
-        });
-
-      i++;
-
-      setTimeout(next, 2500);
-
-    }, 2500);
-
-  }
-}
 
 export function startup() {
 
