@@ -5,9 +5,6 @@ const path = require('path');
 const {keyStores ,providers,utils} = require('near-api-js');
 let providerurl = "https://archival-rpc."+process.env.netinfo+".near.org";
 const provider = new providers.JsonRpcProvider(providerurl);
-const homedir = require("os").homedir();
-const CREDENTIALS_DIR = ".near-credentials";
-const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 require("dotenv").config();
 
 
