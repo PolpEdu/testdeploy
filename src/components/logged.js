@@ -93,6 +93,11 @@ function generatephrase(ammount, won, account) {
     )
 }
 
+export function CreateRoom(props) {
+
+
+}
+
 export function TopPlays() {
     const [plays, setPlays] = React.useState([]);
     const [errormsg, setErrormsg] = React.useState("");

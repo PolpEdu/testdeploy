@@ -8,7 +8,7 @@ import './cointopright.css'
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
 import { Notification, NotificationError } from './App.js'
-import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers } from './components/logged';
+import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers, CreateRoom } from './components/logged';
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
 import { Twitter, Discord } from 'react-bootstrap-icons';
@@ -156,7 +156,7 @@ export default function Mult() {
     return (
         <div>
             {showNotification && <Notification />}
-            {errormsg && <NotificationError err={errormsg} ismult={true}/>}
+            {errormsg && <NotificationError err={errormsg} ismult={true} />}
             <div className='social-icons'>
                 <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
                     <div className='mt-3 d-flex flex-column shortcut-row'>
@@ -339,8 +339,6 @@ export default function Mult() {
                                     onClick={event => {
                                         setisrefreshing(true);
                                         getRooms().then((res) => {
-
-
                                             setisrefreshing(false);
                                             setRooms(res);
                                         }).catch((err) => {
@@ -350,30 +348,19 @@ export default function Mult() {
                                     }}>
                                     {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
                                 </button>
-                                <button className="button button-retro button-retro-small is-primary ms-2"
-                                    style={{ letterSpacing: "2px", width: "8rem" }}
-                                    onClick={event => { createMatch() }}>
-                                    Create Room
-                                </button>
-                                <Popup trigger={
-            <div role='button' className='retro-btn danger'>
-                <a className='buttoncool'>
-                    <span className='btn-inner'>
-                        <span className='content-wrapper'>
-                            <span className='btn-content'>
-                                <span className='btn-content-inner' label="Create Room">
-                                </span>
-                            </span>
-                        </span>
-                    </span>
-                </a>
-            </div>
 
-        } position="center center"
-            modal
-            contentStyle={contentStyle}
-        >
-        </Popup>
+                                <Popup trigger={
+                                    <button className="button button-retro button-retro-small is-primary ms-2"
+                                        style={{ letterSpacing: "2px", width: "8rem" }}
+                                        onClick={event => { createMatch() }}>
+                                        Create Room
+                                    </button>
+                                } position="center center"
+                                    modal
+                                    contentStyle={contentStyle}
+                                >
+                                    <CreateRoom />
+                                </Popup>
                                 <button className="button button-retro button-retro-small is-error ms-2"
                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
                                     onClick={event => {
@@ -421,10 +408,10 @@ export default function Mult() {
                                                     {rooms.map((room, index) => {
                                                         {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
                                                         let roomCreator = room.creator;
-                                                        let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', {useGrouping:false}));
+                                                        let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', { useGrouping: false }));
 
-                                                        
-                                                        
+
+
 
                                                         if (roomCreator.length > 18) {
                                                             roomCreator = roomCreator.substring(0, 17) + "…";
