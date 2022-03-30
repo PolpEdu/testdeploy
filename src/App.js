@@ -213,15 +213,17 @@ export default function App() {
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
-      {errormsg && <NotificationError err={errormsg} />}
+      {errormsg && <NotificationError err={errormsg} ismult={false} />}
       <div className='social-icons'>
         <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
           <div className='mt-3 d-flex flex-column shortcut-row'>
             <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
 
               <div className='d-flex flex-row'>
-                <div role='button' className='retro-btn warning'>
-                  <Link id="RouterNavLink" to='/play'><div className='buttoncool'>
+                <div role='button' className='retro-btn warning' style={{display: !window.walletConnection.isSignedIn() ? "none": ""}}>
+
+                  <Link id="RouterNavLink" to='/play'>
+                    <div className='buttoncool'>
                     <span className='btn-inner'>
                       <span className='content-wrapper'>
                         <span className='btn-content'>
@@ -230,7 +232,8 @@ export default function App() {
                         </span>
                       </span>
                     </span>
-                  </div></Link>
+                  </div>
+                  </Link>
 
 
                 </div>
@@ -479,8 +482,8 @@ export function Notification() {
       {' '/* React trims whitespace around tags insert literal space character when needed */}
       <span style={{ color: "#f5f5f5" }}>called method in contract:</span>
       {' '}
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
-        {window.contract.contractId}
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contractSINGLE.contractId}`}>
+        {window.contractSINGLE.contractId}
       </a>
       <footer>
         <div>Just now</div>
@@ -501,8 +504,8 @@ export function NotificationError(props) {
       {' '/* React trims whitespace around tags insert literal space character when needed */}
       tried to call a method in Contract:
       {' '}
-      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.contract.contractId}`}>
-        {window.contract.contractId}
+      <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${!props.ismult ? window.contractSINGLE.contractId : window.contractMULT.contractId}`}>
+        {!props.ismult ? window.contractSINGLE.contractId : window.contractMULT.contractId}
       </a>
       <footer>
         <div className='err'>❌ Error: <span style={{ color: "white" }}>{props.err}</span></div>

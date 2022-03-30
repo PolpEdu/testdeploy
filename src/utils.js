@@ -74,11 +74,21 @@ export async function initContract() {
   window.accountId = window.walletConnection.getAccountId()
 
   // Initializing our contract APIs by contract name and configuration
-  window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
+  window.contractMULT = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_greeting', 'coin_flip', 'gen_game', 'view_all_matches'],
+    viewMethods: ['view_all_matches','join_match'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['set_greeting'],
+    changeMethods: ['create_match','cancel_match'],
+    // Sender is the account ID to initialize transactions. It can be omitted if you want to send
+    sender: window.walletConnection.account(), // account object to initialize and sign transactions.
+  })
+
+  // Initializing our contract APIs by contract name and configuration
+  window.contractSINGLE = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
+    // View methods are read only. They don't modify the state, but usually return some value.
+    viewMethods: ['coin_flip'],
+    // Change methods can modify the state. But you don't receive the returned value when called.
+    changeMethods: [],
     // Sender is the account ID to initialize transactions. It can be omitted if you want to send
     sender: window.walletConnection.account(), // account object to initialize and sign transactions.
   })
@@ -131,12 +141,36 @@ export async function getState(txHash, accountId) {
 export function flip(args, ammoutNEAR) {
   let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
 
-  let contractID = process.env.CONTRACT_NAME || 'dev-1648336036786-88225996957816';
-  const result = window.walletConnection.accountresultslog().functionCall({
+  let contractID = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
+  const result = window.walletConnection.account().functionCall({
     contractId: contractID.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
 }
 
+export function joinMultiplayer(args, ammoutNEAR) {
+  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
+
+  let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
+  const result = window.walletConnection.account().functionCall({
+    contractId: contractID.toString(), methodName: 'join_match', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
+  })
+}
+
+export function createMultiplayer(args, ammoutNEAR) {
+  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
+
+  let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
+  const result = window.walletConnection.account().functionCall({
+    contractId: contractID.toString(), methodName: 'create_match', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
+  })
+}
+
+export function deleteMatch(args) {
+  let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
+  const result = window.walletConnection.account().functionCall({
+    contractId: contractID.toString(), methodName: 'cancel_match', args: { option: args }, gas: "300000000000000"
+  })
+}
 
 export function startup() {
 
@@ -450,6 +484,6 @@ export function startup() {
 }
 
 export async function getRooms() {
-  const response = await window.contract.view_all_matches();
+  const response = await window.contractMULT.view_all_matches();
   return response;
 }

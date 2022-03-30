@@ -110,6 +110,14 @@ export default function Mult() {
         setButtonDisabled(true)
     }
 
+    const createMatch = async () => {
+        setprocessing(true)
+        setButtonDisabled(true)
+
+        
+
+    }
+
     React.useEffect(
         () => {
             getRooms().then(res => {
@@ -147,7 +155,7 @@ export default function Mult() {
     return (
         <div>
             {showNotification && <Notification />}
-            {errormsg && <NotificationError err={errormsg} />}
+            {errormsg && <NotificationError err={errormsg} ismult={true}/>}
             <div className='social-icons'>
                 <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
                     <div className='mt-3 d-flex flex-column shortcut-row'>
@@ -341,9 +349,7 @@ export default function Mult() {
                                 </button>
                                 <button className="button button-retro button-retro-small is-primary ms-2"
                                     style={{ letterSpacing: "2px", width: "8rem" }}
-                                    onClick={event => {
-
-                                    }}>
+                                    onClick={event => { createMatch() }}>
                                     Create Room
                                 </button>
                                 <button className="button button-retro button-retro-small is-error ms-2"
