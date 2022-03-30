@@ -110,6 +110,7 @@ export function sendpostwithplay(txHash) {
 
 
 export function convertYocto(YOCTO) {
+
   return utils.format.formatNearAmount(YOCTO);
 }
 
@@ -156,12 +157,12 @@ export function joinMultiplayer(args, ammoutNEAR) {
   })
 }
 
-export function createMultiplayer(args, ammoutNEAR) {
+export function createMultiplayer( ammoutNEAR) {
   let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
 
   let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
   const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'create_match', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
+    contractId: contractID.toString(), methodName: 'create_match', gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
 }
 

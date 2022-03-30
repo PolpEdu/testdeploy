@@ -257,7 +257,6 @@ export default function App() {
                 >
                   <TopPlays />
                 </Popup>
-
               </div>
 
               <div className='d-flex flex-row'>

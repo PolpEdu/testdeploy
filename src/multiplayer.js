@@ -15,6 +15,7 @@ import { Twitter, Discord } from 'react-bootstrap-icons';
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { Link } from 'react-router-dom';
 import LOGOMAIN from './assets/result.svg';
+import { parseNearAmount } from 'near-api-js/lib/utils/format';
 
 function genrandomphrase() {
     return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
@@ -114,13 +115,13 @@ export default function Mult() {
         setprocessing(true)
         setButtonDisabled(true)
 
-        
-
     }
 
     React.useEffect(
         () => {
             getRooms().then(res => {
+                console.log(res);
+
                 setRooms(res)
             }).catch(e => {
                 console.error("Couldn't fetch rooms...\n" + e)
@@ -128,7 +129,7 @@ export default function Mult() {
 
             // in this case, we only care to query the contract when signed in
             if (window.walletConnection.isSignedIn()) {
-                console.log("LOADING BALANCE AND HEADS OR TAILS")
+                //console.log("LOADING BALANCE AND HEADS OR TAILS")
                 window.walletConnection.account().getAccountBalance().then(function (balance) {
                     let fullstr = convertYocto(balance.available).split(".");
                     let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
@@ -160,6 +161,8 @@ export default function Mult() {
                 <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
                     <div className='mt-3 d-flex flex-column shortcut-row'>
                         <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
+
+
                             <div className='d-flex flex-row'>
 
                                 <div role='button' className='retro-btn warning'>
@@ -352,6 +355,25 @@ export default function Mult() {
                                     onClick={event => { createMatch() }}>
                                     Create Room
                                 </button>
+                                <Popup trigger={
+            <div role='button' className='retro-btn danger'>
+                <a className='buttoncool'>
+                    <span className='btn-inner'>
+                        <span className='content-wrapper'>
+                            <span className='btn-content'>
+                                <span className='btn-content-inner' label="Create Room">
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </a>
+            </div>
+
+        } position="center center"
+            modal
+            contentStyle={contentStyle}
+        >
+        </Popup>
                                 <button className="button button-retro button-retro-small is-error ms-2"
                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
                                     onClick={event => {
@@ -399,17 +421,23 @@ export default function Mult() {
                                                     {rooms.map((room, index) => {
                                                         {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
                                                         let roomCreator = room.creator;
+                                                        let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', {useGrouping:false}));
+
+                                                        
+                                                        
+
                                                         if (roomCreator.length > 18) {
                                                             roomCreator = roomCreator.substring(0, 17) + "…";
                                                         }
 
+
                                                         return (
-                                                            <div className='mt-1 col col-sm-6 col-lg-4 '>
+                                                            <div className='mt-1 col col-sm-10 col-m-6 col-lg-4 '>
                                                                 <button className="button button-retro is-warning bordercool d-inline-block text-center"
                                                                     style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                                     onClick={() => joinRoom(room.id)}>
                                                                     <span>{roomCreator}</span>
-                                                                    <p className="mb-0" style={{ color: "#dd403a" }}>{room.entry_price} Near</p>
+                                                                    <p className="mb-0" style={{ color: "#dd403a" }}>{ammountNEAR} Near</p>
 
                                                                 </button>
                                                             </div>
