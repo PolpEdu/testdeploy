@@ -247,32 +247,34 @@ export default function Mult() {
 
                             {!window.walletConnection.isSignedIn() ? <></> : <><div className="profile-picture-md"><img className="image rounded-circle cursor-pointer border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow} />
                             </div>
-                                <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered>
-                                    <Modal.Body className='p-0' style={{ color: "black" }}>
-                                        <div className='d-flex flex-column '>
-                                            <div className="card-body text-center">
-                                                <h4 style={{ fontWeight: "bold" }}>USER PROFILE</h4>
-                                                <h6>
-                                                    <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:{window.accountId}!</small>
-                                                </h6>
-                                                <div className="profile-picture d-flex w-80 mb-3">
-                                                    <div className="imageWrapper ms-auto me-auto">
-                                                        <img className="rounded-circle cursor-pointer image-large" src="https://i.imgur.com/E3aJ7TP.jpg" alt="pfp" />
-                                                        <a href="#" className="cornerLink" ><small style={{ fontSize: "0.75rem" }}>CHANGE PICTURE</small></a>
+                                <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered >
+                                    <div className='borderpixelPR'>
+                                        <Modal.Body className='p-0 ' style={{ color: "black" }}>
+                                            <div className='d-flex flex-column '>
+                                                <div className="card-body text-center">
+                                                    <h4 style={{ fontWeight: "bold" }}>USER PROFILE</h4>
+                                                    <h6>
+                                                        <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:{window.accountId}!</small>
+                                                    </h6>
+                                                    <div className="profile-picture d-flex w-80 mb-3">
+                                                        <div className="imageWrapper ms-auto me-auto">
+                                                            <img className="rounded-circle cursor-pointer image-large" src="https://i.imgur.com/E3aJ7TP.jpg" alt="pfp" />
+                                                            <a href="#" className="cornerLink" ><small style={{ fontSize: "0.75rem" }}>CHANGE PICTURE</small></a>
+                                                        </div>
+                                                    </div>
+                                                    <h6>First Fliperino: </h6>
+                                                    <div className="input-group">
+
+                                                        {/*<input type="text" className="form-control" placeholder="Nickname" aria-label="Username" aria-describedby="basic-addon1" value=""/>
+                        */}
                                                     </div>
                                                 </div>
-                                                <h6>First Fliperino: </h6>
-                                                <div className="input-group">
-
-                                                    {/*<input type="text" className="form-control" placeholder="Nickname" aria-label="Username" aria-describedby="basic-addon1" value=""/>
-                        */}
+                                                <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{ margin: "0px" }}>
+                                                    <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{ fontFamily: "VCR_OSD_MONO", fontWeight: "normal", fontSize: "1.1rem" }} onClick={handleClose}>Save</button>
+                                                    <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{ fontWeight: "semibold", fontSize: "1.1rem" }}>Disconnect Wallet</button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </Modal.Body>
-                                    <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{ margin: "0px" }}>
-                                        <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{ fontFamily: "VCR_OSD_MONO", fontWeight: "normal", fontSize: "1.1rem" }} onClick={handleClose}>Save</button>
-                                        <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{ fontWeight: "semibold", fontSize: "1.1rem" }}>Disconnect Wallet</button>
+                                        </Modal.Body>
                                     </div>
                                 </Modal>
                             </>
