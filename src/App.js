@@ -220,19 +220,19 @@ export default function App() {
             <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
 
               <div className='d-flex flex-row'>
-                <div role='button' className='retro-btn warning' style={{display: !window.walletConnection.isSignedIn() ? "none": ""}}>
+                <div role='button' className='retro-btn warning' style={{ display: !window.walletConnection.isSignedIn() ? "none" : "" }}>
 
                   <Link id="RouterNavLink" to='/play'>
                     <div className='buttoncool'>
-                    <span className='btn-inner'>
-                      <span className='content-wrapper'>
-                        <span className='btn-content'>
-                          <span className='btn-content-inner' label="Multiplayer">
+                      <span className='btn-inner'>
+                        <span className='content-wrapper'>
+                          <span className='btn-content'>
+                            <span className='btn-content-inner' label="Multiplayer">
+                            </span>
                           </span>
                         </span>
                       </span>
-                    </span>
-                  </div>
+                    </div>
                   </Link>
 
 
@@ -375,8 +375,6 @@ export default function App() {
                           <img src={LOGOBACK} alt="logoback" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
                         </div>
                       </div>
-
-
                     </div>
 
 

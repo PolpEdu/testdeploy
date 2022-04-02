@@ -1,7 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 import { login } from '../utils.js'
-import NearLogo from '../assets/logo-black.svg';
+import LOGOBACK from '../assets/nearcoin.svg';
+import LOGOMAIN from '../assets/result.svg'
 
 
 
@@ -94,6 +95,68 @@ function generatephrase(ammount, won, account) {
 }
 
 export function CreateRoom(props) {
+    const [tailsHeads, setTailsHeads] = React.useState(Math.random() < 0.5 ? "tails" : "heads")
+
+    const [buttonDisabled, setButtonDisabled] = React.useState(false)
+
+    const [processing, setprocessing] = React.useState(false)
+
+    const [ammoutNEAR, setAmmountNEAR] = React.useState(0);
+
+    const toggleHeadsTails = () => {
+        if (tailsHeads === "heads") {
+            setTailsHeads("tails")
+        } else {
+            setTailsHeads("heads")
+        }
+    }
+
+
+    return (
+        <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelCR">
+            <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Create Room</span>
+            <span className='text-center mb-3 rounded' style={{ fontWeight: "500", color: "white" }}>Flipping as: {window.accountId}.</span>
+            <div className="d-flex flex-row">
+
+                <div className="flip-box mb-2 mx-auto h-full">
+                    <div className="flip-box-inner  d-flex justify-content-center flex-column">
+                        <span style={{ fontWeight: "800", color: "white", fontSize: "1.4rem" }}>
+                            Flip Ammount:
+                        </span>
+                        <span style={{ fontWeight: "800", color: "white", fontSize: "1.5rem" }}>
+                            {ammoutNEAR} NEAR
+                        </span>
+                    </div>
+                </div>
+                <div className="flip-box logo mb-2 mx-auto">
+                    <div className={tailsHeads === "heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
+                        <div className="flip-box-front">
+                            <img src={LOGOMAIN} alt="logo" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
+                        </div>
+                        <div className="flip-box-back">
+                            <img src={LOGOBACK} alt="logoback" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <button
+                className="button button-retro is-warning"
+                onClick={event => {
+                    setButtonDisabled(true)
+                    setprocessing(true)
+                    //console.log(tailsHeads)
+                    //console.log(ammoutNEAR)
+                    props.createMatch()
+
+                    /*code doesnt reach here*/
+                }}
+                disabled={buttonDisabled || tailsHeads === "" || ammoutNEAR === 0}
+            >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>
+        </div>
+    )
+
 
 
 }
@@ -114,7 +177,7 @@ export function TopPlays() {
     }, []);
 
     return (
-        <div className="form-signin2 text-start mx-auto rounded-2" style={{ backgroundColor: "#DD403A" }}>
+        <div className="form-signin2 text-start mx-auto rounded-2 borderpixelf" style={{ backgroundColor: "#DD403A" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🔥 On Fire 🔥</h4>
             <ul className="list-group">
                 {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
@@ -170,7 +233,7 @@ export function RecentPlays() {
     //🔥 Fire 🔥
     return (
 
-        <div className="form-signin2 text-start mx-auto rounded-2" style={{ backgroundColor: "#829922" }}>
+        <div className="form-signin2 text-start mx-auto rounded-2 borderpixelP" style={{ backgroundColor: "#829922" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🎮 Who's Playin? 🎮</h4>
             <ul className="list-group">
                 {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
@@ -229,7 +292,7 @@ export function TopPlayers() {
 
     return (
 
-        <div className="form-signin2 text-start mx-auto rounded-2" style={{ backgroundColor: "#33b5e5" }}>
+        <div className="form-signin2 text-start mx-auto rounded-2 borderpixelm" style={{ backgroundColor: "#33b5e5" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>💵 MVPs 💵</h4>
             <ul className="list-group">
                 {(players === undefined || players === [] || players.length === 0) ?
