@@ -1331,3 +1331,10 @@ img {
 		0 calc(var(--pixel) * 15) 0 calc(var(--pixel) * -6) var(--pixel-border-3)!important;
 }
 
+.box {
+  display: block;
+  border: none;
+  background: none;
+  outline: 0;
+  width: 80%;
+}

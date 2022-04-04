@@ -421,7 +421,7 @@ export default function Mult() {
 
 
                                                         return (
-                                                            <div className='mt-1 col col-sm-10 col-m-6 col-lg-4 '>
+                                                            <div className='mt-1 col col-sm-10 col-m-10 col-lg-12 col-xl-12 '>
                                                                 <button className="button button-retro is-warning bordercool d-inline-block text-center"
                                                                     style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                                     onClick={() => joinRoom(room.id)}>

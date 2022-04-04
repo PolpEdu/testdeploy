@@ -103,6 +103,8 @@ export function CreateRoom(props) {
 
     const [ammoutNEAR, setAmmountNEAR] = React.useState(0);
 
+    const [inputbox, setInputbox] = React.useState('');
+
     const toggleHeadsTails = () => {
         if (tailsHeads === "heads") {
             setTailsHeads("tails")
@@ -111,6 +113,21 @@ export function CreateRoom(props) {
         }
     }
 
+    function handleChange(event) {
+        let text = event.target.value;
+        
+        if (text.length < 7) {
+            setInputbox(event.target.value);
+        }
+
+
+        if (text.length > 0 && text.length < 7) {
+            setButtonDisabled(false)
+        } else {
+            setButtonDisabled(true)
+        }
+
+    }
 
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelCR">
@@ -119,13 +136,17 @@ export function CreateRoom(props) {
             <div className="d-flex flex-row">
 
                 <div className="flip-box mb-2 mx-auto h-full">
-                    <div className="flip-box-inner  d-flex justify-content-center flex-column">
-                        <span style={{ fontWeight: "800", color: "white", fontSize: "1.4rem" }}>
+                    <div className="flip-box-inner  d-flex justify-content-center flex-column" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem"   }}>
+                        <span>
                             Flip Ammount:
                         </span>
-                        <span style={{ fontWeight: "800", color: "white", fontSize: "1.5rem" }}>
-                            {ammoutNEAR} NEAR
-                        </span>
+                        <div className='d-flex justify-content-center flex-row'>
+                            <input className='box' type="number" placeholder={ammoutNEAR.toString()} value={inputbox} onChange={handleChange} />
+                            <span>
+                                Near
+                            </span>
+                        </div>
+                        
                     </div>
                 </div>
                 <div className="flip-box logo mb-2 mx-auto">
