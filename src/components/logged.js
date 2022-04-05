@@ -119,7 +119,6 @@ export function CreateRoom(props) {
         // check if event.target.value has "e" character
         if (event.target.value.includes("e")) {
             setButtonDisabled(true)
-            setInputbox(event.target.value);
             return;
         }
 
@@ -183,7 +182,7 @@ export function CreateRoom(props) {
 
             </div>
             <button
-                className="button button-retro is-warning my-auto"
+                className="button button-retro is-warning mt-3"
                 onClick={event => {
                     setButtonDisabled(true)
                     setprocessing(true)
@@ -195,6 +194,9 @@ export function CreateRoom(props) {
                 }}
                 disabled={buttonDisabled || tailsHeads === "" || ammoutNEAR === 0}
             >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>
+            <span className='mt-1 mx-auto'>
+                Note: Use comma "," to represent decimal numbers.
+            </span>
         </div>
     )
 
