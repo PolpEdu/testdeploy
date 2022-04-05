@@ -48,8 +48,11 @@
     "react-use": "^17.3.2",
     "reactjs-popup": "^2.0.5",
     "regenerator-runtime": "~0.13.5",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1",
     "styled-components": "^5.3.3",
-    "sweetalert2-react": "^0.8.3"
+    "sweetalert2-react": "^0.8.3",
+    "uuid": "^8.3.2"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios';
-import { login } from '../utils.js'
+import { login, createMultiplayer } from '../utils.js'
 import LOGOBACK from '../assets/nearcoin.svg';
 import LOGOMAIN from '../assets/result.svg'
 
@@ -137,17 +137,13 @@ export function CreateRoom(props) {
             }
             setButtonDisabled(true)
         }
-
-
-
-
-
     }
-    console.log(ammoutNEAR)
 
-    console.log(tailsHeads)
-    console.log(buttonDisabled)
-
+    const createMatch = async () => {
+        setprocessing(true)
+        setButtonDisabled(true)
+        createMultiplayer(ammoutNEAR);
+    }
 
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelCR w-full">
@@ -184,11 +180,10 @@ export function CreateRoom(props) {
             <button
                 className="button button-retro is-warning mt-3"
                 onClick={event => {
-                    setButtonDisabled(true)
-                    setprocessing(true)
-                    //console.log(tailsHeads)
-                    //console.log(ammoutNEAR)
-                    props.createMatch()
+
+                    console.log(tailsHeads)
+                    console.log(ammoutNEAR)
+                    createMatch()
 
                     /*code doesnt reach here*/
                 }}

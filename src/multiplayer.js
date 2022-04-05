@@ -31,6 +31,7 @@ export default function Mult() {
     if (searchParams.get("errorCode")) {
         msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + ".";
     }
+
     const [errormsg, setErrormsg] = React.useState(msg);
     const [ammountWon, setWonAmmount] = React.useState("")
     const handleShow = () => setShow(true);
@@ -75,33 +76,6 @@ export default function Mult() {
         let decodedstr = "";
         let decodedWonAmmountstr = "";
 
-        await gettxsRes(txsHashes).then(res => {
-            //console.log(res)
-            setShowNotification(true)
-
-            let decoded = Buffer.from(res.status.SuccessValue, 'base64')
-            decodedstr = decoded.toString("ascii");
-
-            let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees;
-
-            sendpostwithplay(txsHashes);
-
-            try {
-                decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', { useGrouping: false }));
-
-            } catch (e) {
-                console.log("Error converting ammount bet to string.");
-            }
-
-            //console.log("decoded result: "+ decodedstr)
-
-        }).catch(e => {
-            if (!e instanceof TypeError) {
-                console.error(e);
-            }
-
-        })
-
         settxsResult(decodedstr);
         setWonAmmount(decodedWonAmmountstr)
     }
@@ -111,11 +85,6 @@ export default function Mult() {
         setButtonDisabled(true)
     }
 
-    const createMatch = async () => {
-        setprocessing(true)
-        setButtonDisabled(true)
-
-    }
 
     React.useEffect(
         () => {
@@ -146,6 +115,12 @@ export default function Mult() {
 
 
                 getTxsResult(txsHashes);
+
+
+                // connect to games socket
+                window.socket.on('connect', function () {
+                    console.log("Connected to games socket");
+                });
             }
 
         },
@@ -161,10 +136,7 @@ export default function Mult() {
                 <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
                     <div className='mt-3 d-flex flex-column shortcut-row'>
                         <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
-
-
                             <div className='d-flex flex-row'>
-
                                 <div role='button' className='retro-btn warning'>
                                     <Link to="/" id="RouterNavLink">
                                         <div className='buttoncool'>
@@ -353,15 +325,14 @@ export default function Mult() {
 
                                 <Popup trigger={
                                     <button className="button button-retro button-retro-small is-primary ms-2"
-                                        style={{ letterSpacing: "2px", width: "8rem" }}
-                                        onClick={event => { createMatch() }}>
+                                        style={{ letterSpacing: "2px", width: "8rem" }}>
                                         Create Room
                                     </button>
                                 } position="center center"
                                     modal
                                     contentStyle={contentStyle}
                                 >
-                                    <CreateRoom />
+                                    <CreateRoom/>
                                 </Popup>
                                 <button className="button button-retro button-retro-small is-error ms-2"
                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}

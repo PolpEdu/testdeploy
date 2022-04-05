@@ -20,7 +20,9 @@ window.nearInitPromise = initContract()
           <Route path="/" element={<App />} >
             <Route path="/:transactionHashes" element={<App />} />
           </Route>
-          <Route path='/play' element={<Mult />}></Route>
+          <Route path='/play' element={<Mult />}>
+            <Route path='/play/:transactionHashes' element={<Mult />} />
+          </Route>
         </Routes>
       </Router>,
       document.querySelector('#root')
