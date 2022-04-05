@@ -113,49 +113,69 @@ export function CreateRoom(props) {
         }
     }
 
+
+
     function handleChange(event) {
-        let text = event.target.value;
-        
-        if (text.length < 7) {
+        // check if event.target.value has "e" character
+        if (event.target.value.includes("e")) {
+            setButtonDisabled(true)
             setInputbox(event.target.value);
+            return;
         }
 
+        let text = event.target.value;
+        if (text.length < 7) {
+            setInputbox(event.target.value);
 
-        if (text.length > 0 && text.length < 7) {
-            setButtonDisabled(false)
-        } else {
+            if (text.length > 0) {
+                //parse text to int
+                let ammount = parseInt(text);
+                if (ammount > 0) {
+                    setButtonDisabled(false)
+                    setAmmountNEAR(ammount)
+                }
+                return;
+            }
             setButtonDisabled(true)
         }
 
+
+
+
+
     }
+    console.log(ammoutNEAR)
+
+    console.log(tailsHeads)
+    console.log(buttonDisabled)
+
 
     return (
-        <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelCR">
+        <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelCR w-full">
             <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Create Room</span>
             <span className='text-center mb-3 rounded' style={{ fontWeight: "500", color: "white" }}>Flipping as: {window.accountId}.</span>
-            <div className="d-flex flex-row">
-
-                <div className="flip-box mb-2 mx-auto h-full">
-                    <div className="flip-box-inner  d-flex justify-content-center flex-column" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem"   }}>
-                        <span>
+            <div className="d-flex">
+                <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
+                    <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                        <span className='mb-4'>
                             Flip Ammount:
                         </span>
-                        <div className='d-flex justify-content-center flex-row'>
+                        <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
                             <input className='box' type="number" placeholder={ammoutNEAR.toString()} value={inputbox} onChange={handleChange} />
-                            <span>
+                            <span className='m-auto p-2' style={{ fontSize: "1.2rem" }}>
                                 Near
                             </span>
                         </div>
-                        
+
                     </div>
                 </div>
-                <div className="flip-box logo mb-2 mx-auto">
-                    <div className={tailsHeads === "heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
-                        <div className="flip-box-front">
-                            <img src={LOGOMAIN} alt="logo" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
+                <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%" }}>
+                    <div className={tailsHeads === "heads" ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
+                        <div className="flip-box-front ">
+                            <img src={LOGOMAIN} alt="logo" width="220" height="220" onClick={() => { toggleHeadsTails() }} />
                         </div>
                         <div className="flip-box-back">
-                            <img src={LOGOBACK} alt="logoback" width="240" height="240" onClick={() => { toggleHeadsTails() }} />
+                            <img src={LOGOBACK} alt="logoback" width="220" height="220" onClick={() => { toggleHeadsTails() }} />
                         </div>
                     </div>
                 </div>
@@ -163,7 +183,7 @@ export function CreateRoom(props) {
 
             </div>
             <button
-                className="button button-retro is-warning"
+                className="button button-retro is-warning my-auto"
                 onClick={event => {
                     setButtonDisabled(true)
                     setprocessing(true)

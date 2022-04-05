@@ -61,8 +61,8 @@ export default function Mult() {
         navigate(searchParams.toString());
     }
     const contentStyle = {
-        maxWidth: "660px",
-        width: "90%"
+        maxWidth: "35rem",
+        width: "90%",
     };
 
     const [txsResult, settxsResult] = React.useState("");
