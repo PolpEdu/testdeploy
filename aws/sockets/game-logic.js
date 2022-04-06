@@ -1,4 +1,7 @@
 
+const nearAPI = require("near-api-js");
+
+
 
 const SECONDSTOWAIT = 1; // get all the matches from 1 and 1 second.
 var io
@@ -6,18 +9,17 @@ var gameSocket
 // pConnected stores an array of all active socket connections
 var pConnected = []
 var allRooms = []
+
+
 const PRIVATE_KEY = process.env.PRIVATE_KEY; //TODO: on product get the correct wallet rn is from polpy.testnet
 console.log("pvk: " + PRIVATE_KEY)
 
 
 exports.init = async () => {
-    console.log("yo")
     const nearAPI = require("near-api-js");
     const { keyStores, KeyPair } = nearAPI;
     const keyStore = new keyStores.InMemoryKeyStore();
-
     const KP = KeyPair.fromString(PRIVATE_KEY);
-
     await keyStore.setKey("testnet", "polpy.testnet", KP)
     const config = {
         networkId: "testnet",

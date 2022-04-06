@@ -2,7 +2,6 @@ const express = require("express")
 const mongoose = require("mongoose")
 const app = express()
 const gameLogic = require("./sockets/game-logic")
-gameLogic.init();
 const http = require('http').Server(app)
 require("dotenv").config();
 
