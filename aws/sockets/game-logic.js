@@ -1,0 +1,102 @@
+
+var io
+var gameSocket
+// gamesInSession stores an array of all active socket connections
+var gamesInSession = []
+
+const initializeGame = (sio, socket) => {
+    /**
+     * initializeGame sets up all the socket event listeners. 
+     */
+
+    // initialize global variables.
+    io = sio
+    gameSocket = socket
+
+    // pushes this socket to an array which stores all the active sockets.
+    gamesInSession.push(gameSocket)
+
+    // User creates new game room after clicking 'submit' on the frontend
+    gameSocket.on("createNewGame", createNewGame)
+
+    // User joins gameRoom after going to a URL with '/game/:gameId' 
+    gameSocket.on("playerJoinGame", playerJoinsGame)
+
+    gameSocket.on('request username', requestUserName)
+
+    gameSocket.on('recieved userName', recievedUserName)
+
+    // Run code when the client disconnects from their socket session. 
+    gameSocket.on("disconnect", onDisconnect)
+
+}
+
+function onDisconnect() {
+    var i = gamesInSession.indexOf(gameSocket);
+    gamesInSession.splice(i, 1);
+}
+
+function playerJoinsGame(idData) {
+    /**
+     * Joins the given socket to a session with it's gameId
+     */
+
+    // A reference to the player's Socket.IO socket object
+    var sock = this
+
+
+    //get bc its a map
+    var room = io.sockets.adapter.rooms.get(idData.gameId)
+
+    // If the room exists...
+    if (room === undefined || io.sockets.adapter.rooms.has(idData.gameId) === false) {
+        this.emit('status', "This game session does not exist.");
+        return
+    }
+
+    if (room.size < 2) {
+        // attach the socket id to the data object.
+        idData.mySocketId = sock.id;
+
+        // Join the room
+        sock.join(idData.gameId);
+
+        console.log(room.size)
+
+        if (room.size === 2) {
+            io.sockets.in(idData.gameId).emit('start game', idData.userName)
+        }
+
+        // Emit an event notifying the clients that the player has joined the room.
+        io.sockets.in(idData.gameId).emit('playerJoinedRoom', idData);
+
+    } else {
+        // Otherwise, send an error message back to the player.
+        this.emit('status', "There are already 2 people playing in this room.");
+    }
+}
+
+
+function createNewGame(gameId) {
+    console.log("game created: " + gameId)
+
+
+    this.emit('createNewGame', { gameId: gameId, mySocketId: this.id });
+
+    //console.log(this)
+
+    // Join the Room and wait for the other player
+    this.join(gameId)
+}
+
+
+function requestUserName(gameId) {
+    io.to(gameId).emit('give userName', this.id);
+}
+
+function recievedUserName(data) {
+    data.socketId = this.id
+    io.to(data.gameId).emit('get Opponent UserName', data);
+}
+
+exports.initializeGame = initializeGame
