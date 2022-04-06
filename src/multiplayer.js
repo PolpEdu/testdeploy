@@ -16,6 +16,7 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import { Link } from 'react-router-dom';
 import LOGOMAIN from './assets/result.svg';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
+import io from 'socket.io-client';
 
 function genrandomphrase() {
     return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
@@ -38,14 +39,17 @@ export default function Mult() {
     const handleClose = () => setShow(false);
     const [show, setShow] = React.useState(false);
 
-    // on the top right
     const [balance, setbalance] = React.useState("")
-
     const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
-
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
-
     const [rooms, setRooms] = React.useState([]);
+    const [txsResult, settxsResult] = React.useState("");
+    const [buttonDisabled, setButtonDisabled] = React.useState(false)
+    const [ammoutNEAR, setammout] = React.useState("")
+    const [processing, setprocessing] = React.useState(false);
+    const [isrefreshing, setisrefreshing] = React.useState(false);
+
+    const [socket, setSocket] = React.useState(null);
 
     const resetGame = () => {
         setTailsHeads(Math.random() < 0.5 ? "tails" : "heads")
@@ -64,13 +68,7 @@ export default function Mult() {
     const contentStyle = {
         maxWidth: "35rem",
         width: "90%",
-    };
-
-    const [txsResult, settxsResult] = React.useState("");
-    const [buttonDisabled, setButtonDisabled] = React.useState(false)
-    const [ammoutNEAR, setammout] = React.useState("")
-    const [processing, setprocessing] = React.useState(false);
-    const [isrefreshing, setisrefreshing] = React.useState(false);
+    }
 
     const getTxsResult = async () => {
         let decodedstr = "";
@@ -88,13 +86,12 @@ export default function Mult() {
 
     React.useEffect(
         () => {
-            getRooms().then(res => {
-                console.log(res);
+            //connect to server socket
+            const newSocket = io(process.env.DATABASE_URL, { transports: ['websocket', 'polling', 'flashsocket'] })
+            console.log(newSocket)
+            setSocket(newSocket)
 
-                setRooms(res)
-            }).catch(e => {
-                console.error("Couldn't fetch rooms...\n" + e)
-            });
+
 
             // in this case, we only care to query the contract when signed in
             if (window.walletConnection.isSignedIn()) {
@@ -115,17 +112,11 @@ export default function Mult() {
 
 
                 getTxsResult(txsHashes);
-
-
-                // connect to games socket
-                window.socket.on('connect', function () {
-                    console.log("Connected to games socket");
-                });
             }
 
+            return () => socket.disconnect();
         },
-        []
-
+        [setSocket]
     );
     const { width, height } = useWindowSize();
     return (
@@ -332,7 +323,7 @@ export default function Mult() {
                                     modal
                                     contentStyle={contentStyle}
                                 >
-                                    <CreateRoom/>
+                                    <CreateRoom socketobj={socket} />
                                 </Popup>
                                 <button className="button button-retro button-retro-small is-error ms-2"
                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
@@ -362,51 +353,78 @@ export default function Mult() {
                                     </> :
                                     <div className='d-flex flex-column '>
 
+                                        {socket?.connected === false || socket?.disconnected === true || socket === undefined || socket === null ?
+                                            <>
+                                                <div id="game" className="game">
+                                                    <h4 className="text-uppercase mt-3 start-error">ERROR</h4>
+                                                </div>
 
-
-                                        <div id="game" className="game">
-                                            <h4 className="text-uppercase mt-3 start-mult">Select Player</h4>
-                                        </div>
+                                            </>
+                                            :
+                                            <div id="game" className="game">
+                                                <h4 className="text-uppercase mt-3 start-mult">
+                                                    Select Player</h4>
+                                            </div>
+                                        }
 
                                         <hr className="mt-1" />
 
 
                                         {/* display in a grid system the objects in the rooms array */}
                                         <Container className="d-flex flex-wrap justify-content-center">
-                                            {console.log(rooms)}
+                                            {socket?.connected === false || socket?.disconnected === true || socket === undefined || socket === null ?
+                                                <div className='d-flex flex-column justify-items-center text-center'>
 
-                                            {rooms === undefined || rooms.length === 0 ? <div>No rooms available</div> :
-                                                <Row className="justify-content-center align-items-center" >
+                                                    <p style={{ fontSize: "3rem" }}>Not Connected.</p>
+                                                    <button className="button button-retro is-warning bordercool d-inline-block text-center"
+                                                        style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
+                                                        onClick={() => { window.location.reload(false) }}>
+                                                        <p className="mb-0" style={{ color: "#00000" }}>Refresh</p>
 
-                                                    {rooms.map((room, index) => {
-                                                        {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
-                                                        let roomCreator = room.creator;
-                                                        let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', { useGrouping: false }));
+                                                    </button>
+                                                </div>
+
+                                                : <>
+                                                    {rooms === undefined || rooms.length === 0 ?
+                                                        <div className='d-flex flex-column'>
+                                                            <p>No rooms available.</p>
+                                                            <p>Try to create on for yourself!</p>
+                                                        </div>
+                                                        :
+                                                        <Row className="justify-content-center align-items-center" >
+
+                                                            {rooms.map((room, index) => {
+                                                                {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
+                                                                let roomCreator = room.creator;
+                                                                let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', { useGrouping: false }));
 
 
 
 
-                                                        if (roomCreator.length > 18) {
-                                                            roomCreator = roomCreator.substring(0, 17) + "…";
-                                                        }
+                                                                if (roomCreator.length > 18) {
+                                                                    roomCreator = roomCreator.substring(0, 17) + "…";
+                                                                }
 
 
-                                                        return (
-                                                            <div className='mt-1 col col-sm-10 col-m-10 col-lg-12 col-xl-12 '>
-                                                                <button className="button button-retro is-warning bordercool d-inline-block text-center"
-                                                                    style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
-                                                                    onClick={() => joinRoom(room.id)}>
-                                                                    <span>{roomCreator}</span>
-                                                                    <p className="mb-0" style={{ color: "#dd403a" }}>{ammountNEAR} Near</p>
+                                                                return (
+                                                                    <div className='mt-1 col col-sm-10 col-m-10 col-lg-12 col-xl-12 '>
+                                                                        <button className="button button-retro is-warning bordercool d-inline-block text-center"
+                                                                            style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
+                                                                            onClick={() => joinRoom(room.id)}>
+                                                                            <span>{roomCreator}</span>
+                                                                            <p className="mb-0" style={{ color: "#dd403a" }}>{ammountNEAR} Near</p>
 
-                                                                </button>
-                                                            </div>
-                                                        )
+                                                                        </button>
+                                                                    </div>
+                                                                )
 
-                                                    })}
-                                                </Row>
+                                                            })}
+                                                        </Row>
 
+                                                    }
+                                                </>
                                             }
+
                                         </Container>
 
                                     </div>

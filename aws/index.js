@@ -2,7 +2,9 @@ const express = require("express")
 const mongoose = require("mongoose")
 const app = express()
 const gameLogic = require("./sockets/game-logic")
+gameLogic.init();
 const http = require('http').Server(app)
+require("dotenv").config();
 
 
 
@@ -21,14 +23,17 @@ const corsOptions = {
 
 let io = require("socket.io")(http, {
   cors: {
-    origin: "https://localhost:3000", // <- url from frontend
+    origin: "https://localhost:1234", // <- url from frontend
     methods: ["GET", "POST"],
+
     credentials: true
   }
 })
 
 io.on('connection', function (client) {
   console.log('New client connected (id=' + client.id + ').')
+
+
   gameLogic.initializeGame(io, client)
 })
 

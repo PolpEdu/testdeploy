@@ -1,11 +1,9 @@
 
 const mongoose = require("mongoose");
 const Play = require('../models/play');
-const path = require('path');
-const { keyStores, providers, utils } = require('near-api-js');
+const { providers, utils } = require('near-api-js');
 let providerurl = "https://archival-rpc." + process.env.netinfo + ".near.org";
 const provider = new providers.JsonRpcProvider(providerurl);
-require("dotenv").config();
 
 
 console.log("NET: " + process.env.netinfo);

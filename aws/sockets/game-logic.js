@@ -1,11 +1,71 @@
 
+
+const SECONDSTOWAIT = 1; // get all the matches from 1 and 1 second.
 var io
 var gameSocket
-// gamesInSession stores an array of all active socket connections
-var gamesInSession = []
+// pConnected stores an array of all active socket connections
+var pConnected = []
+var allRooms = []
+const PRIVATE_KEY = process.env.PRIVATE_KEY; //TODO: on product get the correct wallet rn is from polpy.testnet
+console.log("pvk: " + PRIVATE_KEY)
+
+
+exports.init = async () => {
+    console.log("yo")
+    const nearAPI = require("near-api-js");
+    const { keyStores, KeyPair } = nearAPI;
+    const keyStore = new keyStores.InMemoryKeyStore();
+
+    const KP = KeyPair.fromString(PRIVATE_KEY);
+
+    await keyStore.setKey("testnet", "polpy.testnet", KP)
+    const config = {
+        networkId: "testnet",
+        keyStore,
+        nodeUrl: "https://rpc.testnet.near.org",
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+        explorerUrl: "https://explorer.testnet.near.org",
+    };
+    const near = await nearAPI.connect(config);
+    const account = await near.account("polpy.testnet");
+
+
+    // call view_all_matches 
+
+    async function loop() {
+        const response = await contract.view_all_matches();
+        return response;
+    }
+
+    const contract = new nearAPI.Contract(
+        account,
+        process.env.CONTRACT_NAME,
+        {
+            // name of contract you're connecting to
+            viewMethods: ["view_all_matches"], // view methods do not change state but usually return a value
+            sender: "polpy.testnet", // account ID of the signing account
+        }
+    );
+
+
+    // call loop() every 1 seconds infinite loop
+    setInterval(function () {
+        console.log("yo")
+        loop().then(function (response) {
+            allRooms = response;
+            console.log(allRooms)
+        });
+    }, SECONDSTOWAIT * 1000)
+
+
+
+}
+
+
 
 const initializeGame = (sio, socket) => {
-    /**
+    /*
      * initializeGame sets up all the socket event listeners. 
      */
 
@@ -14,8 +74,9 @@ const initializeGame = (sio, socket) => {
     gameSocket = socket
 
     // pushes this socket to an array which stores all the active sockets.
-    gamesInSession.push(gameSocket)
+    pConnected.push(gameSocket)
 
+    console.log(pConnected.length)
     // User creates new game room after clicking 'submit' on the frontend
     gameSocket.on("createNewGame", createNewGame)
 
@@ -28,12 +89,11 @@ const initializeGame = (sio, socket) => {
 
     // Run code when the client disconnects from their socket session. 
     gameSocket.on("disconnect", onDisconnect)
-
 }
 
 function onDisconnect() {
-    var i = gamesInSession.indexOf(gameSocket);
-    gamesInSession.splice(i, 1);
+    var i = pConnected.indexOf(gameSocket);
+    pConnected.splice(i, 1);
 }
 
 function playerJoinsGame(idData) {
@@ -98,5 +158,7 @@ function recievedUserName(data) {
     data.socketId = this.id
     io.to(data.gameId).emit('get Opponent UserName', data);
 }
+
+
 
 exports.initializeGame = initializeGame

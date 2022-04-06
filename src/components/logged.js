@@ -183,6 +183,11 @@ export function CreateRoom(props) {
 
                     console.log(tailsHeads)
                     console.log(ammoutNEAR)
+                    //emit a socket event to create a match
+                    props.socket.emit(
+                        'createMatch',
+                    )
+
                     createMatch()
 
                     /*code doesnt reach here*/
