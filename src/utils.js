@@ -76,9 +76,9 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contractMULT = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['view_all_matches','join_match'],
+    viewMethods: ['view_all_matches', 'join_match'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['create_match','cancel_match'],
+    changeMethods: ['create_match', 'cancel_match'],
     // Sender is the account ID to initialize transactions. It can be omitted if you want to send
     sender: window.walletConnection.account(), // account object to initialize and sign transactions.
   })
@@ -157,7 +157,7 @@ export function joinMultiplayer(args, ammoutNEAR) {
   })
 }
 
-export function createMultiplayer( ammoutNEAR) {
+export function createMultiplayer(ammoutNEAR) {
   let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
 
   let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
@@ -482,9 +482,4 @@ export function startup() {
     }
     return a;
   }
-}
-
-export async function getRooms() {
-  const response = await window.contractMULT.view_all_matches();
-  return response;
 }

@@ -8,7 +8,6 @@ require("dotenv").config();
 
 
 const bodyParser = require("body-parser")
-require("dotenv").config()
 const playsRoutes = require("./API/routes/plays")
 //const userRoutes = require("./API/routes/users")
 const cors = require("cors")
@@ -28,6 +27,7 @@ let io = require("socket.io")(http, {
     credentials: true
   }
 })
+gameLogic.init();
 
 io.on('connection', function (client) {
   console.log('New client connected (id=' + client.id + ').')

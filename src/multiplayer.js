@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import LOGOMAIN from './assets/result.svg';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import io from 'socket.io-client';
+import SoundCloudPlayer from 'react-player/soundcloud';
 
 function genrandomphrase() {
     return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
@@ -42,14 +43,62 @@ export default function Mult() {
     const [balance, setbalance] = React.useState("")
     const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
-    const [rooms, setRooms] = React.useState([]);
     const [txsResult, settxsResult] = React.useState("");
     const [buttonDisabled, setButtonDisabled] = React.useState(false)
     const [ammoutNEAR, setammout] = React.useState("")
     const [processing, setprocessing] = React.useState(false);
     const [isrefreshing, setisrefreshing] = React.useState(false);
 
-    const [socket, setSocket] = React.useState(null);
+    const [rooms, setRooms] = React.useState([]);
+    const socketRef = React.useRef();
+
+
+    React.useEffect(
+        () => {
+
+
+
+
+            // in this case, we only care to query the contract when signed in
+            if (window.walletConnection.isSignedIn()) {
+                socketRef.current = io(process.env.DATABASE_URL, { transports: ['websocket', 'polling', 'flashsocket'] })
+
+
+                socketRef.current.on('connect', () => {
+                    console.log('Connected to server socket');
+                    socketRef.current.emit('gettables');
+                });
+
+                socketRef.current.on('rooms', (data) => {
+                    setRooms(data);
+                    setisrefreshing(false);
+
+                });
+
+
+                //console.log("LOADING BALANCE AND HEADS OR TAILS")
+                window.walletConnection.account().getAccountBalance().then(function (balance) {
+                    let fullstr = convertYocto(balance.available).split(".");
+                    let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
+                    setbalance("NEAR: " + str);
+                }).catch(e => {
+                    console.log('There has been a problem with getting your balance: ' + e.message);
+                    setbalance("Couldn't Fetch Balance");
+                });
+
+
+                searchParams.delete("errorCode");
+                searchParams.delete("errorMessage");
+                navigate(searchParams.toString());
+
+
+                getTxsResult(txsHashes);
+            }
+
+            return () => socketRef.current.disconnect();
+        },
+        []
+    );
 
     const resetGame = () => {
         setTailsHeads(Math.random() < 0.5 ? "tails" : "heads")
@@ -81,43 +130,11 @@ export default function Mult() {
     const joinRoom = async (roomId) => {
         setprocessing(true)
         setButtonDisabled(true)
+
+        socketRef.current.emit('playerJoinGame', roomId);
     }
+    console.log(rooms);
 
-
-    React.useEffect(
-        () => {
-            //connect to server socket
-            const newSocket = io(process.env.DATABASE_URL, { transports: ['websocket', 'polling', 'flashsocket'] })
-            console.log(newSocket)
-            setSocket(newSocket)
-
-
-
-            // in this case, we only care to query the contract when signed in
-            if (window.walletConnection.isSignedIn()) {
-                //console.log("LOADING BALANCE AND HEADS OR TAILS")
-                window.walletConnection.account().getAccountBalance().then(function (balance) {
-                    let fullstr = convertYocto(balance.available).split(".");
-                    let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
-                    setbalance("NEAR: " + str);
-                }).catch(e => {
-                    console.log('There has been a problem with getting your balance: ' + e.message);
-                    setbalance("Couldn't Fetch Balance");
-                });
-
-
-                searchParams.delete("errorCode");
-                searchParams.delete("errorMessage");
-                navigate(searchParams.toString());
-
-
-                getTxsResult(txsHashes);
-            }
-
-            return () => socket.disconnect();
-        },
-        [setSocket]
-    );
     const { width, height } = useWindowSize();
     return (
         <div>
@@ -303,13 +320,7 @@ export default function Mult() {
                                     style={{ letterSpacing: "2px", width: "8rem" }}
                                     onClick={event => {
                                         setisrefreshing(true);
-                                        getRooms().then((res) => {
-                                            setisrefreshing(false);
-                                            setRooms(res);
-                                        }).catch((err) => {
-                                            setisrefreshing(false);
-                                            console.log("Couldn't refresh rooms: " + err);
-                                        });
+                                        socketRef.current.emit('gettables');
                                     }}>
                                     {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
                                 </button>
@@ -323,21 +334,12 @@ export default function Mult() {
                                     modal
                                     contentStyle={contentStyle}
                                 >
-                                    <CreateRoom socketobj={socket} />
+                                    <CreateRoom socketobj={socketRef.current} />
                                 </Popup>
                                 <button className="button button-retro button-retro-small is-error ms-2"
                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
                                     onClick={event => {
-                                        setisrefreshing(true);
-                                        getRooms().then((res) => {
 
-                                            setisrefreshing(false);
-                                            setRooms(res);
-                                        }
-                                        ).catch((err) => {
-                                            setisrefreshing(false);
-                                            console.log("Couldn't refresh rooms: " + err);
-                                        });
 
                                     }}>
                                     Feeling Lucky
@@ -353,7 +355,7 @@ export default function Mult() {
                                     </> :
                                     <div className='d-flex flex-column '>
 
-                                        {socket?.connected === false || socket?.disconnected === true || socket === undefined || socket === null ?
+                                        {socketRef.current?.connected === false || socketRef.current?.disconnected === true || socketRef.current === undefined || socketRef.current === null ?
                                             <>
                                                 <div id="game" className="game">
                                                     <h4 className="text-uppercase mt-3 start-error">ERROR</h4>
@@ -372,11 +374,13 @@ export default function Mult() {
 
                                         {/* display in a grid system the objects in the rooms array */}
                                         <Container className="d-flex flex-wrap justify-content-center">
-                                            {socket?.connected === false || socket?.disconnected === true || socket === undefined || socket === null ?
+                                            {socketRef.current?.connected === false || socketRef.current === undefined || socketRef.current?.disconnected === true || socketRef.current === null ?
                                                 <div className='d-flex flex-column justify-items-center text-center'>
-
-                                                    <p style={{ fontSize: "3rem" }}>Not Connected.</p>
-                                                    <button className="button button-retro is-warning bordercool d-inline-block text-center"
+                                                    <p style={{ fontSize: "2rem" }}>Connecting</p>
+                                                    <div className='mx-auto'>
+                                                        <Loading size={40} color={"text-light"} />
+                                                    </div>
+                                                    <button className="button button-retro is-warning bordercool d-inline-block text-center mt-2"
                                                         style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                         onClick={() => { window.location.reload(false) }}>
                                                         <p className="mb-0" style={{ color: "#00000" }}>Refresh</p>

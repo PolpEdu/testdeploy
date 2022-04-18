@@ -1,7 +1,4 @@
-
 const nearAPI = require("near-api-js");
-
-
 
 const SECONDSTOWAIT = 1; // get all the matches from 1 and 1 second.
 var io
@@ -9,14 +6,13 @@ var gameSocket
 // pConnected stores an array of all active socket connections
 var pConnected = []
 var allRooms = []
+require("dotenv").config();
 
-
-const PRIVATE_KEY = process.env.PRIVATE_KEY; //TODO: on product get the correct wallet rn is from polpy.testnet
+const PRIVATE_KEY = process.env.PRIVATE_KEYY; //TODO: on product get the correct wallet rn is from polpy.testnet
 console.log("pvk: " + PRIVATE_KEY)
 
 
 exports.init = async () => {
-    const nearAPI = require("near-api-js");
     const { keyStores, KeyPair } = nearAPI;
     const keyStore = new keyStores.InMemoryKeyStore();
     const KP = KeyPair.fromString(PRIVATE_KEY);
@@ -42,7 +38,7 @@ exports.init = async () => {
 
     const contract = new nearAPI.Contract(
         account,
-        process.env.CONTRACT_NAME,
+        process.env.CONTRACT_NAMEE,
         {
             // name of contract you're connecting to
             viewMethods: ["view_all_matches"], // view methods do not change state but usually return a value
@@ -53,17 +49,14 @@ exports.init = async () => {
 
     // call loop() every 1 seconds infinite loop
     setInterval(function () {
-        console.log("yo")
+        //console.log("yo")
+        //console.log(process.env.CONTRACT_NAMEE)
         loop().then(function (response) {
+            console.log("all rooms: " + response)
             allRooms = response;
-            console.log(allRooms)
         });
     }, SECONDSTOWAIT * 1000)
-
-
-
 }
-
 
 
 const initializeGame = (sio, socket) => {
@@ -78,7 +71,10 @@ const initializeGame = (sio, socket) => {
     // pushes this socket to an array which stores all the active sockets.
     pConnected.push(gameSocket)
 
-    console.log(pConnected.length)
+    console.log("Current Connected: " + pConnected.length)
+
+    gameSocket.on('gettables', getRooms)
+
     // User creates new game room after clicking 'submit' on the frontend
     gameSocket.on("createNewGame", createNewGame)
 
@@ -93,26 +89,30 @@ const initializeGame = (sio, socket) => {
     gameSocket.on("disconnect", onDisconnect)
 }
 
+function getRooms() {
+    console.log(allRooms)
+    this.emit('rooms', allRooms)
+}
+
 function onDisconnect() {
     var i = pConnected.indexOf(gameSocket);
     pConnected.splice(i, 1);
+    console.log("Current Connected: " + pConnected.length)
+
 }
 
 function playerJoinsGame(idData) {
     /**
-     * Joins the given socket to a session with it's gameId
-     */
+     ** Joins the given socket to a session with it's gameId
+     **/
 
     // A reference to the player's Socket.IO socket object
     var sock = this
-
-
     //get bc its a map
-    var room = io.sockets.adapter.rooms.get(idData.gameId)
-
+    var room = allRooms.get(idData.gameId)
     // If the room exists...
-    if (room === undefined || io.sockets.adapter.rooms.has(idData.gameId) === false) {
-        this.emit('status', "This game session does not exist.");
+    if (room === undefined || room === null) {
+        this.emit('status', "This game no longer exists.");
         return
     }
 
