@@ -1,10 +1,11 @@
 import React from 'react'
 import axios from 'axios';
-import { login, createMultiplayer } from '../utils.js'
+import { login, createMultiplayer, getAllPlayerMathces } from '../utils.js'
 import LOGOBACK from '../assets/nearcoin.svg';
 import LOGOMAIN from '../assets/result.svg'
-
-
+import NearLogo from '../assets/logo-black.svg';
+import { fees } from '../utils.js'
+import { urlPrefix } from '../App.js'
 
 function generatephrase(ammount, won, account) {
     account = account.split(".")[0]
@@ -93,6 +94,42 @@ function generatephrase(ammount, won, account) {
         </>
     )
 }
+export function SelfMatches() {
+
+    const [matches, setMatches] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState(false);
+
+    React.useEffect(() => {
+        getAllPlayerMathces(window.accountId).then(res => {
+            console.log(res)
+            setMatches(res)
+            setLoading(false)
+        }).catch(err => {
+            setError(true)
+            setLoading(false)
+        });
+    }, [])
+
+
+    return (
+        <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelYRM w-full">
+            <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Your Currently Open Matches as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a></span>
+            <div className="d-flex">
+                <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
+                    <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                        <span className='mb-4'>
+                            Flip Ammount:
+                        </span>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    )
+}
 
 export function CreateRoom(props) {
     const [tailsHeads, setTailsHeads] = React.useState(Math.random() < 0.5 ? "tails" : "heads")
@@ -148,7 +185,7 @@ export function CreateRoom(props) {
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelCR w-full">
             <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Create Room</span>
-            <span className='text-center mb-3 rounded' style={{ fontWeight: "500", color: "white" }}>Flipping as: {window.accountId}.</span>
+            <span className='text-center mb-3 rounded' style={{ fontWeight: "500", color: "white" }}>Flipping as: {window.accountId}</span>
             <div className="d-flex">
                 <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
                     <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
@@ -161,8 +198,12 @@ export function CreateRoom(props) {
                                 Near
                             </span>
                         </div>
+                        <span className='text-danger text-center pt-3' style={{ fontSize: "0.75rem" }}>
+                            {Math.round(ammoutNEAR * fees * 100000) / 100000} Near after Fees.
+                        </span>
 
                     </div>
+
                 </div>
                 <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%" }}>
                     <div className={tailsHeads === "heads" ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
@@ -183,14 +224,9 @@ export function CreateRoom(props) {
 
                     console.log(tailsHeads)
                     console.log(ammoutNEAR)
-                    //emit a socket event to create a match
-                    props.socket.emit(
-                        'createMatch',
-                    )
+
 
                     createMatch()
-
-                    /*code doesnt reach here*/
                 }}
                 disabled={buttonDisabled || tailsHeads === "" || ammoutNEAR === 0}
             >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>

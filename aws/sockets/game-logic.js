@@ -52,7 +52,7 @@ exports.init = async () => {
         //console.log("yo")
         //console.log(process.env.CONTRACT_NAMEE)
         loop().then(function (response) {
-            console.log("all rooms: " + response)
+            //console.log("all rooms: " + response)
             allRooms = response;
         });
     }, SECONDSTOWAIT * 1000)
@@ -105,11 +105,11 @@ function playerJoinsGame(idData) {
     /**
      ** Joins the given socket to a session with it's gameId
      **/
-
+    console.log(idData)
     // A reference to the player's Socket.IO socket object
     var sock = this
     //get bc its a map
-    var room = allRooms.get(idData.gameId)
+    var room = allRooms[idData.gameId]
     // If the room exists...
     if (room === undefined || room === null) {
         this.emit('status', "This game no longer exists.");

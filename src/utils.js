@@ -76,7 +76,7 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contractMULT = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['view_all_matches', 'join_match'],
+    viewMethods: ['view_all_matches', 'join_match', 'view_match_from'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['create_match', 'cancel_match'],
     // Sender is the account ID to initialize transactions. It can be omitted if you want to send
@@ -94,7 +94,6 @@ export async function initContract() {
   })
 
 }
-
 export function sendpostwithplay(txHash) {
 
   axios.post(process.env.DATABASE_URL + '/plays', {
@@ -140,7 +139,10 @@ export async function getState(txHash, accountId) {
 }
 
 export function flip(args, ammoutNEAR) {
-  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
+  let total = ammoutNEAR * fees;
+  //round with 4 decimal places
+  total = Math.round(total * 10000) / 10000;
+  let yoctoNEAR = utils.format.parseNearAmount((total.toString()));
 
   let contractID = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
   const result = window.walletConnection.account().functionCall({
@@ -148,8 +150,16 @@ export function flip(args, ammoutNEAR) {
   })
 }
 
+export async function getAllPlayerMathces(accountId) {
+  const res = await window.contractMULT.view_match_from({ creator: accountId });
+  console.log(res);
+  return res;
+}
+
 export function joinMultiplayer(args, ammoutNEAR) {
+
   let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
+
 
   let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
   const result = window.walletConnection.account().functionCall({

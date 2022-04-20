@@ -7,8 +7,8 @@ import './global.css'
 import './cointopright.css'
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
-import { Notification, NotificationError } from './App.js'
-import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers, CreateRoom } from './components/logged';
+import { Notification, NotificationError, urlPrefix } from './App.js'
+import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers, CreateRoom, SelfMatches } from './components/logged';
 import ParasLogoB from './assets/paras-black.svg';
 import ParasLogoW from './assets/paras-white.svg';
 import { Twitter, Discord } from 'react-bootstrap-icons';
@@ -17,7 +17,6 @@ import { Link } from 'react-router-dom';
 import LOGOMAIN from './assets/result.svg';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import io from 'socket.io-client';
-import SoundCloudPlayer from 'react-player/soundcloud';
 
 function genrandomphrase() {
     return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
@@ -123,9 +122,35 @@ export default function Mult() {
         let decodedstr = "";
         let decodedWonAmmountstr = "";
 
-        settxsResult(decodedstr);
-        setWonAmmount(decodedWonAmmountstr)
+        await gettxsRes(txsHashes).then(res => {
+            console.log(res)
+            setShowNotification(true)
+
+            /*let decoded = Buffer.from(res.status.SuccessValue, 'base64')
+            decodedstr = decoded.toString("ascii")
+
+            let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees
+
+            sendpostwithplay(txsHashes)
+
+            try {
+                decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', { useGrouping: false }))
+
+            } catch (e) {
+                console.log("Error converting ammount bet to string.")
+            }*/
+
+            //console.log("decoded result: "+ decodedstr)
+
+        }).catch(e => {
+            if (!e instanceof TypeError) {
+                console.error(e)
+            }
+
+        })
+
     }
+
 
     const joinRoom = async (roomId) => {
         setprocessing(true)
@@ -133,7 +158,7 @@ export default function Mult() {
 
         socketRef.current.emit('playerJoinGame', roomId);
     }
-    console.log(rooms);
+    //console.log(rooms);
 
     const { width, height } = useWindowSize();
     return (
@@ -146,19 +171,21 @@ export default function Mult() {
                         <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
                             <div className='d-flex flex-row'>
                                 <div role='button' className='retro-btn warning'>
-                                    <Link to="/" id="RouterNavLink">
-                                        <div className='buttoncool'>
-                                            <span className='btn-inner'>
-                                                <span className='content-wrapper'>
-                                                    <span className='btn-content'>
+                                    <div role='button' className='retro-btn warning' style={{ display: !window.walletConnection.isSignedIn() ? "none" : "" }}>
+                                        <Link to="/" id="RouterNavLink">
+                                            <div className='buttoncool'>
+                                                <span className='btn-inner'>
+                                                    <span className='content-wrapper'>
+                                                        <span className='btn-content'>
 
-                                                        <span className='btn-content-inner' label="Flip Alone">
+                                                            <span className='btn-content-inner' label="Flip Alone">
+                                                            </span>
                                                         </span>
                                                     </span>
                                                 </span>
-                                            </span>
-                                        </div>
-                                    </Link>
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </div>
                                 <Popup trigger={
                                     <div role='button' className='retro-btn danger'>
@@ -234,23 +261,16 @@ export default function Mult() {
                                                 <div className="card-body text-center">
                                                     <h4 style={{ fontWeight: "bold" }}>USER PROFILE</h4>
                                                     <h6>
-                                                        <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:{window.accountId}!</small>
+                                                        <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:
+                                                            <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>!</small>
                                                     </h6>
-                                                    <div className="profile-picture d-flex w-80 mb-3">
-                                                        <div className="imageWrapper ms-auto me-auto">
-                                                            <img className="rounded-circle cursor-pointer image-large" src="https://i.imgur.com/E3aJ7TP.jpg" alt="pfp" />
-                                                            <a href="#" className="cornerLink" ><small style={{ fontSize: "0.75rem" }}>CHANGE PICTURE</small></a>
-                                                        </div>
-                                                    </div>
                                                     <h6>First Fliperino: </h6>
                                                     <div className="input-group">
-
                                                         {/*<input type="text" className="form-control" placeholder="Nickname" aria-label="Username" aria-describedby="basic-addon1" value=""/>
-                        */}
+                                                        */}
                                                     </div>
                                                 </div>
                                                 <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{ margin: "0px" }}>
-                                                    <button className='w-80 mt-3 ms-3 me-3 justify-content-center mx-auto btnhover btn btn-success' style={{ fontFamily: "VCR_OSD_MONO", fontWeight: "normal", fontSize: "1.1rem" }} onClick={handleClose}>Save</button>
                                                     <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{ fontWeight: "semibold", fontSize: "1.1rem" }}>Disconnect Wallet</button>
                                                 </div>
                                             </div>
@@ -315,37 +335,54 @@ export default function Mult() {
 
                             <h1 className="textsurprese font-weight-normal" style={{ fontSize: "1.5rem" }}>{surprisePhrase}</h1>
 
-                            <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
-                                <button className="button button-retro button-retro-small is-success ms-2"
-                                    style={{ letterSpacing: "2px", width: "8rem" }}
-                                    onClick={event => {
-                                        setisrefreshing(true);
-                                        socketRef.current.emit('gettables');
-                                    }}>
-                                    {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
-                                </button>
+                            {
+                                window.walletConnection.isSignedIn() ?
+                                    <>
+                                        <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
+                                            <button className="button button-retro button-retro-small is-success ms-2"
+                                                style={{ letterSpacing: "2px", width: "8rem" }}
+                                                onClick={event => {
+                                                    setisrefreshing(true);
+                                                    socketRef.current.emit('gettables');
+                                                }}>
+                                                {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
+                                            </button>
 
-                                <Popup trigger={
-                                    <button className="button button-retro button-retro-small is-primary ms-2"
-                                        style={{ letterSpacing: "2px", width: "8rem" }}>
-                                        Create Room
-                                    </button>
-                                } position="center center"
-                                    modal
-                                    contentStyle={contentStyle}
-                                >
-                                    <CreateRoom socketobj={socketRef.current} />
-                                </Popup>
-                                <button className="button button-retro button-retro-small is-error ms-2"
-                                    style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
-                                    onClick={event => {
+                                            <Popup trigger={
+                                                <button className="button button-retro button-retro-small is-primary ms-2"
+                                                    style={{ letterSpacing: "2px", width: "8rem" }}>
+                                                    Create Room
+                                                </button>
+                                            } position="center center"
+                                                modal
+                                                contentStyle={contentStyle}
+                                            >
+                                                <CreateRoom socket={socketRef.current} />
+                                            </Popup>
+                                            <Popup trigger={
+                                                <button className="button button-retro button-retro-small is-yellow ms-2"
+                                                    style={{ letterSpacing: "2px", width: "8rem" }}>
+                                                    Your Matches
+                                                </button>
+                                            } position="center center"
+                                                modal
+                                                contentStyle={contentStyle}
+                                            >
+                                                <SelfMatches socket={socketRef.current} />
+                                            </Popup>
+                                            <button className="button button-retro button-retro-small is-error ms-2"
+                                                style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
+                                                onClick={event => {
 
 
-                                    }}>
-                                    Feeling Lucky
-                                </button>
+                                                }}>
+                                                Feeling Lucky
+                                            </button>
 
-                            </div>
+                                        </div>
+                                    </>
+                                    : <></>
+                            }
 
                             <div className='maincenter-multi text-center'>
 
@@ -447,7 +484,7 @@ export default function Mult() {
                             <img src={ParasLogoW} alt="Paras Logo B" className='rounded mt-1 fa-nearnfts' style={{ height: "28px", width: "28px" }}
                             />
                         </a>
-                        <a href="" target="_blank" rel="" className="cursor-pointer me-2">
+                        <a href="https://twitter.com/flipnear" target="_blank" rel="" className="cursor-pointer me-2">
                             <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter" />
                         </a>
                         <a href="https://discord.gg/b7NJPuV5pk" target="_blank" rel="" className="cursor-pointer me-2">

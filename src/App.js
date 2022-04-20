@@ -25,6 +25,7 @@ import ReactPlayer from 'react-player'
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance = 0.05
+export const urlPrefix = "https://explorer." + networkId + ".near.org/accounts"
 
 
 //import { ThemeProvider } from 'styled-components'
@@ -310,14 +311,9 @@ export default function App() {
                         <div className="card-body text-center">
                           <h4 style={{ fontWeight: "bold" }}>USER PROFILE</h4>
                           <h6>
-                            <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:{window.accountId}!</small>
+                            <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:
+                              <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>!</small>
                           </h6>
-                          <div className="profile-picture d-flex w-80 mb-3">
-                            <div className="imageWrapper ms-auto me-auto">
-                              <img className="rounded-circle cursor-pointer image-large" src="https://i.imgur.com/E3aJ7TP.jpg" alt="pfp" />
-                              <a href="#" className="cornerLink" ><small style={{ fontSize: "0.75rem" }}>CHANGE PICTURE</small></a>
-                            </div>
-                          </div>
                           <h6>First Fliperino: </h6>
                           <div className="input-group">
 
@@ -472,7 +468,6 @@ export default function App() {
 
 // this component gets rendered by App after the form is submitted
 export function Notification() {
-  const urlPrefix = "https://explorer." + networkId + ".near.org/accounts"
   return (
     <aside>
       <a target="_blank" rel="noreferrer" href={`${urlPrefix}/${window.accountId}`}>
@@ -493,7 +488,6 @@ export function Notification() {
 
 
 export function NotificationError(props) {
-  const urlPrefix = "https://explorer." + networkId + ".near.org/accounts"
 
   return (
     <aside>

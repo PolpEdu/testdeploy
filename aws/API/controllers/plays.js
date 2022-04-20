@@ -23,10 +23,7 @@ async function gettxsStatus(hash, id) {
         return result;
     } catch (err) {
         console.log("Error getting transaction status!");
-
     }
-
-
 }
 
 exports.postPlay = (req, res, next) => {
@@ -72,7 +69,6 @@ exports.postPlay = (req, res, next) => {
                             let streakofplayer = 0;
                             let totalwon = asciiammount;
 
-                            //eyes emoji: 👀 
                             if (play) {
                                 streakofplayer = play.streak;
                                 totalwon = play.totalammountwon;
@@ -100,7 +96,7 @@ exports.postPlay = (req, res, next) => {
                             });
                             //console.log("New Play created!");
                             newplay.save().then(result => {
-                                res.status(201).json({
+                                return res.status(201).json({
                                     message: "Play created successfully!",
                                     play: {
                                         ...result,
@@ -109,34 +105,34 @@ exports.postPlay = (req, res, next) => {
                                 });
                             }).catch(err => {
                                 console.log(err);
-                                res.status(500).json({
+                                return res.status(500).json({
                                     error: err
                                 });
                             });
 
                         }).catch(err => {
                             console.log(err);
-                            res.status(500).json({
+                            return res.status(500).json({
                                 error: "Couldn't fetch player's plays"
                             });
                         });
                     }
                 }).catch(err => {
                     console.log(err);
-                    res.status(500).json({
+                    return res.status(500).json({
                         error: "error fetching database"
                     });
                 });
 
             } else {
                 console.log("Transaction not valid!");
-                res.status(500).json({
+                return res.status(500).json({
                     error: "Transaction not committed yet!"
                 });
             }
         }).catch(err => {
             console.log(err);
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Error getting transaction status!",
                 error: err
             });
