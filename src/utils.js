@@ -16,6 +16,7 @@ const provider = new providers.JsonRpcProvider(providerurl);
 
 let near;
 export const fees = 1.035;
+export const feesMultiplayer = 1.0175
 
 export const menusayingsmult = [
   "Ready to rekt some noobs",
@@ -114,6 +115,7 @@ export function convertYocto(YOCTO) {
 }
 
 export async function gettxsRes(txs) {
+  console.log(txs)
   const result = await provider.txStatus(txs, window.accountId)
   return result;
 }
@@ -168,7 +170,8 @@ export function joinMultiplayer(args, ammoutNEAR) {
 }
 
 export function createMultiplayer(ammoutNEAR) {
-  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
+
+  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * feesMultiplayer.toString()))
 
   let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
   const result = window.walletConnection.account().functionCall({

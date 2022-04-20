@@ -4,7 +4,7 @@ import { login, createMultiplayer, getAllPlayerMathces } from '../utils.js'
 import LOGOBACK from '../assets/nearcoin.svg';
 import LOGOMAIN from '../assets/result.svg'
 import NearLogo from '../assets/logo-black.svg';
-import { fees } from '../utils.js'
+import { feesMultiplayer } from '../utils.js'
 import { urlPrefix } from '../App.js'
 
 function generatephrase(ammount, won, account) {
@@ -165,7 +165,7 @@ export function CreateRoom(props) {
 
             if (text.length > 0) {
                 //parse text to int
-                let ammount = parseInt(text);
+                let ammount = parseFloat(text);
                 if (ammount > 0) {
                     setButtonDisabled(false)
                     setAmmountNEAR(ammount)
@@ -199,7 +199,7 @@ export function CreateRoom(props) {
                             </span>
                         </div>
                         <span className='text-danger text-center pt-3' style={{ fontSize: "0.75rem" }}>
-                            {Math.round(ammoutNEAR * fees * 100000) / 100000} Near after Fees.
+                            {Math.round(ammoutNEAR * feesMultiplayer * 100000) / 100000} Near after Fees.
                         </span>
 
                     </div>

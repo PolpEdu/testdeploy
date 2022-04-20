@@ -1,6 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { logout, convertYocto, gettxsRes, menusayingsmult, fees, sendpostwithplay, startup, getRooms } from './utils'
+import { logout, convertYocto, gettxsRes, menusayingsmult, sendpostwithplay, startup, getRooms } from './utils'
 import Confetti from 'react-confetti';
 import { Modal, Row, Container, Col } from 'react-bootstrap';
 import './global.css'
@@ -72,6 +72,10 @@ export default function Mult() {
                     setRooms(data);
                     setisrefreshing(false);
 
+                });
+
+                socketRef.current.on('start game', () => {
+                    searchParams.set("transactionHashes", data.room);
                 });
 
 
@@ -157,6 +161,7 @@ export default function Mult() {
         setButtonDisabled(true)
 
         socketRef.current.emit('playerJoinGame', roomId);
+
     }
     //console.log(rooms);
 
@@ -330,11 +335,8 @@ export default function Mult() {
                             }
                         </div>
                         :
-
                         <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "1000px" }}>
-
                             <h1 className="textsurprese font-weight-normal" style={{ fontSize: "1.5rem" }}>{surprisePhrase}</h1>
-
                             {
                                 window.walletConnection.isSignedIn() ?
                                     <>
@@ -347,18 +349,6 @@ export default function Mult() {
                                                 }}>
                                                 {processing || isrefreshing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
                                             </button>
-
-                                            <Popup trigger={
-                                                <button className="button button-retro button-retro-small is-primary ms-2"
-                                                    style={{ letterSpacing: "2px", width: "8rem" }}>
-                                                    Create Room
-                                                </button>
-                                            } position="center center"
-                                                modal
-                                                contentStyle={contentStyle}
-                                            >
-                                                <CreateRoom socket={socketRef.current} />
-                                            </Popup>
                                             <Popup trigger={
                                                 <button className="button button-retro button-retro-small is-yellow ms-2"
                                                     style={{ letterSpacing: "2px", width: "8rem" }}>
@@ -370,6 +360,18 @@ export default function Mult() {
                                             >
                                                 <SelfMatches socket={socketRef.current} />
                                             </Popup>
+                                            <Popup trigger={
+                                                <button className="button button-retro button-retro-small is-primary ms-2"
+                                                    style={{ letterSpacing: "2px", width: "8rem" }}>
+                                                    Create Room
+                                                </button>
+                                            } position="center center"
+                                                modal
+                                                contentStyle={contentStyle}
+                                            >
+                                                <CreateRoom socket={socketRef.current} />
+                                            </Popup>
+
                                             <button className="button button-retro button-retro-small is-error ms-2"
                                                 style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
                                                 onClick={event => {
