@@ -838,6 +838,14 @@ text-shadow: 1px 1px 0px rgb(177, 255, 125);
 animation: opacityPulse 1s ease-out;
 animation-iteration-count: infinite;
 }
+.textinfoyellow {
+text-align: center;
+min-height: 2rem;
+color:#FFE23F;
+text-shadow: 1px 1px 0px #000000;
+animation: opacityPulse 1s ease-out;
+animation-iteration-count: infinite;
+}
 .textinfolose {
 text-align: center;
 min-height: 2rem;

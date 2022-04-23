@@ -17,6 +17,7 @@ const provider = new providers.JsonRpcProvider(providerurl);
 let near;
 export const fees = 1.035;
 export const feesMultiplayer = 1.0175
+export const minimumAmmount = 0.01;
 
 export const menusayingsmult = [
   "Ready to rekt some noobs",
@@ -115,7 +116,6 @@ export function convertYocto(YOCTO) {
 }
 
 export async function gettxsRes(txs) {
-  console.log(txs)
   const result = await provider.txStatus(txs, window.accountId)
   return result;
 }
@@ -159,23 +159,21 @@ export async function getAllPlayerMathces(accountId) {
 }
 
 export function joinMultiplayer(args, ammoutNEAR) {
-
-  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * fees).toString());
-
-
+  let total = ammoutNEAR * fees;
+  let yoctoNEAR = utils.format.parseNearAmount(total.toString());
   let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
   const result = window.walletConnection.account().functionCall({
     contractId: contractID.toString(), methodName: 'join_match', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
 }
 
-export function createMultiplayer(ammoutNEAR) {
-
-  let yoctoNEAR = utils.format.parseNearAmount((ammoutNEAR * feesMultiplayer.toString()))
-
+export function createMultiplayer(ammoutNEAR, tailsHeads) {
+  let argside = tailsHeads === "heads";
+  let totalammount = ammoutNEAR * feesMultiplayer;
+  let yoctoNEAR = utils.format.parseNearAmount(totalammount.toString());
   let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
   const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'create_match', gas: "300000000000000", attachedDeposit: yoctoNEAR
+    contractId: contractID.toString(), methodName: 'create_match', args: { face: argside }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
 }
 

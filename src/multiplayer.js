@@ -38,13 +38,12 @@ export default function Mult() {
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
     const [show, setShow] = React.useState(false);
+    const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
+    const [sideChoosen, setSideBet] = React.useState(null);
 
     const [balance, setbalance] = React.useState("")
-    const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
     const [txsResult, settxsResult] = React.useState("");
-    const [buttonDisabled, setButtonDisabled] = React.useState(false)
-    const [ammoutNEAR, setammout] = React.useState("")
     const [processing, setprocessing] = React.useState(false);
     const [isrefreshing, setisrefreshing] = React.useState(false);
 
@@ -124,27 +123,23 @@ export default function Mult() {
 
     const getTxsResult = async () => {
         let decodedstr = "";
-        let decodedWonAmmountstr = "";
+        let sidebetstr = "";
 
         await gettxsRes(txsHashes).then(res => {
             console.log(res)
             setShowNotification(true)
 
-            /*let decoded = Buffer.from(res.status.SuccessValue, 'base64')
+            let decoded = Buffer.from(res.status.SuccessValue, 'base64')
             decodedstr = decoded.toString("ascii")
 
-            let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees
+            let sideBet = Buffer.from(res.transaction.actions[0].FunctionCall.args, 'base64')
+            sidebetstr = sideBet.toString("ascii")
 
-            sendpostwithplay(txsHashes)
+            settxsResult(decodedstr)
+            setSideBet(sidebetstr)
 
-            try {
-                decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', { useGrouping: false }))
-
-            } catch (e) {
-                console.log("Error converting ammount bet to string.")
-            }*/
-
-            //console.log("decoded result: "+ decodedstr)
+            console.log("decoded result: " + decodedstr)
+            console.log("side bet: " + sidebetstr)
 
         }).catch(e => {
             if (!e instanceof TypeError) {
@@ -158,7 +153,6 @@ export default function Mult() {
 
     const joinRoom = async (roomId) => {
         setprocessing(true)
-        setButtonDisabled(true)
 
         socketRef.current.emit('playerJoinGame', roomId);
 
@@ -300,33 +294,34 @@ export default function Mult() {
 
                 <div className='play form-signin'>
                     {txsHashes ?
-                        <div className='maincenter text-center'>
-                            {txsResult === "" ? <Loading /> :
+                        <div className='maincenter text-center' style={{ maxWidth: "32rem" }}>
+                            {txsResult === "" || sideChoosen === null ? <Loading /> :
                                 <>
                                     {txsResult === "true" ?
                                         <>
 
-                                            <Confetti
-                                                width={width - 1}
-                                                height={height - 1}
-                                            />
-
-
-                                            <div className="textinfowin font-weight-normal" style={{ fontSize: "2rem" }}>
-                                                YOU WON!
+                                            <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
+                                                Waiting for opponent...
                                             </div>
-                                            <button className="button button-retro is-primary" onClick={resetGame}>
-                                                Play Again
+
+                                            <div>
+                                                Current Side: {sideChoosen}
+                                            </div>
+
+
+
+                                            <button className="button button-retro is-error" onClick={resetGame}>
+                                                Cancel
                                             </button>
                                         </>
 
                                         :
                                         <>
                                             <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
-                                                Game Over!
+                                                ERROR
                                             </div>
                                             <button className="button button-retro is-error" onClick={resetGame}>
-                                                Try Again
+                                                Some Error Ocurred... Try again.
                                             </button>
                                         </>
 
@@ -455,7 +450,7 @@ export default function Mult() {
                                                                             style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                                             onClick={() => joinRoom(room.id)}>
                                                                             <span>{roomCreator}</span>
-                                                                            <p className="mb-0" style={{ color: "#dd403a" }}>{ammountNEAR} Near</p>
+                                                                            <p className="mb-0" style={{ color: "#dd403a" }}>{Math.round(ammountNEAR * 10000000) / 10000000} Near</p>
 
                                                                         </button>
                                                                     </div>

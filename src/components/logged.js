@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios';
-import { login, createMultiplayer, getAllPlayerMathces } from '../utils.js'
+import { login, createMultiplayer, getAllPlayerMathces, minimumAmmount } from '../utils.js'
 import LOGOBACK from '../assets/nearcoin.svg';
 import LOGOMAIN from '../assets/result.svg'
 import NearLogo from '../assets/logo-black.svg';
@@ -166,20 +166,23 @@ export function CreateRoom(props) {
             if (text.length > 0) {
                 //parse text to int
                 let ammount = parseFloat(text);
-                if (ammount > 0) {
+                if (ammount >= minimumAmmount) {
                     setButtonDisabled(false)
                     setAmmountNEAR(ammount)
+                    return
                 }
-                return;
+                else {
+                    setButtonDisabled(true)
+                }
             }
             setButtonDisabled(true)
         }
     }
 
-    const createMatch = async () => {
+    const createMatch = async (tailsHeads) => {
         setprocessing(true)
         setButtonDisabled(true)
-        createMultiplayer(ammoutNEAR);
+        createMultiplayer(ammoutNEAR, tailsHeads);
     }
 
     return (
@@ -199,7 +202,7 @@ export function CreateRoom(props) {
                             </span>
                         </div>
                         <span className='text-danger text-center pt-3' style={{ fontSize: "0.75rem" }}>
-                            {Math.round(ammoutNEAR * feesMultiplayer * 100000) / 100000} Near after Fees.
+                            {Math.round(ammoutNEAR * feesMultiplayer * 1000000) / 1000000} Near after Fees.
                         </span>
 
                     </div>
@@ -226,13 +229,10 @@ export function CreateRoom(props) {
                     console.log(ammoutNEAR)
 
 
-                    createMatch()
+                    createMatch(tailsHeads)
                 }}
                 disabled={buttonDisabled || tailsHeads === "" || ammoutNEAR === 0}
             >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>
-            <span className='mt-1 mx-auto'>
-                Note: Use comma "," to represent decimal numbers.
-            </span>
         </div>
     )
 
@@ -429,9 +429,6 @@ export function NotLogged() {
 
     );
 }
-
-
-
 
 export function Loading(props) {
     return (
