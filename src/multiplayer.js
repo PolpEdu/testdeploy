@@ -1,27 +1,33 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { logout, convertYocto, gettxsRes, menusayingsmult, sendpostwithplay, startup, getRooms } from './utils'
 import Confetti from 'react-confetti';
 import { Modal, Row, Container, Col } from 'react-bootstrap';
-import './global.css'
-import './cointopright.css'
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
-import { Notification, NotificationError, urlPrefix } from './App.js'
-import { NotLogged, Loading, RecentPlays, TopPlays, TopPlayers, CreateRoom, SelfMatches } from './components/logged';
-import ParasLogoB from './assets/paras-black.svg';
-import ParasLogoW from './assets/paras-white.svg';
-import { Twitter, Discord } from 'react-bootstrap-icons';
 import useWindowSize from 'react-use/lib/useWindowSize'
-import { Link } from 'react-router-dom';
-import LOGOMAIN from './assets/result.svg';
-import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import io from 'socket.io-client';
+
+
+
+import './global.css'
+import './cointopright.css'
+
+import { Notification, NotificationError } from './App.js'
+import { NotLogged, Loading, CreateRoom, SelfMatches } from './components/logged';
+import FooterComponent from './components/FooterComponent'
+import HeaderButtons from './components/HeaderComponents';
+
+import { convertYocto, gettxsRes, menusayingsmult, sendpostwithplay, startup, getRooms } from './utils'
+import LOGOMAIN from './assets/result.svg'
+import LOGOBACK from './assets/nearcoin.svg'
 
 function genrandomphrase() {
     return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
 }
-
+const contentStyle = {
+    maxWidth: "35rem",
+    width: "90%",
+}
 export default function Mult() {
     startup();
 
@@ -34,14 +40,10 @@ export default function Mult() {
     }
 
     const [errormsg, setErrormsg] = React.useState(msg);
-    const [ammountWon, setWonAmmount] = React.useState("")
-    const handleShow = () => setShow(true);
-    const handleClose = () => setShow(false);
-    const [show, setShow] = React.useState(false);
     const [txsHashes, settxsHash] = React.useState(searchParams.get("transactionHashes"));
     const [sideChoosen, setSideBet] = React.useState(null);
+    const [ammoutNEAR, setBetAmmount] = React.useState(null);
 
-    const [balance, setbalance] = React.useState("")
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
     const [txsResult, settxsResult] = React.useState("");
     const [processing, setprocessing] = React.useState(false);
@@ -53,10 +55,6 @@ export default function Mult() {
 
     React.useEffect(
         () => {
-
-
-
-
             // in this case, we only care to query the contract when signed in
             if (window.walletConnection.isSignedIn()) {
                 socketRef.current = io(process.env.DATABASE_URL, { transports: ['websocket', 'polling', 'flashsocket'] })
@@ -78,15 +76,6 @@ export default function Mult() {
                 });
 
 
-                //console.log("LOADING BALANCE AND HEADS OR TAILS")
-                window.walletConnection.account().getAccountBalance().then(function (balance) {
-                    let fullstr = convertYocto(balance.available).split(".");
-                    let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
-                    setbalance("NEAR: " + str);
-                }).catch(e => {
-                    console.log('There has been a problem with getting your balance: ' + e.message);
-                    setbalance("Couldn't Fetch Balance");
-                });
 
 
                 searchParams.delete("errorCode");
@@ -116,14 +105,12 @@ export default function Mult() {
         searchParams.delete("errorMessage")
         navigate(searchParams.toString());
     }
-    const contentStyle = {
-        maxWidth: "35rem",
-        width: "90%",
-    }
+
 
     const getTxsResult = async () => {
         let decodedstr = "";
         let sidebetstr = "";
+        let nearbetstr = "";
 
         await gettxsRes(txsHashes).then(res => {
             console.log(res)
@@ -133,13 +120,23 @@ export default function Mult() {
             decodedstr = decoded.toString("ascii")
 
             let sideBet = Buffer.from(res.transaction.actions[0].FunctionCall.args, 'base64')
-            sidebetstr = sideBet.toString("ascii")
 
-            settxsResult(decodedstr)
-            setSideBet(sidebetstr)
+            sidebetstr = sideBet.toString("ascii")
+            sidebetstr = JSON.parse(sidebetstr)
+            sidebetstr = sidebetstr.face;
+
+            let betAmm = Buffer.from(res.transaction.actions[0].FunctionCall.deposit, 'base64')
+            nearbetstr = convertYocto(betAmm)
 
             console.log("decoded result: " + decodedstr)
             console.log("side bet: " + sidebetstr)
+            console.log("near bet: " + nearbetstr)
+
+            settxsResult(decodedstr)
+            setSideBet(sidebetstr)
+            setBetAmmount(nearbetstr)
+
+
 
         }).catch(e => {
             if (!e instanceof TypeError) {
@@ -155,143 +152,19 @@ export default function Mult() {
         setprocessing(true)
 
         socketRef.current.emit('playerJoinGame', roomId);
-
     }
-    //console.log(rooms);
 
-    const { width, height } = useWindowSize();
+    const cancelMatch = async (roomId) => {
+        setprocessing(true)
+        deleteMatch(roomId)
+    }
+
     return (
         <div>
             {showNotification && <Notification />}
             {errormsg && <NotificationError err={errormsg} ismult={true} />}
-            <div className='social-icons'>
-                <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
-                    <div className='mt-3 d-flex flex-column shortcut-row'>
-                        <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
-                            <div className='d-flex flex-row'>
-                                <div role='button' className='retro-btn warning'>
-                                    <div role='button' className='retro-btn warning' style={{ display: !window.walletConnection.isSignedIn() ? "none" : "" }}>
-                                        <Link to="/" id="RouterNavLink">
-                                            <div className='buttoncool'>
-                                                <span className='btn-inner'>
-                                                    <span className='content-wrapper'>
-                                                        <span className='btn-content'>
-
-                                                            <span className='btn-content-inner' label="Flip Alone">
-                                                            </span>
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </div>
-                                <Popup trigger={
-                                    <div role='button' className='retro-btn danger'>
-                                        <a className='buttoncool'>
-                                            <span className='btn-inner'>
-                                                <span className='content-wrapper'>
-                                                    <span className='btn-content'>
-                                                        <span className='btn-content-inner' label="ON FIRE">
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </div>
-
-                                } position="center center"
-                                    modal
-                                    contentStyle={contentStyle}
-                                >
-                                    <TopPlays />
-                                </Popup>
-
-                            </div>
-                            <div className='d-flex flex-row'>
-                                <Popup trigger={
-                                    <div role='button' className='retro-btn'>
-                                        <a className='buttoncool'>
-                                            <span className='btn-inner'>
-                                                <span className='content-wrapper'>
-                                                    <span className='btn-content'  >
-                                                        <span className='btn-content-inner' label="WHO'S PLAYIN">
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </div>
-                                } position="center center"
-                                    modal
-                                    contentStyle={contentStyle}
-                                >
-                                    <RecentPlays />
-
-                                </Popup>
-
-                                <Popup trigger={
-                                    <div role='button' className='retro-btn info'>
-                                        <a className='buttoncool'>
-                                            <span className='btn-inner'>
-                                                <span className='content-wrapper'>
-                                                    <span className='btn-content'>
-                                                        <span className='btn-content-inner' label="TOP PLAYERS">
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </div>
-                                } position="center center"
-                                    modal
-                                    contentStyle={contentStyle}
-                                >
-                                    <TopPlayers />
-                                </Popup>
-                            </div>
-
-                            {!window.walletConnection.isSignedIn() ? <></> : <><div className="profile-picture-md"><img className="image rounded-circle cursor-pointer border-2" src="https://i.imgur.com/E3aJ7TP.jpg" alt="" onClick={handleShow} />
-                            </div>
-                                <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter" centered >
-                                    <div className='borderpixelPR'>
-                                        <Modal.Body className='p-0 ' style={{ color: "black" }}>
-                                            <div className='d-flex flex-column '>
-                                                <div className="card-body text-center">
-                                                    <h4 style={{ fontWeight: "bold" }}>USER PROFILE</h4>
-                                                    <h6>
-                                                        <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:
-                                                            <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>!</small>
-                                                    </h6>
-                                                    <h6>First Fliperino: </h6>
-                                                    <div className="input-group">
-                                                        {/*<input type="text" className="form-control" placeholder="Nickname" aria-label="Username" aria-describedby="basic-addon1" value=""/>
-                                                        */}
-                                                    </div>
-                                                </div>
-                                                <div className='d-flex  flex-column justify-content-center bg-light linetop' style={{ margin: "0px" }}>
-                                                    <button className='btn w-80 mt-2 ms-3 me-3 rounded-2 btn-danger mb-3 ' onClick={logout} style={{ fontWeight: "semibold", fontSize: "1.1rem" }}>Disconnect Wallet</button>
-                                                </div>
-                                            </div>
-                                        </Modal.Body>
-                                    </div>
-                                </Modal>
-                            </>
-                            }
-                        </div>
-                        {window.walletConnection.isSignedIn() && <h6 className="mt-1 balance-text mb-0">{balance === "" ? <Loading /> : balance}</h6>
-                        }
-
-                    </div>
-                </div>
-            </div>
+            <HeaderButtons />
             <div className='text-center body-wrapper h-100'>
-                <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-                <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-                <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-                <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-                <div className="toast-container position-absolute top-0 start-0 p-3 top-index"></div>
-
                 <div className='play form-signin'>
                     {txsHashes ?
                         <div className='maincenter text-center' style={{ maxWidth: "32rem" }}>
@@ -303,12 +176,36 @@ export default function Mult() {
                                             <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
                                                 Waiting for opponent...
                                             </div>
+                                            <div className="d-flex mt-4">
+                                                <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
+                                                    <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
+                                                        <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                                                            <span className='mb-4'>
+                                                                Flip Ammount:
+                                                            </span>
 
-                                            <div>
-                                                Current Side: {sideChoosen}
+
+                                                            <span className='text-danger text-center pt-3' style={{ fontSize: "0.75rem" }}>
+                                                                {Math.round(ammoutNEAR * 1000000) / 1000000} Near after Fees.
+                                                            </span>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%" }}>
+                                                    <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
+                                                        <div className="flip-box-front ">
+                                                            <img src={LOGOMAIN} alt="logo" width="220" height="220" onClick={() => { toggleHeadsTails() }} />
+                                                        </div>
+                                                        <div className="flip-box-back">
+                                                            <img src={LOGOBACK} alt="logoback" width="220" height="220" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
-
-
 
                                             <button className="button button-retro is-error" onClick={resetGame}>
                                                 Cancel
@@ -445,7 +342,7 @@ export default function Mult() {
 
 
                                                                 return (
-                                                                    <div className='mt-1 col col-sm-10 col-m-10 col-lg-12 col-xl-12 '>
+                                                                    <div className='mt-1 col col-sm-10 col-m-5 col-lg-5 col-xl-5 '>
                                                                         <button className="button button-retro is-warning bordercool d-inline-block text-center"
                                                                             style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                                             onClick={() => joinRoom(room.id)}>
@@ -469,40 +366,11 @@ export default function Mult() {
                                 }
                             </div>
                         </div>
-
                     }
                 </div>
                 {!window.walletConnection.isSignedIn() ? <NotLogged /> : <></>}
             </div>
-            <div className="social-icons-bottom-right">
-                <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">
-                    <div className="text-center justify-content-center d-flex">
-                        <a href="" target="_blank" rel="" className="cursor-pointer me-2">
-                            <img src={ParasLogoW} alt="Paras Logo B" className='rounded mt-1 fa-nearnfts' style={{ height: "28px", width: "28px" }}
-                            />
-                        </a>
-                        <a href="https://twitter.com/flipnear" target="_blank" rel="" className="cursor-pointer me-2">
-                            <Twitter color="#1da1f2" size={30} className="rounded mt-1 fa-twitter" />
-                        </a>
-                        <a href="https://discord.gg/b7NJPuV5pk" target="_blank" rel="" className="cursor-pointer me-2">
-                            <Discord color="#5865f2" size={31} className="rounded mt-1 fa-discord" />
-                        </a>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div className="social-icons-left">
-                <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100">
-                    <div className="mt-3 d-flex flex-column">
-                        <div className="d-flex flex-row mb-2 toolbar">
-                            {/*}
-              <button className="ms-2 btn btn-outline-dark" style={{fontSize:"0.7rem"}} >
-                {darkMode==="light" ? "DARK" : "LIGHT"} {darkMode==="light" ? <Moon className="fa-xs fas mb-1"/>: <Sun className="fa-xs fas mb-1"/> }
-      </button>*/}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <FooterComponent />
         </div >
     )
 
