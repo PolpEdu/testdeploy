@@ -111,12 +111,24 @@ export function SelfMatches() {
         });
     }, [])
 
-
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelYRM w-full">
             <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Your Currently Open Matches as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a></span>
             <div className="d-flex">
                 <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
+                    {/* for every matches create a div with the match details */}
+                    {matches.map((match, index) => {
+                        return (
+                            <div className="d-flex flex-column">
+                                <div className="d-flex flex-row">
+                                    <div className="d-flex flex-column">
+                                        <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>{match.accountId}</span>
+                                        <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>{match.ammount} Near</span>
+                                    </div>
+                                </div>
+
+                            </div>)
+                    })}
                     <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
                         <span className='mb-4'>
                             Flip Ammount:
@@ -182,7 +194,7 @@ export function CreateRoom(props) {
     const createMatch = async (tailsHeads) => {
         setprocessing(true)
         setButtonDisabled(true)
-        createMultiplayer(ammoutNEAR, tailsHeads);
+        createMultiplayer(ammoutNEAR, tailsHeads)
     }
 
     return (

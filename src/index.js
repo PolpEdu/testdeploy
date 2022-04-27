@@ -11,12 +11,16 @@ import {
 } from "react-router-dom";
 
 import Mult from './multiplayer.js';
+import Room from './room.js';
 
 window.nearInitPromise = initContract()
   .then(() => {
     ReactDOM.render(
       <Router>
         <Routes>
+          <Route path='/game' element={<Room />}>
+            <Route path='/game/:id' element={<Room />} />
+          </Route>
           <Route path="/" element={<App />} >
             <Route path="/:transactionHashes" element={<App />} />
           </Route>

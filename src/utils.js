@@ -135,6 +135,11 @@ export function login() {
   window.walletConnection.requestSignIn(nearConfig.contractName);
 }
 
+export async function getRoomInfoFromTxs(txs) {
+  const result = await provider.txStatus(txs, window.accountId)
+  return result;
+}
+
 export async function getState(txHash, accountId) {
   const result = await provider.txStatus(txHash, accountId);
   console.log("Result: ", result);
@@ -154,6 +159,7 @@ export function flip(args, ammoutNEAR) {
 
 export async function getAllPlayerMathces(accountId) {
   const res = await window.contractMULT.view_match_from({ creator: accountId });
+  //todo: doesnt work for some reason
   console.log(res);
   return res;
 }

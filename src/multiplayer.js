@@ -17,7 +17,7 @@ import { NotLogged, Loading, CreateRoom, SelfMatches } from './components/logged
 import FooterComponent from './components/FooterComponent'
 import HeaderButtons from './components/HeaderComponents';
 
-import { convertYocto, gettxsRes, menusayingsmult, sendpostwithplay, startup, getRooms } from './utils'
+import { convertYocto, gettxsRes, menusayingsmult, sendpostwithplay, startup, getRooms, getRoomInfoFromTxs } from './utils'
 import LOGOMAIN from './assets/result.svg'
 import LOGOBACK from './assets/nearcoin.svg'
 
@@ -71,9 +71,17 @@ export default function Mult() {
 
                 });
 
-                socketRef.current.on('start game', () => {
-                    searchParams.set("transactionHashes", data.room);
-                });
+                let hash = searchParams.get("transactionHashes");
+                if (hash) {
+                    socketRef.current.emit('createNewGame')
+
+                    //redirect player to /room/:gameId
+                    getRoomInfoFromTxs(hash).then(room => {
+                        if (room) {
+                            navigate(`/room/${room.Id}`)
+                        }
+                    })
+                }
 
 
 

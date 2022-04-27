@@ -90,7 +90,6 @@ const initializeGame = (sio, socket) => {
 }
 
 function getRooms() {
-    console.log(allRooms)
     this.emit('rooms', allRooms)
 }
 
@@ -149,6 +148,9 @@ function createNewGame(gameId) {
 
     // Join the Room and wait for the other player
     this.join(gameId)
+
+    //emit to all the clients "rooms"
+    getRooms()
 }
 
 
