@@ -17,7 +17,9 @@ import LOGODOG from './assets/nearcoindoggo.svg'
 import getConfig from './config'
 
 //for flips animation
-import logo from './assets/Coin Animation.gif'
+import logoH from './assets/Coin Animation.mp4'
+//import logoT from './assets/Coin Animation2.mp4'
+
 
 const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
 const doggochance = 0.05
@@ -50,8 +52,6 @@ export default function App() {
   const [showNotification, setShowNotification] = React.useState(false)
 
 
-
-
   // Dark Theme
   const [darkMode, setDarkMode] = React.useState("light")
 
@@ -76,11 +76,9 @@ export default function App() {
 
   const [txsResult, settxsResult] = React.useState("")
 
-
-
   const [showDoggo, setShowDogo] = React.useState(false)
 
-
+  const [processing, setprocessing] = React.useState(false)
 
 
   const setPrice = (price) => {
@@ -103,14 +101,13 @@ export default function App() {
     navigate(searchParams.toString())
   }
 
-  const [processing, setprocessing] = React.useState(false)
 
 
   const getTxsResult = async () => {
     let decodedstr = ""
     let decodedWonAmmountstr = ""
 
-    await gettxsRes(txsHashes).then(res => {
+    gettxsRes(txsHashes).then(res => {
       //console.log(res)
       setShowNotification(true)
 
@@ -147,17 +144,12 @@ export default function App() {
 
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
-
-
         searchParams.delete("errorCode")
         searchParams.delete("errorMessage")
         navigate(searchParams.toString())
 
-
         getTxsResult(txsHashes)
-
       }
-
     },
 
     //! The second argument to useEffect tells React when to re-run the effect
@@ -180,9 +172,6 @@ export default function App() {
       setTailsHeads("heads")
     }
   }
-
-
-
 
   return (
     <div className={darkMode}>
@@ -228,7 +217,6 @@ export default function App() {
 
                     <div className="row">
                       <div className="col-4">
-
                         <button className={ammoutNEAR === "0.5" ? "button button-retro is-selected" : "button button-retro is-warning"} onClick={() => setPrice("0.5")}>0.5 NEAR</button>
                       </div>
                       <div className="col-4">
@@ -332,16 +320,10 @@ function FlipCoin(props) {
 
 
   React.useEffect(() => {
-    //why won't the last coin animate??
-
-    setTimeout(function () {
-      //buildTimeline(props.tailsHeads === "heads")
-      //play animation here
-    }, 2000)
 
     setTimeout(function () {
       setprocessing(false)
-    }, 4000)
+    }, 5000)
   }, [])
 
   res = () => {
@@ -351,20 +333,20 @@ function FlipCoin(props) {
   return (
     <>
       <div id="cointainer" className=''>
-        <img style={{ width: "600px", height: "auto" }} src={logo} />
+        {/* Play a video (logo)*/}
+        <video autoPlay muted playsInline className="video-container d-flex justify-content-center flex-row borderpixelSMALL" style={{ marginTop: "3rem" }}>
+          <source src={props.result === "heads" ? logoH : logoH} type="video/mp4" />
+        </video>
       </div>
       <div className={processing === false ? 'fadein' : 'fadein fadeout'}>
         {props.won === "true" ? <>
-
           <Confetti
             width={props.width - 1}
             height={props.height - 1}
           />
-
           <div className="textinfowin font-weight-normal mb-2" style={{ fontSize: "2rem" }}>
             YOU WON!
           </div>
-
           <button className="button button-retro is-primary" onClick={res}>
             Play Again
           </button>

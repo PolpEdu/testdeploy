@@ -1,11 +1,12 @@
 import React from 'react'
 import axios from 'axios';
-import { login, createMultiplayer, getAllPlayerMathces, minimumAmmount } from '../utils.js'
+import { login, createMultiplayer, getAllPlayerMathces, minimumAmmount, storageRent, storageRentNear } from '../utils.js'
 import LOGOBACK from '../assets/nearcoin.svg';
 import LOGOMAIN from '../assets/result.svg'
 import NearLogo from '../assets/logo-black.svg';
-import { feesMultiplayer } from '../utils.js'
+import { feesMultiplayer, convertYocto } from '../utils.js'
 import { urlPrefix } from '../App.js'
+import { utils } from 'near-api-js';
 
 function generatephrase(ammount, won, account) {
     account = account.split(".")[0]
@@ -80,8 +81,6 @@ function generatephrase(ammount, won, account) {
         " will hodl " + ammount + " Near.",
         " is filling up his wallet with " + ammount + " Near.",
         " got " + ammount + " Near.",
-
-
     ]
     /* returns a random rugged phrase */
 
@@ -102,8 +101,8 @@ export function SelfMatches() {
 
     React.useEffect(() => {
         getAllPlayerMathces(window.accountId).then(res => {
-            console.log(res)
             setMatches(res)
+            console.log(res)
             setLoading(false)
         }).catch(err => {
             setError(true)
@@ -114,30 +113,33 @@ export function SelfMatches() {
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelYRM w-full">
             <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Your Currently Open Matches as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a></span>
-            <div className="d-flex">
-                <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
-                    {/* for every matches create a div with the match details */}
-                    {matches.map((match, index) => {
-                        return (
-                            <div className="d-flex flex-column">
-                                <div className="d-flex flex-row">
-                                    <div className="d-flex flex-column">
-                                        <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>{match.accountId}</span>
-                                        <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>{match.ammount} Near</span>
-                                    </div>
-                                </div>
+            <div className="d-flex mx-auto mt-3 h-full">
+                {matches ?
+                    <>
+                        {matches.length > 0 ?
+                            <div className="flip-box mb-2 mt-2 mx-auto text-center h-full " style={{ width: "70%", overflowY: "scroll" }}>
+                                {matches.map((match, index) => {
+                                    return (
+                                        <div className="d-flex text-center flex-column">
+                                            <div className="d-flex text-center flex-row">
+                                                <div className="d-flex text-center flex-column">
+                                                    <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>
+                                                        Room id: {match.id} - face: {match.face === "true" ? "Heads" : "Tails"} - {
+                                                            Math.round(
+                                                                convertYocto(match.entry_price.toLocaleString('fullwide', { useGrouping: false }))
+                                                                * 10000000) / 10000000} Near</span>
+                                                </div>
+                                            </div>
 
-                            </div>)
-                    })}
-                    <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
-                        <span className='mb-4'>
-                            Flip Ammount:
-                        </span>
-                    </div>
-
-                </div>
-
-
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            : <div className="text-center">No Matches Found</div>
+                        }
+                    </>
+                    : <Loading />
+                }
             </div>
         </div>
     )
@@ -214,7 +216,7 @@ export function CreateRoom(props) {
                             </span>
                         </div>
                         <span className='text-danger text-center pt-3' style={{ fontSize: "0.75rem" }}>
-                            {Math.round(ammoutNEAR * feesMultiplayer * 1000000) / 1000000} Near after Fees.
+                            {ammoutNEAR > 0 ? Math.round(((ammoutNEAR * feesMultiplayer) + storageRentNear) * 1000000) / 1000000 : 0} Near after Fees.
                         </span>
 
                     </div>

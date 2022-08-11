@@ -548,7 +548,12 @@ aside footer *:last-child {
   max-width: 41rem;
   margin: auto;
 }
- 
+
+.video-container {
+  height: auto;
+  width: 100%;
+}
+
 ul.ba {
   list-style-type: none;
 }
@@ -944,7 +949,6 @@ img {
 #cointainer{
   overflow:visible;
   height: 500px;
-  width:50%;
   margin-bottom: 0;
   bottom: 0;
 }
@@ -1066,7 +1070,7 @@ input::-webkit-inner-spin-button {
 
 .borderpixelSMALL {
 
-  --pixel-bg: #625f63;
+  --pixel-bg: #3E363F;
 
 	/* ↑ Inner background color */
 	

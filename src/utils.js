@@ -1,7 +1,6 @@
 import { connect, Contract, keyStores, WalletConnection, utils, providers } from 'near-api-js'
 import getConfig from './config'
 import axios from 'axios';
-import { async } from 'regenerator-runtime';
 
 
 let node_env = process.env.NODE_ENV || 'testnet';
@@ -18,6 +17,8 @@ let near;
 export const fees = 1.035;
 export const feesMultiplayer = 1.0175
 export const minimumAmmount = 0.01;
+export const storageRent = 500000000000000000000;
+export const storageRentNear = 0.0005;
 
 export const menusayingsmult = [
   "Ready to rekt some noobs",
@@ -63,6 +64,43 @@ export const menusayings = [
   "one sec, let me call drake brb"
 ]
 
+const contractID = process.env.CONTRACT_NAME_MULT || 'multiplayer.flipnear.a3corp.testnet';
+const contractIDSingle = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
+
+
+export const EVENT_FILTER = [{
+  status: "SUCCESS",
+  event: {
+    standard: "nep171",
+    event: "nft_mint",
+  },
+}, {
+  status: "SUCCESS",
+  event: {
+    standard: "nep171",
+    event: "nft_transfer",
+  },
+}];
+
+const filterTest = {
+  secret: "ohyeahnftsss",
+  filter: [
+    {
+      status: "SUCCESS",
+      event: {
+        standard: "nep171",
+        event: "nft_mint"
+      }
+    },
+    {
+      status: "SUCCESS",
+      event: {
+        standard: "nep171",
+        event: "nft_transfer"
+      }
+    }
+  ]
+}
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
@@ -96,6 +134,7 @@ export async function initContract() {
   })
 
 }
+
 export function sendpostwithplay(txHash) {
 
   axios.post(process.env.DATABASE_URL + '/plays', {
@@ -109,9 +148,12 @@ export function sendpostwithplay(txHash) {
   })
 }
 
+export async function getRooms() {
+  let rooms = await window.contractMULT.view_all_matches()
+  return rooms
+}
 
 export function convertYocto(YOCTO) {
-
   return utils.format.formatNearAmount(YOCTO);
 }
 
@@ -151,43 +193,113 @@ export function flip(args, ammoutNEAR) {
   total = Math.round(total * 10000) / 10000;
   let yoctoNEAR = utils.format.parseNearAmount((total.toString()));
 
-  let contractID = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
   const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
+    contractId: contractIDSingle.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   })
 }
 
 export async function getAllPlayerMathces(accountId) {
   const res = await window.contractMULT.view_match_from({ creator: accountId });
-  //todo: doesnt work for some reason
-  console.log(res);
-  return res;
+  return res ? res : [];
 }
 
-export function joinMultiplayer(args, ammoutNEAR) {
-  let total = ammoutNEAR * fees;
-  let yoctoNEAR = utils.format.parseNearAmount(total.toString());
-  let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
-  const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'join_match', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
-  })
+export function joinMultiplayer(ammoutNEAR, idroom, roomCreator) {
+  // convert to normal number from cientific notation
+  let yoctoNEAR = Number(utils.format.parseNearAmount(ammoutNEAR.toString())) * feesMultiplayer;
+  /*
+    yoctoNEAR = yoctoNEAR.toLocaleString('fullwide', { useGrouping: false })
+    console.log("yoctoNEAR: ", yoctoNEAR);
+    console.log("idroom: ", idroom);
+    console.log("roomCreator: ", roomCreator);
+  */
+
+  window.walletConnection.account().functionCall({
+    contractId: contractID.toString(),
+    methodName: 'join_match',
+    args: { id: idroom, creator: roomCreator },
+    gas: "300000000000000",
+    attachedDeposit: yoctoNEAR
+  }).catch(e => {
+    console.log("Error Joining Match :(");
+    console.error(e)
+  });
 }
 
 export function createMultiplayer(ammoutNEAR, tailsHeads) {
   let argside = tailsHeads === "heads";
   let totalammount = ammoutNEAR * feesMultiplayer;
-  let yoctoNEAR = utils.format.parseNearAmount(totalammount.toString());
-  let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
-  const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'create_match', args: { face: argside }, gas: "300000000000000", attachedDeposit: yoctoNEAR
-  })
+  let yoctoNEAR = (Number(utils.format.parseNearAmount(totalammount.toString())) + storageRent).toLocaleString('fullwide', { useGrouping: false })
+
+  console.log("yoctoNEAR: ", yoctoNEAR);
+  console.log("ammoutNEAR: ", ammoutNEAR);
+  console.log("argside: ", argside);
+
+  window.walletConnection.account().functionCall({
+    contractId: contractID.toString(), methodName: 'create_match',
+    args: { face: argside, rent_amount: storageRent.toString() }, gas: "300000000000000", attachedDeposit: yoctoNEAR
+  }).catch(e => {
+    console.log("Error Creating Match :(");
+    console.error(e)
+  });
 }
 
 export function deleteMatch(args) {
-  let contractID = process.env.CONTRACT_NAME_MULT || 'dev-1648336036786-88225996957816';
   const result = window.walletConnection.account().functionCall({
     contractId: contractID.toString(), methodName: 'cancel_match', args: { option: args }, gas: "300000000000000"
   })
+}
+
+let reconnectTimeout = null;
+
+export function listenToRoom(processEvents) {
+  const scheduleReconnect = (timeOut) => {
+    if (reconnectTimeout) {
+      clearTimeout(reconnectTimeout);
+      reconnectTimeout = null;
+    }
+    reconnectTimeout = setTimeout(() => {
+      listenToRoom(processEvents);
+    }, timeOut);
+  };
+
+  if (document.hidden) {
+    scheduleReconnect(1000);
+    return;
+  }
+
+  const ws = new WebSocket(`wss://events.near.stream/ws`);
+
+  ws.onopen = () => {
+    console.log("Listening to room changes");
+    ws.send(
+      JSON.stringify(filterTest)
+    );
+  };
+
+  ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    console.log(data)
+    processEvents(data.events);
+  };
+
+  ws.onclose = () => {
+    console.log(`WS Connection has been closed`);
+    scheduleReconnect(1);
+  };
+
+  ws.onerror = (err) => {
+    console.log("WebSocket error", err);
+  };
+}
+
+export function processEvent(event) {
+  return (event?.event?.data[0]?.token_ids || []).map((tokenId) => ({
+    time: new Date(parseFloat(event.block_timestamp) / 1e6),
+    contractId: event.account_id,
+    ownerId: event.event.data[0].owner_id,
+    tokenId,
+    isTransfer: event.event.event === "nft_transfer",
+  }));
 }
 
 export function startup() {
