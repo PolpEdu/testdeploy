@@ -4,6 +4,7 @@
   "description": "",
   "main": "PORT=8545 index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "A3SERVER",
@@ -14,7 +15,8 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "mongoose": "^6.2.4",
-    "near-api-js": "^0.44.2"
+    "near-api-js": "^0.44.2",
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
