@@ -47,7 +47,7 @@ impl Welcome {
     pub fn coin_flip(&mut self, option: bool) -> bool {
         let amount: u128 = (env::attached_deposit()*1000)/1035;
 
-        assert!(self.bet_amount.contains(&amount), "Attached amount not in available array");
+        assert!(self.bet_amount.contains(&amount), "Attached amount not in available array. Attached deposit: {}, Amount calculated: {}", env::attached_deposit(),amount);
 
         let signer = env::signer_account_id();
         let seed = env::random_seed();
