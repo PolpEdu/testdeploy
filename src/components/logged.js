@@ -92,47 +92,51 @@ function generatephrase(ammount, won, account) {
         </>
     )
 }
-export function SelfMatches() {
+export function SelfMatches(props) {
 
     const [matches, setMatches] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState(false);
 
     React.useEffect(() => {
         getAllPlayerMathces(window.accountId).then(res => {
             setMatches(res)
             console.log(res)
-            setLoading(false)
         }).catch(err => {
             setError(true)
-            setLoading(false)
         });
     }, [])
 
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelYRM w-full">
             <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Your Currently Open Matches as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a></span>
-            <div className="d-flex align-middle justify-center mt-3 h-full w-full">
+            <div className="justify-center mt-3 h-full w-full">
                 {matches ?
                     <>
                         {matches.length > 0 ?
                             <div className="flip-box mb-2 mt-2 text-center h-full align-middle justify-center mx-2" style={{ width: "100%", overflowY: "scroll" }}>
                                 {matches.map((match, index) => {
                                     return (
-                                        <div className="d-flex text-center flex-column mt-2 align-middle justify-center w-full">
-                                            <div className="button button-retro button-retro-small is-yellow align-middle justify-center"
-                                                style={{ letterSpacing: "2px", width: "95%" }}>
+                                        <div className="d-flex text-center flex-column mt-2 align-middle justify-center px-4">
+                                            <button className="button-retro button-retro-small is-yellow align-middle justify-center" style={{ letterSpacing: "2px", width: "100%" }} onClick={
+                                                () => {
+                                                    //convert to near 
+                                                    const ammount = convertYocto(match.entry_price.toLocaleString('fullwide', { useGrouping: false }))
+                                                    props.changeToRoom(match.id, match.face, ammount)
+                                                }
+                                            }>
+
                                                 <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>
-                                                    Room id: {match.id} - face: {match.face === "true" ? "Heads" : "Tails"} - {
+                                                    #{match.id} - {match.face === "true" ? "Heads" : "Tails"}: {
                                                         Math.round(
                                                             convertYocto(match.entry_price.toLocaleString('fullwide', { useGrouping: false }))
-                                                            * 10000000) / 10000000} Near</span>
-                                            </div>
+                                                            * 10000000) / 10000000
+                                                    } Near
+                                                </span>
+                                            </button>
                                         </div>
                                     )
                                 })}
                             </div>
-                            : <div className="text-center">No Matches Found</div>
+                            : <div className="text-center align-middle font-normal" style={{ fontSize: "1.5rem" }}>No Matches Found</div>
                         }
                     </>
                     : <Loading />

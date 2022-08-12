@@ -244,6 +244,7 @@ export function createMultiplayer(ammoutNEAR, tailsHeads) {
 }
 
 export function deleteMatch(roomId) {
+  console.log("roomId: ", roomId);
   window.walletConnection.account().functionCall({
     contractId: contractID.toString(), methodName: 'cancel_match', args: { id: roomId }, gas: "300000000000000"
   }).catch(e => {
