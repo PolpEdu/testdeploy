@@ -243,10 +243,13 @@ export function createMultiplayer(ammoutNEAR, tailsHeads) {
   });
 }
 
-export function deleteMatch(args) {
-  const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'cancel_match', args: { option: args }, gas: "300000000000000"
-  })
+export function deleteMatch(roomId) {
+  window.walletConnection.account().functionCall({
+    contractId: contractID.toString(), methodName: 'cancel_match', args: { id: roomId }, gas: "300000000000000"
+  }).catch(e => {
+    console.log("Error Canceling Match :(");
+    console.error(e)
+  });
 }
 
 let reconnectTimeout = null;

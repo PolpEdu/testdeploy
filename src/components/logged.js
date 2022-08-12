@@ -6,7 +6,6 @@ import LOGOMAIN from '../assets/result.svg'
 import NearLogo from '../assets/logo-black.svg';
 import { feesMultiplayer, convertYocto } from '../utils.js'
 import { urlPrefix } from '../App.js'
-import { utils } from 'near-api-js';
 
 function generatephrase(ammount, won, account) {
     account = account.split(".")[0]
@@ -113,24 +112,22 @@ export function SelfMatches() {
     return (
         <div className="form-signin2 mx-auto rounded-2 d-flex flex-column borderpixelYRM w-full">
             <span className='text-center rounded' style={{ fontWeight: "800", color: "white", fontSize: "1.6rem" }}>Your Currently Open Matches as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a></span>
-            <div className="d-flex mx-auto mt-3 h-full">
+            <div className="d-flex align-middle justify-center mt-3 h-full w-full">
                 {matches ?
                     <>
                         {matches.length > 0 ?
-                            <div className="flip-box mb-2 mt-2 mx-auto text-center h-full " style={{ width: "70%", overflowY: "scroll" }}>
+                            <div className="flip-box mb-2 mt-2 text-center h-full align-middle justify-center mx-2" style={{ width: "100%", overflowY: "scroll" }}>
                                 {matches.map((match, index) => {
                                     return (
-                                        <div className="d-flex text-center flex-column">
-                                            <div className="d-flex text-center flex-row">
-                                                <div className="d-flex text-center flex-column">
-                                                    <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>
-                                                        Room id: {match.id} - face: {match.face === "true" ? "Heads" : "Tails"} - {
-                                                            Math.round(
-                                                                convertYocto(match.entry_price.toLocaleString('fullwide', { useGrouping: false }))
-                                                                * 10000000) / 10000000} Near</span>
-                                                </div>
+                                        <div className="d-flex text-center flex-column mt-2 align-middle justify-center w-full">
+                                            <div className="button button-retro button-retro-small is-yellow align-middle justify-center"
+                                                style={{ letterSpacing: "2px", width: "95%" }}>
+                                                <span className="text-center" style={{ fontWeight: "800", color: "white", fontSize: "0.8rem" }}>
+                                                    Room id: {match.id} - face: {match.face === "true" ? "Heads" : "Tails"} - {
+                                                        Math.round(
+                                                            convertYocto(match.entry_price.toLocaleString('fullwide', { useGrouping: false }))
+                                                            * 10000000) / 10000000} Near</span>
                                             </div>
-
                                         </div>
                                     )
                                 })}
