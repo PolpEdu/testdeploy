@@ -47,7 +47,7 @@ const HeaderButtons = () => {
                                                 <span className='content-wrapper'>
                                                     <span className='btn-content'>
 
-                                                        <span className='btn-content-inner' label="Flip Alone">
+                                                        <span className='btn-content-inner' label="Change Mode">
                                                         </span>
                                                     </span>
                                                 </span>

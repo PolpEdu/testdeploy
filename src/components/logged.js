@@ -233,8 +233,6 @@ export function CreateRoom(props) {
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <button
                 className="button button-retro is-warning mt-3"
@@ -247,7 +245,12 @@ export function CreateRoom(props) {
                     createMatch(tailsHeads)
                 }}
                 disabled={buttonDisabled || tailsHeads === "" || ammoutNEAR === 0}
-            >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>
+            >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}
+            </button>
+            <span className='text-warning text-center mt-2' style={{ fontSize: "0.75rem" }}>
+                Fees = Room Storage Rent + NFTs distribution fee
+            </span>
+
         </div>
     )
 

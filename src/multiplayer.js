@@ -118,16 +118,19 @@ export default function Mult() {
     const closeRoom = (roomId) => {
         console.log("room id: ", roomId)
         setprocessing(true);
-        deleteMatch(roomId)
-        setprocessing(false);
-        /* .then(data => {
-            console.log(data)
-            resetGame();
-        }).catch(err => {
-            console.log(err);
-            setErrorHappend(true);
-            setErrormsg("Error while deleting the room.")
-        }); */
+        deleteMatch(roomId).then(data => {
+            setprocessing(false);
+            if(data === "true") {
+                resetGame();
+            } else {
+                setErrorHappend(true);
+                setErrormsg("Error while deleting the room")
+            }}).catch(err => {
+                console.log(err);
+                setprocessing(false);
+                setErrorHappend(true);
+                setErrormsg("Error while deleting the room")
+            });
 
     }
 
