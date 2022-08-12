@@ -118,20 +118,7 @@ export default function Mult() {
     const closeRoom = (roomId) => {
         console.log("room id: ", roomId)
         setprocessing(true);
-        deleteMatch(roomId).then(data => {
-            setprocessing(false);
-            if(data === "true") {
-                resetGame();
-            } else {
-                setErrorHappend(true);
-                setErrormsg("Error while deleting the room")
-            }}).catch(err => {
-                console.log(err);
-                setprocessing(false);
-                setErrorHappend(true);
-                setErrormsg("Error while deleting the room")
-            });
-
+        deleteMatch(roomId)
     }
 
     const resetGame = () => {
@@ -212,10 +199,12 @@ export default function Mult() {
                                     </div>
                                 </div>
                                 <div className="d-flex my-auto justify-content-between">
-                                    <button className="align-self-start button button-retro is-error" onClick={() => {
+                                    <button className="align-self-start button button-retro is-error"
+                                                disabled={processing}
+                                    onClick={() => {
                                         closeRoom(roomID)
                                     }} style={{ marginRight: "1rem" }} >
-                                        Close Room
+                                        {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "Close Room"}
                                     </button>
 
                                     <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
@@ -243,6 +232,7 @@ export default function Mult() {
                                         <>
                                             <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
                                                 <button className="button button-retro button-retro-small is-success ms-2"
+                                                disabled={processing}
                                                     style={{ letterSpacing: "2px", width: "8rem" }}
                                                     onClick={() => {
                                                         setprocessing(true)
