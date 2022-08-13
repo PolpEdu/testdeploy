@@ -206,12 +206,12 @@ export async function getAllPlayerMathces(accountId) {
 export function joinMultiplayer(ammoutNEAR, idroom, roomCreator) {
   // convert to normal number from cientific notation
   let yoctoNEAR = Number(utils.format.parseNearAmount(ammoutNEAR.toString())) * feesMultiplayer;
-  /*
-    yoctoNEAR = yoctoNEAR.toLocaleString('fullwide', { useGrouping: false })
-    console.log("yoctoNEAR: ", yoctoNEAR);
-    console.log("idroom: ", idroom);
-    console.log("roomCreator: ", roomCreator);
-  */
+
+  yoctoNEAR = yoctoNEAR.toLocaleString('fullwide', { useGrouping: false })
+  console.log("yoctoNEAR: ", yoctoNEAR);
+  console.log("idroom: ", idroom);
+  console.log("roomCreator: ", roomCreator);
+
 
   window.walletConnection.account().functionCall({
     contractId: contractID.toString(),

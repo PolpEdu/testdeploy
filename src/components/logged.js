@@ -92,6 +92,31 @@ function generatephrase(ammount, won, account) {
         </>
     )
 }
+
+export function generateDestroyerPhrase(ammount, creator) {
+    if (creator && creator.length > 18) {
+        creator = creator.split(".")[0]
+    }
+
+    const phrase = [
+        "Destroy this idiot",
+        creator + "'s Room",
+        creator + "'s Room",
+        creator + "'s Room",
+        creator + "'s Room",
+        "Kick some ass",
+        "This Room will be Heads",
+        "!TRADE OFFER! I GET: " + ammount + " NEAR, you get 0",
+        "Best of 3?",
+        "What a kind donation :)",
+        "Prepare to be rekt",
+        "Easy 2x lmao",
+        "Ⓝ I CAN SMELL IT Ⓝ",
+        "LET'S DO THIS"
+    ]
+    return phrase[Math.floor(Math.random() * phrase.length)]
+}
+
 export function SelfMatches(props) {
 
     const [matches, setMatches] = React.useState([]);

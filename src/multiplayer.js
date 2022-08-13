@@ -9,7 +9,7 @@ import './global.css'
 import './cointopright.css'
 
 import { Notification, NotificationError, urlPrefix } from './App.js'
-import { NotLogged, Loading, CreateRoom, SelfMatches } from './components/logged';
+import { NotLogged, Loading, CreateRoom, SelfMatches, generateDestroyerPhrase } from './components/logged';
 import FooterComponent from './components/FooterComponent'
 import HeaderButtons from './components/HeaderComponents';
 
@@ -39,6 +39,8 @@ export default function Mult() {
     const [sideChoosen, setSideBet] = React.useState(null);
     const [ammoutNEAR, setBetAmmount] = React.useState(null);
     const [roomID, setRoomID] = React.useState(null);
+    const [roomCreator, setRoomCreator] = React.useState(null);
+    const [destroyer, setDestroyer] = React.useState(generateDestroyerPhrase(ammoutNEAR));
     const [errorHappend, setErrorHappend] = React.useState(false);
 
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
@@ -46,6 +48,44 @@ export default function Mult() {
 
     const [rooms, setRooms] = React.useState([]);
 
+    const roomSetupfromTXS = (txsHashes) => {
+        gettxsRes(txsHashes).then(res => {
+            let nearbetstr = "";
+            let returnedvalues = {};
+            setShowNotification(true)
+            // console.log(res)
+            try {
+                let decodedstr = Buffer.from(res.status.SuccessValue, 'base64').toString("ascii")
+                if (decodedstr === "true") {
+                    resetGame();
+                }
+                returnedvalues = JSON.parse(decodedstr)
+                // console.log(returnedvalues)
+                nearbetstr = convertYocto(returnedvalues.entry_price.toLocaleString('fullwide', { useGrouping: false }))
+
+            } catch (error) {
+                console.log(error)
+                setErrormsg("Error while decoding the transaction")
+                setErrorHappend(true)
+            }
+
+            // check if room exists
+
+            //set the info using the txs result
+            setprocessing(false)
+            setSideBet(returnedvalues.face)
+            setBetAmmount(nearbetstr)
+            setRoomID(returnedvalues.id)
+            setRoomCreator(returnedvalues.creator)
+            listenToRoom(processEvents)
+            // console.log("hello: " + processing)
+        }).catch(e => {
+            console.error(e)
+            setErrorHappend(true)
+            setErrormsg("Error while decoding the transaction")
+            setprocessing(false)
+        })
+    }
 
     React.useEffect(
         () => {
@@ -53,72 +93,42 @@ export default function Mult() {
             if (window.walletConnection.isSignedIn()) {
                 const txsHashes = searchParams.get("transactionHashes");
                 if (txsHashes) {
-                    gettxsRes(txsHashes).then(res => {
-                        let decodedstr = "";
-                        let sidebetstr = "";
-                        let nearbetstr = "";
-                        let roomId = "";
-                        let returnedvalues = {};
-                        setShowNotification(true)
-                        console.log(res)
-                        try {
-                            let decoded = Buffer.from(res.status.SuccessValue, 'base64')
-                            decodedstr = decoded.toString("ascii")
-                            if (decodedstr === "true") {
-                                resetGame();
-                            }
-
-                            returnedvalues = JSON.parse(decodedstr)
-
-                            sidebetstr = returnedvalues.face
-                            nearbetstr = convertYocto(returnedvalues.entry_price.toLocaleString('fullwide', { useGrouping: false }))
-                            roomId = returnedvalues.id
-
-                        } catch (error) {
-                            console.log(error)
-                            setErrormsg("Error while decoding the transaction")
-                            setErrorHappend(true)
-                        }
-
-
-                        //set the info using the txs result
-                        setprocessing(false)
-                        setSideBet(sidebetstr)
-                        setBetAmmount(nearbetstr)
-                        setRoomID(roomId)
-                        listenToRoom(processEvents)
-                        console.log("hello: " + processing)
-                    }).catch(e => {
-                        console.error(e)
-                        setErrorHappend(true)
-                        setErrormsg("Error while decoding the transaction")
-                        setprocessing(false)
-                    })
+                    roomSetupfromTXS(txsHashes)
                     return;
                 }
+
+                getRooms().then(data => {
+                    setRooms(data);
+                    setprocessing(false);
+                }).catch(err => {
+                    console.log(err);
+                    setprocessing(false);
+                    setErrorHappend(true);
+                });
+
+
+                searchParams.delete("errorCode");
+                searchParams.delete("errorMessage");
+                navigate(searchParams.toString());
             }
-
-            getRooms().then(data => {
-                setRooms(data);
-                setprocessing(false);
-            }).catch(err => {
-                console.log(err);
-                setprocessing(false);
-                setErrorHappend(true);
-            });
-
-
-            searchParams.delete("errorCode");
-            searchParams.delete("errorMessage");
-            navigate(searchParams.toString());
         },
         []
     );
 
+
+
     const closeRoom = (roomId) => {
-        console.log("room id: ", roomId)
+        // console.log("room id: ", roomId)
         setprocessing(true);
-        deleteMatch(roomId)
+        deleteMatch(roomId).then(res => {
+            console.log(res)
+            setprocessing(false);
+        }).catch(err => {
+            console.log(err)
+            setprocessing(false);
+            setErrorHappend(true);
+            setErrormsg("Error while deleting the room")
+        });
     }
 
     const resetGame = () => {
@@ -140,21 +150,33 @@ export default function Mult() {
 
 
 
-    const joinRoom = async (roomId, ammount, roomCreator) => {
+    const joinRoom = async (roomId, ammount, roomCreator, sidetobet) => {
         setprocessing(true)
+        const txsHashes = searchParams.get("transactionHashes");
+        if (txsHashes) {
+            roomSetupfromTXS(txsHashes)
+            return;
+        }
 
-        console.log("join room: " + roomId)
+        /* console.log("join room: " + roomId)
         console.log("ammount: " + ammount)
-        console.log("room creator: " + roomCreator)
+        console.log("room creator: " + roomCreator) */
 
-        //navigate to the room
+
+        setDestroyer(generateDestroyerPhrase(ammount, roomCreator))
+        setRoomID(roomId)
+        setRoomCreator(roomCreator)
+        setBetAmmount(ammount)
+        setSideBet(sidetobet)
+        setprocessing(false)
+
 
 
     }
     /* console.log(ammoutNEAR)
-    console.log(roomID)
-    console.log(sideChoosen)
-    console.log("f", roomID && ammoutNEAR && sideChoosen) */
+    console.log(roomCreator)
+    console.log(window.accountId)
+    console.log("f", roomCreator === window.accountId) */
     return (
         <>
             {showNotification && <Notification />}
@@ -165,64 +187,142 @@ export default function Mult() {
                     <div className='maincenter text-center' style={{ maxWidth: "34rem" }}>
                         {roomID && ammoutNEAR && sideChoosen !== null ?
                             <>
-                                <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
-                                    WAITING FOR OPPONENT
-                                </div>
-                                <span className='text-center rounded' style={{ color: "white", fontSize: "0.8rem" }}>
-                                    Room ID: {roomID}
-                                </span>
-
-                                <div className="d-flex my-auto">
-                                    <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "20%" }}>
-                                        <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
-                                            <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
-                                                <span className='my-auto'>
-                                                    Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
-                                                </span>
-
-                                                <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                    Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
-                                                </span>
-
-                                            </div>
-                                        </div>
+                                {roomCreator === window.accountId ? <>
+                                    <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
+                                        WAITING FOR OPPONENT
                                     </div>
-                                    <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "13%" }}>
-                                        <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
-                                            <div className="flip-box-front ">
-                                                <img src={LOGOMAIN} alt="logo" width="220" height="220" />
-                                            </div>
-                                            <div className="flip-box-back">
-                                                <img src={LOGOBACK} alt="logoback" width="220" height="220" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="d-flex my-auto justify-content-between">
-                                    <button className="align-self-start button button-retro is-error"
-                                                disabled={processing}
-                                    onClick={() => {
-                                        closeRoom(roomID)
-                                    }} style={{ marginRight: "1rem" }} >
-                                        {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "Close Room"}
-                                    </button>
-
-                                    <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
-                                        resetGame()
-                                    }}>
-                                        Back
-                                    </button>
-                                </div>
-
-
-                                <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
-                                    If you leave the page, the room will remain active.
-                                </span>
-                                <p>
-                                    <span className='text-center rounded' style={{ color: "white", fontSize: "0.8rem" }}>
-                                        To close it, click the button above.
+                                    <span className='text-center rounded' style={{ color: "white", fontSize: "0.85rem" }}>
+                                        Room ID: {roomID}
                                     </span>
-                                </p>
+
+                                    <div className="d-flex my-auto">
+                                        <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "20%" }}>
+                                            <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
+                                                <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                                                    <span className='my-auto'>
+                                                        Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
+                                                    </span>
+
+                                                    <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
+                                                        Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "13%" }}>
+                                            <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
+                                                <div className="flip-box-front ">
+                                                    <img src={LOGOMAIN} alt="logo" width="220" height="220" />
+                                                </div>
+                                                <div className="flip-box-back">
+                                                    <img src={LOGOBACK} alt="logoback" width="220" height="220" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="d-flex my-auto justify-content-between">
+                                        <button className="align-self-start button button-retro is-error"
+                                            disabled={processing}
+                                            onClick={() => {
+                                                closeRoom(roomID)
+                                            }} style={{ marginRight: "1rem" }} >
+                                            {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "Close Room"}
+                                        </button>
+
+                                        <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
+                                            resetGame()
+                                        }}>
+                                            Back
+                                        </button>
+                                    </div>
+
+
+                                    <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
+                                        If you leave the page, the room will remain active.
+                                    </span>
+                                    <p>
+                                        <span className='text-center rounded' style={{ color: "white", fontSize: "0.8rem" }}>
+                                            To close it, click the button above.
+                                        </span>
+                                    </p>
+                                </>
+                                    : <>
+                                        <div className="textinfoyellow font-weight-normal" style={{ fontSize: "1.8rem" }}>
+                                            {destroyer}
+                                        </div>
+                                        <span className='text-center rounded' style={{ color: "white", fontSize: "1rem" }}>
+                                            Room ID: {roomID}
+                                        </span>
+
+                                        <div className="d-flex my-auto">
+                                            <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "15%" }}>
+                                                <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
+                                                    <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                                                        <span className='my-auto'>
+                                                            Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
+                                                        </span>
+
+                                                        <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
+                                                            Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
+                                                        </span>
+                                                        <span className='text-center rounded mt-1' style={{ color: "white", fontSize: "0.75rem" }}>
+                                                            Playing vs: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{roomCreator}</a>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "12%" }}>
+                                                <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
+                                                    <div className="flip-box-front ">
+                                                        <img src={LOGOMAIN} alt="logo" width="220" height="220" />
+                                                    </div>
+                                                    <div className="flip-box-back">
+                                                        <img src={LOGOBACK} alt="logoback" width="220" height="220" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="d-flex my-auto justify-content-between">
+                                            <button className="align-self-start button button-retro is-primary"
+                                                disabled={processing}
+                                                onClick={() => {
+                                                    setprocessing(true)
+                                                    console.log(ammoutNEAR)
+                                                    console.log(roomID)
+                                                    console.log(window.accountId)
+                                                    try {
+                                                        joinMultiplayer(ammoutNEAR, roomID, window.accountId)
+                                                    }
+                                                    catch (err) {
+                                                        setprocessing(false)
+                                                        console.log(err)
+                                                        setErrorHappend(true)
+                                                        setErrormsg(err.message)
+                                                    }
+
+                                                }} style={{ marginRight: "1rem" }} >
+                                                {processing ? <Loading size={"1.5rem"} color={"text-success"} /> : "LET'S FLIP"}
+                                            </button>
+
+                                            <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
+                                                resetGame()
+                                            }}>
+                                                Back
+                                            </button>
+                                        </div>
+
+
+                                        {/* <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
+                                            If you leave the page, the room will remain active.
+                                        </span>
+                                        <p>
+                                            <span className='text-center rounded' style={{ color: "white", fontSize: "0.8rem" }}>
+                                                To close it, click the button above.
+                                            </span>
+                                        </p> */}
+                                    </>
+                                }
                             </>
                             :
                             <>
@@ -232,7 +332,7 @@ export default function Mult() {
                                         <>
                                             <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
                                                 <button className="button button-retro button-retro-small is-success ms-2"
-                                                disabled={processing}
+                                                    disabled={processing}
                                                     style={{ letterSpacing: "2px", width: "8rem" }}
                                                     onClick={() => {
                                                         setprocessing(true)
@@ -260,7 +360,6 @@ export default function Mult() {
                                                 >
                                                     <SelfMatches changeToRoom={
                                                         (roomId, sidebetstr, nearbetstr) => {
-                                                            console.log("hey")
                                                             setSideBet(sidebetstr)
                                                             setBetAmmount(nearbetstr)
                                                             setRoomID(roomId)
@@ -333,7 +432,6 @@ export default function Mult() {
                                                                     {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
                                                                     let roomCreator = room.creator;
                                                                     let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', { useGrouping: false }));
-
                                                                     if (roomCreator.length > 18) {
                                                                         roomCreator = roomCreator.substring(0, 17) + "…";
                                                                     }
@@ -342,7 +440,7 @@ export default function Mult() {
                                                                         <div className='mt-1 col col-sm-10 col-m-5 col-lg-5 col-xl-6'>
                                                                             <button className="button button-retro is-warning bordercool d-inline-block text-center"
                                                                                 style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
-                                                                                onClick={() => joinRoom(room.id, ammountNEAR, room.creator)}>
+                                                                                onClick={() => joinRoom(room.id, ammountNEAR, room.creator, room.face)}>
                                                                                 <span>{roomCreator} #{room.id}</span>
                                                                                 <p className="mb-0" style={{ color: "#dd403a" }}>{Math.round(ammountNEAR * 10000000) / 10000000} Near</p>
 
