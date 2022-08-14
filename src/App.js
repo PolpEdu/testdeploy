@@ -74,11 +74,11 @@ export default function App() {
 
   const [errormsg, setErrormsg] = React.useState(msg)
 
-  const [txsResult, settxsResult] = React.useState("")
-
   const [showDoggo, setShowDogo] = React.useState(false)
 
   const [processing, setprocessing] = React.useState(false)
+
+  const [didWon, setDidWon] = React.useState(false)
 
 
   const setPrice = (price) => {
@@ -89,9 +89,9 @@ export default function App() {
   const resetGame = () => {
     setTailsHeads(Math.random() < 0.5 ? "tails" : "heads")
     settxsHash("")
-    settxsResult("")
     setErrormsg("")
     setWonAmmount("")
+    setDidWon(null)
     setprocessing(false)
 
 
@@ -104,22 +104,22 @@ export default function App() {
 
 
   const getTxsResult = async () => {
-    let decodedstr = ""
     let decodedWonAmmountstr = ""
 
     gettxsRes(txsHashes).then(res => {
       //console.log(res)
       setShowNotification(true)
 
-      let decoded = Buffer.from(res.status.SuccessValue, 'base64')
-      decodedstr = decoded.toString("ascii")
+
+      let decoded = Buffer.from(res.status.SuccessValue, 'base64').toString("ascii")
+      setDidWon(decoded)
 
       let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees
-
       sendpostwithplay(txsHashes)
 
       try {
         decodedWonAmmountstr = convertYocto(decodedWonAmmount.toLocaleString('fullwide', { useGrouping: false }))
+        setWonAmmount(decodedWonAmmountstr)
 
       } catch (e) {
         console.log("Error converting ammount bet to string.")
@@ -134,8 +134,6 @@ export default function App() {
 
     })
 
-    settxsResult(decodedstr)
-    setWonAmmount(decodedWonAmmountstr)
   }
 
   React.useEffect(
@@ -172,7 +170,6 @@ export default function App() {
       setTailsHeads("heads")
     }
   }
-
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
@@ -183,7 +180,7 @@ export default function App() {
         <div className='play form-signin'>
           {txsHashes ?
             <div className='maincenter text-center'>
-              <FlipCoin result={tailsHeads} loading={false} won={txsResult} width={width} height={height} reset={resetGame} />
+              <FlipCoin result={tailsHeads} loading={false} won={didWon} width={width} height={height} reset={resetGame} />
             </div>
             :
             <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "650px" }}>
@@ -333,7 +330,6 @@ function FlipCoin(props) {
   return (
     <>
       <div id="cointainer" className=''>
-        {/* Play a video (logo)*/}
         <video autoPlay muted playsInline className="video-container d-flex justify-content-center flex-row borderpixelSMALL" style={{ marginTop: "3rem" }}>
           <source src={props.result === "heads" ? logoH : logoH} type="video/mp4" />
         </video>

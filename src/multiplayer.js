@@ -227,13 +227,13 @@ export default function Mult() {
                                             onClick={() => {
                                                 closeRoom(roomID)
                                             }} style={{ marginRight: "1rem" }} >
-                                            {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "Close Room"}
+                                            {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "CLOSE ROOM"}
                                         </button>
 
                                         <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
                                             resetGame()
                                         }}>
-                                            Back
+                                            BACK
                                         </button>
                                     </div>
 
@@ -308,7 +308,7 @@ export default function Mult() {
                                             <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
                                                 resetGame()
                                             }}>
-                                                Back
+                                                BACK
                                             </button>
                                         </div>
 
@@ -381,6 +381,17 @@ export default function Mult() {
                                                 <button className="button button-retro button-retro-small is-error ml-1"
                                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
                                                     onClick={event => {
+
+                                                        // join a random room from room state
+                                                        let randomRoom = rooms[Math.floor(Math.random() * rooms.length)];
+                                                        const nearBet = convertYocto(randomRoom.entry_price.toLocaleString('fullwide', { useGrouping: false }));
+                                                        setRoomID(randomRoom.id)
+                                                        setBetAmmount(nearBet)
+                                                        setSideBet(randomRoom.face)
+                                                        setRoomCreator(randomRoom.creator)
+
+
+                                                        // joinMultiplayer(randomRoom.nearBet, randomRoom.id, window.accountId)
 
 
                                                     }}>

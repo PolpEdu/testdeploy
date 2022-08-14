@@ -948,8 +948,7 @@ img {
 
 #cointainer{
   overflow:visible;
-  height: 500px;
-  margin-bottom: 0;
+  margin-bottom: 2rem;
   bottom: 0;
 }
 .coinLine {

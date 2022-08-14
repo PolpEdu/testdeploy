@@ -112,7 +112,7 @@ export function generateDestroyerPhrase(ammount, creator) {
         "Prepare to be rekt",
         "Easy 2x lmao",
         "Ⓝ I CAN SMELL IT Ⓝ",
-        "LET'S DO THIS"
+        "LET'S DO THIS",
     ]
     return phrase[Math.floor(Math.random() * phrase.length)]
 }
