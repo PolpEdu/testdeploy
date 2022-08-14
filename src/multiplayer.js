@@ -386,6 +386,7 @@ export default function Mult() {
                                                             setSideBet(sidebetstr)
                                                             setBetAmmount(nearbetstr)
                                                             setRoomID(roomId)
+                                                            setRoomCreator(window.accountId)
                                                         }
                                                     } />
                                                 </Popup>
