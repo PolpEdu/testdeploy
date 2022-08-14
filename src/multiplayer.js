@@ -4,6 +4,7 @@ import Confetti from 'react-confetti';
 import { Modal, Row, Container, Col } from 'react-bootstrap';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Popup from 'reactjs-popup';
+import useWindowSize from 'react-use/lib/useWindowSize'
 
 import './global.css'
 import './cointopright.css'
@@ -16,6 +17,7 @@ import HeaderButtons from './components/HeaderComponents';
 import { convertYocto, gettxsRes, menusayingsmult, processEvent, startup, getRooms, getRoomInfoFromTxs, joinMultiplayer, listenToRoom, storageRent, deleteMatch } from './utils'
 import LOGOMAIN from './assets/result.svg'
 import LOGOBACK from './assets/nearcoin.svg'
+import FlipCoinMultiplayer from './components/FlipCoinMultiplayer';
 
 function genrandomphrase() {
     return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
@@ -26,6 +28,8 @@ const contentStyle = {
 }
 export default function Mult() {
     startup();
+    const { width, height } = useWindowSize()
+
 
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams();
@@ -34,6 +38,7 @@ export default function Mult() {
     if (searchParams.get("errorCode")) {
         msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + ".";
     }
+    const [rooms, setRooms] = React.useState([]);
 
     const [errormsg, setErrormsg] = React.useState(msg);
     const [sideChoosen, setSideBet] = React.useState(null);
@@ -46,7 +51,10 @@ export default function Mult() {
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
     const [processing, setprocessing] = React.useState(true);
 
-    const [rooms, setRooms] = React.useState([]);
+
+    const [accountWon, setAccountWon] = React.useState(null);
+    const [sideResult, setSideResult] = React.useState(null);
+
 
     const roomSetupfromTXS = (txsHashes) => {
         gettxsRes(txsHashes).then(res => {
@@ -56,13 +64,19 @@ export default function Mult() {
             // console.log(res)
             try {
                 let decodedstr = Buffer.from(res.status.SuccessValue, 'base64').toString("ascii")
+                console.log(decodedstr)
                 if (decodedstr === "true") {
                     resetGame();
+                    return;
                 }
                 returnedvalues = JSON.parse(decodedstr)
-                // console.log(returnedvalues)
-                nearbetstr = convertYocto(returnedvalues.entry_price.toLocaleString('fullwide', { useGrouping: false }))
-
+                if (returnedvalues.accountWon && returnedvalues.result) {
+                    setAccountWon(returnedvalues.accountWon)
+                    setSideResult(returnedvalues.result)
+                    return;
+                } else {
+                    nearbetstr = convertYocto(returnedvalues.entry_price.toLocaleString('fullwide', { useGrouping: false }))
+                }
             } catch (error) {
                 console.log(error)
                 setErrormsg("Error while decoding the transaction")
@@ -98,6 +112,7 @@ export default function Mult() {
                 }
 
                 getRooms().then(data => {
+                    console.log(data)
                     setRooms(data);
                     setprocessing(false);
                 }).catch(err => {
@@ -132,7 +147,6 @@ export default function Mult() {
     }
 
     const resetGame = () => {
-
         searchParams.delete("transactionHashes")
         searchParams.delete("errorCode")
         searchParams.delete("errorMessage")
@@ -158,9 +172,9 @@ export default function Mult() {
             return;
         }
 
-        /* console.log("join room: " + roomId)
+        console.log("join room: " + roomId)
         console.log("ammount: " + ammount)
-        console.log("room creator: " + roomCreator) */
+        console.log("room creator: " + roomCreator)
 
 
         setDestroyer(generateDestroyerPhrase(ammount, roomCreator))
@@ -173,147 +187,149 @@ export default function Mult() {
 
 
     }
-    /* console.log(ammoutNEAR)
+    console.log(ammoutNEAR)
     console.log(roomCreator)
-    console.log(window.accountId)
-    console.log("f", roomCreator === window.accountId) */
+    console.log("f", roomCreator === window.accountId)
+    console.log("fsdad", roomID && ammoutNEAR && sideChoosen !== null)
+    console.log(roomID)
+    console.log(ammoutNEAR)
+    console.log(sideChoosen)
     return (
         <>
             {showNotification && <Notification />}
-            {errormsg && <NotificationError err={errormsg} ismult={true} />}
+            {errormsg && <NotificationError err={errormsg.replaceAll("%20", " ")} ismult={true} />}
             <HeaderButtons />
             <div className='text-center body-wrapper h-100'>
                 <div className='play form-signin'>
                     <div className='maincenter text-center' style={{ maxWidth: "34rem" }}>
-                        {roomID && ammoutNEAR && sideChoosen !== null ?
+                        {roomID !== null && ammoutNEAR !== null && sideChoosen !== null ?
                             <>
-                                {roomCreator === window.accountId ? <>
-                                    <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
-                                        WAITING FOR OPPONENT
-                                    </div>
-                                    <span className='text-center rounded' style={{ color: "white", fontSize: "0.85rem" }}>
-                                        Room ID: {roomID}
-                                    </span>
-
-                                    <div className="d-flex my-auto">
-                                        <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "20%" }}>
-                                            <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
-                                                <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
-                                                    <span className='my-auto'>
-                                                        Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
-                                                    </span>
-
-                                                    <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                        Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
-                                                    </span>
-
-                                                </div>
+                                {!accountWon || !sideResult ?
+                                    <>
+                                        {roomCreator === window.accountId ? <>
+                                            <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
+                                                WAITING FOR OPPONENT
                                             </div>
-                                        </div>
-                                        <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "13%" }}>
-                                            <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
-                                                <div className="flip-box-front ">
-                                                    <img src={LOGOMAIN} alt="logo" width="220" height="220" />
+                                            <span className='text-center rounded' style={{ color: "white", fontSize: "0.85rem" }}>
+                                                Room ID: {roomID}
+                                            </span>
+
+                                            <div className="d-flex my-auto">
+                                                <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "20%" }}>
+                                                    <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
+                                                        <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                                                            <span className='my-auto'>
+                                                                Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
+                                                            </span>
+
+                                                            <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
+                                                                Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
+                                                            </span>
+
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="flip-box-back">
-                                                    <img src={LOGOBACK} alt="logoback" width="220" height="220" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="d-flex my-auto justify-content-between">
-                                        <button className="align-self-start button button-retro is-error"
-                                            disabled={processing}
-                                            onClick={() => {
-                                                closeRoom(roomID)
-                                            }} style={{ marginRight: "1rem" }} >
-                                            {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "CLOSE ROOM"}
-                                        </button>
-
-                                        <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
-                                            resetGame()
-                                        }}>
-                                            BACK
-                                        </button>
-                                    </div>
-
-
-                                    <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
-                                        If you leave the page, the room will remain active.
-                                    </span>
-                                    <p>
-                                        <span className='text-center rounded' style={{ color: "white", fontSize: "0.8rem" }}>
-                                            To close it, click the button above.
-                                        </span>
-                                    </p>
-                                </>
-                                    : <>
-                                        <div className="textinfoyellow font-weight-normal" style={{ fontSize: "1.8rem" }}>
-                                            {destroyer}
-                                        </div>
-                                        <span className='text-center rounded' style={{ color: "white", fontSize: "1rem" }}>
-                                            Room ID: {roomID}
-                                        </span>
-
-                                        <div className="d-flex my-auto">
-                                            <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "15%" }}>
-                                                <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
-                                                    <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
-                                                        <span className='my-auto'>
-                                                            Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
-                                                        </span>
-
-                                                        <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                            Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
-                                                        </span>
-                                                        <span className='text-center rounded mt-1' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                            Playing vs: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{roomCreator}</a>
-                                                        </span>
+                                                <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "13%" }}>
+                                                    <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
+                                                        <div className="flip-box-front ">
+                                                            <img src={LOGOMAIN} alt="logo" width="220" height="220" />
+                                                        </div>
+                                                        <div className="flip-box-back">
+                                                            <img src={LOGOBACK} alt="logoback" width="220" height="220" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "12%" }}>
-                                                <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
-                                                    <div className="flip-box-front ">
-                                                        <img src={LOGOMAIN} alt="logo" width="220" height="220" />
+                                            <div className="d-flex my-auto justify-content-between">
+                                                <button className="align-self-start button button-retro is-error"
+                                                    disabled={processing}
+                                                    onClick={() => {
+                                                        closeRoom(roomID)
+                                                    }} style={{ marginRight: "1rem" }} >
+                                                    {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "CLOSE ROOM"}
+                                                </button>
+
+                                                <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
+                                                    resetGame()
+                                                }}>
+                                                    BACK
+                                                </button>
+                                            </div>
+
+
+                                            <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
+                                                If you leave the page, the room will remain active.
+                                            </span>
+                                            <p>
+                                                <span className='text-center rounded' style={{ color: "white", fontSize: "0.8rem" }}>
+                                                    To close it, click the button above.
+                                                </span>
+                                            </p>
+                                        </>
+                                            : <>
+                                                <div className="textinfoyellow font-weight-normal" style={{ fontSize: "1.8rem" }}>
+                                                    {destroyer}
+                                                </div>
+                                                <span className='text-center rounded' style={{ color: "white", fontSize: "1rem" }}>
+                                                    Room ID: {roomID}
+                                                </span>
+
+                                                <div className="d-flex my-auto">
+                                                    <div className="flip-box mb-2 mx-auto h-full " style={{ width: "50%", marginTop: "15%" }}>
+                                                        <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
+                                                            <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
+                                                                <span className='my-auto'>
+                                                                    Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
+                                                                </span>
+
+                                                                <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
+                                                                    Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
+                                                                </span>
+                                                                <span className='text-center rounded mt-1' style={{ color: "white", fontSize: "0.75rem" }}>
+                                                                    Playing vs: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{roomCreator}</a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="flip-box-back">
-                                                        <img src={LOGOBACK} alt="logoback" width="220" height="220" />
+                                                    <div className="flip-box logo mb-2 mx-auto" style={{ width: "40%", marginTop: "12%" }}>
+                                                        <div className={sideChoosen === true ? "flip-box-inner my-auto" : "flip-box-inner-flipped my-auto"}>
+                                                            <div className="flip-box-front ">
+                                                                <img src={LOGOMAIN} alt="logo" width="220" height="220" />
+                                                            </div>
+                                                            <div className="flip-box-back">
+                                                                <img src={LOGOBACK} alt="logoback" width="220" height="220" />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex my-auto justify-content-between">
-                                            <button className="align-self-start button button-retro is-primary"
-                                                disabled={processing}
-                                                onClick={() => {
-                                                    setprocessing(true)
-                                                    console.log(ammoutNEAR)
-                                                    console.log(roomID)
-                                                    console.log(window.accountId)
-                                                    try {
-                                                        joinMultiplayer(ammoutNEAR, roomID, window.accountId)
-                                                    }
-                                                    catch (err) {
-                                                        setprocessing(false)
-                                                        console.log(err)
-                                                        setErrorHappend(true)
-                                                        setErrormsg(err.message)
-                                                    }
+                                                <div className="d-flex my-auto justify-content-between">
+                                                    <button className="align-self-start button button-retro is-primary"
+                                                        disabled={processing}
+                                                        onClick={() => {
+                                                            setprocessing(true)
+                                                            try {
+                                                                joinMultiplayer(ammoutNEAR, roomID, roomCreator)
+                                                            }
+                                                            catch (err) {
+                                                                setprocessing(false)
+                                                                console.log(err)
+                                                                setErrorHappend(true)
+                                                                setErrormsg(err.message)
+                                                            }
 
-                                                }} style={{ marginRight: "1rem" }} >
-                                                {processing ? <Loading size={"1.5rem"} color={"text-success"} /> : "LET'S FLIP"}
-                                            </button>
+                                                        }} style={{ marginRight: "1rem" }} >
+                                                        {processing ? <Loading size={"1.5rem"} color={"text-success"} /> : "LET'S FLIP"}
+                                                    </button>
 
-                                            <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
-                                                resetGame()
-                                            }}>
-                                                BACK
-                                            </button>
-                                        </div>
+                                                    <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
+                                                        resetGame()
+                                                    }}>
+                                                        BACK
+                                                    </button>
+                                                </div>
 
 
-                                        {/* <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
+                                                {/* <span className='text-center rounded' style={{ color: "red", fontSize: "0.8rem" }}>
                                             If you leave the page, the room will remain active.
                                         </span>
                                         <p>
@@ -321,8 +337,15 @@ export default function Mult() {
                                                 To close it, click the button above.
                                             </span>
                                         </p> */}
+                                            </>
+                                        }
                                     </>
+                                    :
+                                    <div className='maincenter text-center'>
+                                        <FlipCoinMultiplayer result={sideResult} loading={false} account1={window.accountId} account2={accountWon} width={width} height={height} reset={resetGame} />
+                                    </div>
                                 }
+
                             </>
                             :
                             <>
@@ -382,18 +405,18 @@ export default function Mult() {
                                                     style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
                                                     onClick={event => {
 
-                                                        // join a random room from room state
-                                                        let randomRoom = rooms[Math.floor(Math.random() * rooms.length)];
+                                                        //let randomRoom = rooms[Math.floor(Math.random() * rooms.length)];
+                                                        // join a random room from room state exclude room's creator
+                                                        let randomRoom = rooms.filter(room => room.creator !== window.accountId)[Math.floor(Math.random() * rooms.length)];
+
+
                                                         const nearBet = convertYocto(randomRoom.entry_price.toLocaleString('fullwide', { useGrouping: false }));
                                                         setRoomID(randomRoom.id)
                                                         setBetAmmount(nearBet)
                                                         setSideBet(randomRoom.face)
                                                         setRoomCreator(randomRoom.creator)
 
-
                                                         // joinMultiplayer(randomRoom.nearBet, randomRoom.id, window.accountId)
-
-
                                                     }}>
                                                     Feeling Lucky
                                                 </button>
@@ -452,9 +475,8 @@ export default function Mult() {
                                                                             <button className="button button-retro is-warning bordercool d-inline-block text-center"
                                                                                 style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
                                                                                 onClick={() => joinRoom(room.id, ammountNEAR, room.creator, room.face)}>
-                                                                                <span>{roomCreator} #{room.id}</span>
+                                                                                <span style={roomCreator === window.accountId ? { color: "#03558c" } : {}}>{roomCreator} #{room.id}</span>
                                                                                 <p className="mb-0" style={{ color: "#dd403a" }}>{Math.round(ammountNEAR * 10000000) / 10000000} Near</p>
-
                                                                             </button>
                                                                         </div>
                                                                     )

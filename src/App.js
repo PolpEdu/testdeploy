@@ -313,9 +313,6 @@ export function NotificationError(props) {
 
 function FlipCoin(props) {
   const [processing, setprocessing] = React.useState(true)
-
-
-
   React.useEffect(() => {
 
     setTimeout(function () {

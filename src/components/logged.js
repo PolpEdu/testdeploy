@@ -301,17 +301,18 @@ export function TopPlays() {
     return (
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelf" style={{ backgroundColor: "#DD403A" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🔥 On Fire 🔥</h4>
-            <ul className="list-group">
-                {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
-                    <Loading size={25} color={"text-light"} />
-                </div> :
-                    errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching plays :/ </div> :
-                        plays.map((play, i) => {
+            {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
+                <Loading size={25} color={"text-light"} />
+            </div> :
+                errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching plays :/ </div> :
+                    <ul className="list-group">
+
+                        {plays.map((play, i) => {
                             //console.log(i)
                             const url = `https://explorer.${process.env.NODE_ENV}.near.org/accounts/` + play._id;
                             return (
-                                <a href={url} className="text-decoration-none" target='_blank'>
-                                    <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
+                                <a href={url} key={i} className="text-decoration-none" target='_blank'>
+                                    <li className='list-group-item d-flex cursor-pointer rounded-2'>
                                         <div className="profile-picture">
                                             {
                                                 i === 0 ? "🥇" :
@@ -329,9 +330,9 @@ export function TopPlays() {
 
                             )
                         }
-                        )
-                }
-            </ul>
+                        )}
+                    </ul>
+            }
         </div>
     )
 }
@@ -357,17 +358,18 @@ export function RecentPlays() {
 
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelP" style={{ backgroundColor: "#829922" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🎮 Who's Playin? 🎮</h4>
-            <ul className="list-group">
-                {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
-                    <Loading size={25} color={"text-light"} />
-                </div> :
-                    errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :
-                        plays.map((play, i) => {
+
+            {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
+                <Loading size={25} color={"text-light"} />
+            </div> :
+                errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :
+                    <ul className="list-group">
+                        {plays.map((play, i) => {
                             //console.log(i)
                             const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/` + play.tx;
                             return (
-                                <a href={url} className="text-decoration-none" target='_blank'>
-                                    <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
+                                <a href={url} key={i} className="text-decoration-none" target='_blank'>
+                                    <li className='list-group-item d-flex cursor-pointer rounded-2'>
                                         <div className="profile-picture">
                                             <img src={NearLogo} height={30} width={30} alt="logoback" />
                                         </div>
@@ -384,9 +386,10 @@ export function RecentPlays() {
 
                             )
                         }
-                        )
-                }
-            </ul>
+                        )}
+                    </ul>
+
+            }
         </div>
     );
 }
@@ -416,19 +419,20 @@ export function TopPlayers() {
 
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelm" style={{ backgroundColor: "#33b5e5" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>💵 MVPs 💵</h4>
-            <ul className="list-group">
-                {(players === undefined || players === [] || players.length === 0) ?
-                    <div className='mx-auto'>
-                        <Loading size={25} color={"text-light"} />
-                    </div> :
-                    errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :
-                        players.map((play, i) => {
+            {(players === undefined || players === [] || players.length === 0) ?
+                <div className='mx-auto'>
+                    <Loading size={25} color={"text-light"} />
+                </div> :
+                errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :
+                    <ul className="list-group">
+
+                        {players.map((play, i) => {
                             //console.log(i)
                             console.log(play)
                             const url = `https://explorer.${process.env.NODE_ENV}.near.org/account/` + play.wlt;
                             return (
-                                <a href={url} className="text-decoration-none" target='_blank'>
-                                    <li key={i} className='list-group-item d-flex cursor-pointer rounded-2'>
+                                <a href={url} key={i} className="text-decoration-none" target='_blank'>
+                                    <li className='list-group-item d-flex cursor-pointer rounded-2'>
                                         <div className="profile-picture">
                                             {
                                                 i === 0 ? "🥇" :
@@ -446,9 +450,9 @@ export function TopPlayers() {
 
                             )
                         }
-                        )
-                }
-            </ul>
+                        )}
+                    </ul>
+            }
         </div>
     );
 }

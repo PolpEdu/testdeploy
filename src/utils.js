@@ -193,9 +193,11 @@ export function flip(args, ammoutNEAR) {
   total = Math.round(total * 10000) / 10000;
   let yoctoNEAR = utils.format.parseNearAmount((total.toString()));
 
-  const result = window.walletConnection.account().functionCall({
+  window.walletConnection.account().functionCall({
     contractId: contractIDSingle.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
-  })
+  }).catch(e => {
+    console.log("Could not flip :(", e)
+  });
 }
 
 export async function getAllPlayerMathces(accountId) {
@@ -205,8 +207,7 @@ export async function getAllPlayerMathces(accountId) {
 
 export function joinMultiplayer(ammoutNEAR, idroom, roomCreator) {
   // convert to normal number from cientific notation
-  let yoctoNEAR = Number(utils.format.parseNearAmount(ammoutNEAR.toString())) * feesMultiplayer;
-
+  let yoctoNEAR = Number(utils.format.parseNearAmount((ammoutNEAR * feesMultiplayer).toString()));
   yoctoNEAR = yoctoNEAR.toLocaleString('fullwide', { useGrouping: false })
   console.log("yoctoNEAR: ", yoctoNEAR);
   console.log("idroom: ", idroom);
