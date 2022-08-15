@@ -21,6 +21,15 @@ export const storageRent = 500000000000000000000;
 export const storageRentNear = 0.0005;
 
 export const menusayingsmult = [
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
+  "Near Flip Multiplayer!",
   "Ready to rekt some noobs",
   "Mom get the camera",
   "1v1 me",
@@ -37,7 +46,6 @@ export const menusayingsmult = [
   "gg heads diff",
   "gg tails diff",
   "+20 flip mmr",
-  "gg I was lagging didn't count",
 ]
 export const menusayings = [
   "Near Coin Flip!",
@@ -64,7 +72,116 @@ export const menusayings = [
   "one sec, let me call drake brb"
 ]
 
-const contractID = process.env.CONTRACT_NAME_MULT || 'multiplayer.flipnear.a3corp.testnet';
+export const menusayingslose = [
+  "Better luck next time..",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Shit Game.",
+  "Lmao Get Rugged.",
+  "Lmao Get Rugged.",
+  "Lmao Get Rugged.",
+  "Lmao Get Rugged.",
+  "*sadge*",
+]
+
+export const menusayingswin = [
+  "You won!",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "You got lucky!",
+  "lmao ez clap",
+  "You're a winner!",
+  "2x just like that.",
+  "You're a winner!",
+  "LET'S DRINKS ON ME",
+  "ME WON NEAR, ME IS WINNER",
+  "Just like that ;)",
+  "SOLID.",
+  "LET'S GOOOOOOOOOOO",
+  "yo drake, can i come over?",
+  "brb https://www.yachtworld.co.uk/",
+  "WOOOOOOO",
+  "BOOK BOOK BOOK",
+  "Is that easy?",
+  "lmao ez clap",
+  "You're a winner!",
+  "2x just like that.",
+  "Easy Peasy Lemon Squeezy",
+  "SOLID.",
+  "I'm the best coin-flipping machine!",
+]
+
+export const menusayingswinMulti = [
+  "You won!",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "BO3 Idiot?",
+  "Some kids never learn...",
+  "Try again?",
+  "brb https://www.yachtworld.co.uk/", //link 
+  "WOOOOOOO",
+  "BOOK BOOK BOOK",
+  "Is that easy?",
+  "lmao ez clap",
+  "You're a winner!",
+  "2x just like that.",
+  "Easy Peasy Lemon Squeezy",
+  "SOLID.",
+  "Dude you are sooo baddddd",
+  "Diamond Flipper since '93",
+  "You just got flipped bro",
+  "i feel so sad about u man...",
+]
+
+export const menusayingloseMulti = [
+  "Better luck next time...",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Try again?",
+  "Shit Game.",
+  "Lmao Get Rugged.",
+  "Lmao Get Rugged.",
+  "Lmao Get Rugged.",
+  "Lmao Get Rugged.",
+  "*sadge*",
+  "Bro i just got flipped",
+  "BO3?",
+  "fuck you",
+  "dude can you give me a refund?",
+  ":( not funny man",
+]
+
+export const contractID = process.env.CONTRACT_NAME_MULT || 'multiplayer.flipnear.a3corp.testnet';
 const contractIDSingle = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
 
 
@@ -240,16 +357,6 @@ export function createMultiplayer(ammoutNEAR, tailsHeads) {
     args: { face: argside, rent_amount: storageRent.toString() }, gas: "300000000000000", attachedDeposit: yoctoNEAR
   }).catch(e => {
     console.log("Error Creating Match :(");
-    console.error(e)
-  });
-}
-
-export function deleteMatch(roomId) {
-  console.log("roomId: ", roomId);
-  window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'cancel_match', args: { id: roomId }, gas: "300000000000000"
-  }).catch(e => {
-    console.log("Error Canceling Match :(");
     console.error(e)
   });
 }

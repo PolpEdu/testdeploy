@@ -7,7 +7,7 @@ import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useSearchParams, useNavigate } from "react-router-dom"
 
-import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup } from './utils'
+import { logout, convertYocto, flip, gettxsRes, menusayings, fees, sendpostwithplay, startup, menusayingswin, menusayingslose } from './utils'
 import { NotLogged, Loading } from './components/logged'
 import FooterComponent from './components/FooterComponent'
 import HeaderButtons from './components/HeaderComponents';
@@ -69,7 +69,7 @@ export default function App() {
 
   let msg = ""
   if (searchParams.get("errorCode")) {
-    msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + "."
+    msg = decodeURI(searchParams.get("errorCode")) + ", " + decodeURI(searchParams.get("errorMessage")) + "."
   }
 
   const [errormsg, setErrormsg] = React.useState(msg)
@@ -114,6 +114,22 @@ export default function App() {
       let decoded = Buffer.from(res.status.SuccessValue, 'base64').toString("ascii")
       setDidWon(decoded)
 
+      let wr = localStorage.getItem("winstreak")
+      // store in local storage
+      if (decoded === "true") {
+        if (wr < 0) {
+          localStorage.setItem("winstreak", 0)
+        } else {
+          localStorage.setItem("winstreak", wr++)
+        }
+      } else {
+        if (wr > 0) {
+          localStorage.setItem("winstreak", 0)
+        } else {
+          localStorage.setItem("winstreak", wr--)
+        }
+      }
+
       let decodedWonAmmount = res.transaction.actions[0].FunctionCall.deposit / fees
       sendpostwithplay(txsHashes)
 
@@ -139,6 +155,11 @@ export default function App() {
   React.useEffect(
     () => {
       checkifdoggo()
+      // check if localstorage has winstreak
+      if (!localStorage.getItem("winstreak")) {
+        localStorage.setItem("winstreak", 0)
+      }
+
 
       // in this case, we only care to query the contract when signed in
       if (window.walletConnection.isSignedIn()) {
@@ -170,17 +191,18 @@ export default function App() {
       setTailsHeads("heads")
     }
   }
+  console.log(localStorage.getItem("winstreak"))
   return (
     <div className={darkMode}>
       {showNotification && <Notification />}
-      {errormsg && <NotificationError err={errormsg} ismult={false} />}
+      {errormsg && <NotificationError err={decodeURI(errormsg)} ismult={false} />}
       <HeaderButtons />
 
       <div className='text-center body-wrapper h-100'>
         <div className='play form-signin'>
           {txsHashes ?
             <div className='maincenter text-center'>
-              <FlipCoin result={tailsHeads} loading={false} won={didWon} width={width} height={height} reset={resetGame} />
+              <FlipCoin result={tailsHeads} quantity={ammountWon} loading={false} won={didWon} width={width} height={height} reset={resetGame} />
             </div>
             :
             <div className='menumain' style={!window.walletConnection.isSignedIn() ? { maxWidth: "860px" } : { maxWidth: "650px" }}>
@@ -194,7 +216,14 @@ export default function App() {
                     <img src={showDoggo ? LOGODOG : LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240" />
                   </> :
                   <div className='d-flex flex-column '>
-                    <h4 className='mt-1 mt-sm-1' fontSize="1.3rem">I like...</h4>
+                    {localStorage.getItem("winstreak") === "0" ?
+                      <div style={{ marginTop: "1rem" }}></div> : <>{
+                        localStorage.getItem("winstreak") > 0 ?
+                          <h4 className='mt-1 mt-sm-1 textinfowin' fontSize="1.3rem">Congrats! You are on a {localStorage.getItem("winstreak")} Win Streak!</h4>
+                          :
+                          <h4 className='mt-1 mt-sm-1 text-red-500' fontSize="1.3rem">Cmon man you are on a {localStorage.getItem("winstreak") * -1} Lose Streak...</h4>
+                      }</>}
+
 
                     <div className="flip-box logo mb-2 mx-auto">
                       <div className={tailsHeads === "heads" ? "flip-box-inner" : "flip-box-inner-flipped"}>
@@ -313,6 +342,8 @@ export function NotificationError(props) {
 
 function FlipCoin(props) {
   const [processing, setprocessing] = React.useState(true)
+  const [winPhrase, setwinPhrase] = React.useState(menusayingswin[Math.floor(Math.random() * menusayingswin.length)])
+  const [losePhrase, setlosePhrase] = React.useState(menusayingslose[Math.floor(Math.random() * menusayingslose.length)])
   React.useEffect(() => {
 
     setTimeout(function () {
@@ -332,25 +363,40 @@ function FlipCoin(props) {
         </video>
       </div>
       <div className={processing === false ? 'fadein' : 'fadein fadeout'}>
+
         {props.won === "true" ? <>
           <Confetti
             width={props.width - 1}
             height={props.height - 1}
           />
-          <div className="textinfowin font-weight-normal mb-2" style={{ fontSize: "2rem" }}>
-            YOU WON!
+          <div className="font-weight-normal" style={{ fontSize: "1.8rem" }}>
+            YOU WON
           </div>
-          <button className="button button-retro is-primary" onClick={res}>
-            Play Again
+          <span className="textinfowinnoanim font-weight-normal" style={{ fontSize: "2rem" }}>
+            {Math.round((props.quantity) * 1000000) / 1000000} NEAR
+          </span>
+          <hr mb-2 />
+          <span style={{ fontSize: "1.5rem", textTransform: "uppercase" }} className={"mt-2"}>
+            {winPhrase}
+          </span>
+          <button className="button button-retro is-primary  mt-1" onClick={res}>
+            LET'S GO
           </button>
         </>
           :
           <>
-            <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
-              Game Over!
+            <div className="font-weight-normal" style={{ fontSize: "1.8rem" }}>
+              You Lost.
             </div>
-            <button className="button button-retro is-error mb-2" onClick={this.res}>
-              Try Again
+            <span className="textinfolosenoanim font-weight-normal" style={{ fontSize: "2rem" }}>
+              {Math.round((props.quantity) * 1000000) / 1000000} NEAR
+            </span>
+            <hr mb-2 />
+            <span style={{ fontSize: "1.5rem", textTransform: "uppercase", fontStyle: "italic" }} className={"mt-2"} >
+              {losePhrase}
+            </span>
+            <button className="button button-retro is-primary mt-1" onClick={res}>
+              Play Again
             </button>
           </>
         }

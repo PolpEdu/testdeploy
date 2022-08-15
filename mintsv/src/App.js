@@ -46,7 +46,7 @@ export default function App() {
 
   let msg = "";
   if (searchParams.get("errorCode")) {
-    msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + ".";
+    msg = decodeURI(searchParams.get("errorCode")) + ", " + decodeURI(searchParams.get("errorMessage")) + ".";
   }
 
   const [errormsg, setErrormsg] = React.useState(msg);
@@ -88,7 +88,7 @@ export default function App() {
     <>
       <Navbar />
       <div className="max-w-screen-3xl mx-auto w-full px-8 ">
-        {errormsg && <NotificationError err={errormsg} />}
+        {errormsg && <NotificationError err={decodeURI(errormsg)} />}
         <div className="flex flex-1 flex-col-reverse md:flex-row mx-auto gap-8 justify-between my-4">
           <div className="flex flex-col gap-4 flex-grow md:max-w-[40%]">
             <h1 className="text-4xl font-extrabold leading-none" style={{ color: "#fcdd35" }}>

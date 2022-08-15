@@ -113,6 +113,7 @@ export function generateDestroyerPhrase(ammount, creator) {
         "Easy 2x lmao",
         "Ⓝ I CAN SMELL IT Ⓝ",
         "LET'S DO THIS",
+        "Rugging People On Chain Lmao..."
     ]
     return phrase[Math.floor(Math.random() * phrase.length)]
 }
@@ -171,15 +172,11 @@ export function SelfMatches(props) {
     )
 }
 
-export function CreateRoom(props) {
+export function CreateRoom() {
     const [tailsHeads, setTailsHeads] = React.useState(Math.random() < 0.5 ? "tails" : "heads")
-
     const [buttonDisabled, setButtonDisabled] = React.useState(false)
-
     const [processing, setprocessing] = React.useState(false)
-
     const [ammoutNEAR, setAmmountNEAR] = React.useState(0);
-
     const [inputbox, setInputbox] = React.useState('');
 
     const toggleHeadsTails = () => {
@@ -189,8 +186,6 @@ export function CreateRoom(props) {
             setTailsHeads("heads")
         }
     }
-
-
 
     function handleChange(event) {
         // check if event.target.value has "e" character
@@ -233,7 +228,7 @@ export function CreateRoom(props) {
                 <div className="flip-box mb-2 mx-auto h-full" style={{ width: "55%" }}>
                     <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
                         <span className='mb-4'>
-                            Flip Ammount:
+                            Flip amount:
                         </span>
                         <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
                             <input className='box' type="number" placeholder={ammoutNEAR.toString()} value={inputbox} onChange={handleChange} />
@@ -242,7 +237,7 @@ export function CreateRoom(props) {
                             </span>
                         </div>
                         <span className='text-danger text-center pt-3' style={{ fontSize: "0.75rem" }}>
-                            {ammoutNEAR > 0 ? Math.round(((ammoutNEAR * feesMultiplayer) + storageRentNear) * 1000000) / 1000000 : 0} Near after Fees.
+                            {ammoutNEAR > 0 ? Math.round(((ammoutNEAR * feesMultiplayer) + storageRentNear) * 10000000) / 10000000 : 0} Near after Fees.
                         </span>
 
                     </div>
@@ -301,9 +296,10 @@ export function TopPlays() {
     return (
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelf" style={{ backgroundColor: "#DD403A" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🔥 On Fire 🔥</h4>
-            {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
-                <Loading size={25} color={"text-light"} />
-            </div> :
+            {(plays === undefined || plays === [] || plays.length === 0) ?
+                <div style={{ marginLeft: "50%" }} >
+                    <Loading size={25} color={"text-light"} />
+                </div> :
                 errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching plays :/ </div> :
                     <ul className="list-group">
 
@@ -359,7 +355,7 @@ export function RecentPlays() {
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelP" style={{ backgroundColor: "#829922" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🎮 Who's Playin? 🎮</h4>
 
-            {(plays === undefined || plays === [] || plays.length === 0) ? <div className='mx-auto'>
+            {(plays === undefined || plays === [] || plays.length === 0) ? <div style={{ marginLeft: "50%" }} >
                 <Loading size={25} color={"text-light"} />
             </div> :
                 errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :
@@ -420,7 +416,7 @@ export function TopPlayers() {
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelm" style={{ backgroundColor: "#33b5e5" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>💵 MVPs 💵</h4>
             {(players === undefined || players === [] || players.length === 0) ?
-                <div className='mx-auto'>
+                <div style={{ marginLeft: "50%" }} >
                     <Loading size={25} color={"text-light"} />
                 </div> :
                 errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :

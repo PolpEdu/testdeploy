@@ -843,6 +843,21 @@ text-shadow: 1px 1px 0px rgb(177, 255, 125);
 animation: opacityPulse 1s ease-out;
 animation-iteration-count: infinite;
 }
+
+
+.animwon {
+  animation: opacityPulse 1s ease-out;
+  animation-iteration-count: infinite;
+}
+
+.textinfowinnoanim {
+text-align: center;
+min-height: 2rem;
+color:rgb(116, 194, 0);
+text-shadow: 1px 1px 0px rgb(177, 255, 125);
+}
+
+
 .textinfoyellow {
 text-align: center;
 min-height: 2rem;
@@ -858,6 +873,45 @@ color:rgb(255, 50, 23);
 text-shadow: 1px 1px 0px rgb(100, 38, 19);
 animation: opacityPulse 1.5s linear;
 animation-iteration-count: infinite;
+}
+
+.animlose {
+  animation: opacityPulse 1.5s linear;
+animation-iteration-count: infinite;
+}
+
+.textinfolosenoanim {
+text-align: center;
+min-height: 2rem;
+color:rgb(255, 50, 23);
+text-shadow: 1px 1px 0px rgb(100, 38, 19);
+}
+
+.wavy
+{
+ position:relative;
+ /* -webkit-box-reflect:below -12px linear-gradient(
+    transparent,rgba(0,0,0,0.2)); */
+}
+.wavy span
+{
+ position:relative;
+ display: inline-block;
+ animation:animateWave 2s ease-in-out infinite;
+ animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes animateWave {
+  0% {
+    transform:translateY(0px);
+  }
+20% {
+ transform:translateY(-15px);
+}
+40%,100%
+{
+  transform:translateY(0px);
+}
 }
 
 .form-signin2 {

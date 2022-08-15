@@ -1,8 +1,12 @@
 import React from 'react'
+import logoH from '../assets/coinreal.mp4'
+import { menusayingloseMulti, menusayingswinMulti } from '../utils'
+import { Loading } from './logged'
 
 function FlipCoinMultiplayer(props) {
     const [processing, setprocessing] = React.useState(true)
-
+    const [winPhrase, setwinPhrase] = React.useState(menusayingswinMulti[Math.floor(Math.random() * menusayingswinMulti.length)])
+    const [losePhrase, setlosePhrase] = React.useState(menusayingloseMulti[Math.floor(Math.random() * menusayingloseMulti.length)])
     React.useEffect(() => {
 
         setTimeout(function () {
@@ -10,7 +14,7 @@ function FlipCoinMultiplayer(props) {
         }, 5000)
     }, [])
 
-    res = () => {
+    const res = () => {
         props.reset()
     }
 
@@ -27,20 +31,47 @@ function FlipCoinMultiplayer(props) {
                         width={props.width - 1}
                         height={props.height - 1}
                     />
-                    <div className="textinfowin font-weight-normal mb-2" style={{ fontSize: "2rem" }}>
-                        YOU WON!
+                    <div className="font-weight-normal" style={{ fontSize: "1.8rem" }}>
+                        YOU WON
                     </div>
-                    <button className="button button-retro is-primary" onClick={res}>
-                        Play Again
+                    <span className="textinfowinnoanim font-weight-normal" style={{ fontSize: "2rem" }}>
+                        {Math.round((props.quantity) * 1000000) / 1000000} NEAR
+                    </span>
+                    <hr className='mb-3' />
+                    <div style={{ fontSize: "1.3rem", textTransform: "uppercase", fontStyle: "italic" }} className={"mt-2 wavy"}>
+                        {/* for each letter in winPhrase create a span with it */}
+                        {winPhrase.split('').map((letter, index) => {
+                            let styles = { "--i": index }
+                            if (letter === " ") {
+                                styles = { "--i": index, width: "0.7rem" }
+                            }
+                            return <span key={index} style={styles}>{letter}</span>
+                        })}
+                    </div>
+                    <button className="button button-retro is-primary  mt-2" onClick={res}>
+                        {processing ? <Loading size={"1.5rem"} color={"text-success"} /> : "Play Again"}
                     </button>
                 </>
                     :
                     <>
-                        <div className="textinfolose font-weight-normal" style={{ fontSize: "2rem" }}>
-                            Game Over!
+                        <div className="font-weight-normal" style={{ fontSize: "1.8rem" }}>
+                            You Lost.
                         </div>
-                        <button className="button button-retro is-error mb-2" onClick={this.res}>
-                            Try Again
+                        <span className="textinfolosenoanim font-weight-normal" style={{ fontSize: "2rem" }}>
+                            {Math.round((props.quantity) * 1000000) / 1000000} NEAR
+                        </span>
+                        <hr className='mb-3' />
+                        <div style={{ fontSize: "1.3rem", textTransform: "uppercase", fontStyle: "italic" }} className={"mt-2 wavy"} >
+                            {losePhrase.split('').map((letter, index) => {
+                                let styles = { "--i": index }
+                                if (letter === " ") {
+                                    styles = { "--i": index, width: "0.7rem" }
+                                }
+                                return <span key={index} style={styles}>{letter}</span>
+                            })}
+                        </div>
+                        <button className="button button-retro is-primary mt-2" onClick={res}>
+                            {processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Play Again"}
                         </button>
                     </>
                 }

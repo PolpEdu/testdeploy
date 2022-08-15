@@ -14,7 +14,7 @@ import { NotLogged, Loading, CreateRoom, SelfMatches, generateDestroyerPhrase } 
 import FooterComponent from './components/FooterComponent'
 import HeaderButtons from './components/HeaderComponents';
 
-import { convertYocto, gettxsRes, menusayingsmult, processEvent, startup, getRooms, getRoomInfoFromTxs, joinMultiplayer, listenToRoom, storageRent, deleteMatch } from './utils'
+import { convertYocto, gettxsRes, menusayingsmult, processEvent, startup, getRooms, getRoomInfoFromTxs, joinMultiplayer, listenToRoom, storageRent, deleteMatch, contractID } from './utils'
 import LOGOMAIN from './assets/result.svg'
 import LOGOBACK from './assets/nearcoin.svg'
 import FlipCoinMultiplayer from './components/FlipCoinMultiplayer';
@@ -32,11 +32,11 @@ export default function Mult() {
 
 
     const navigate = useNavigate()
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams()
     const [showNotification, setShowNotification] = React.useState(false)
     let msg = "";
     if (searchParams.get("errorCode")) {
-        msg = searchParams.get("errorCode") + ", " + (searchParams.get("errorMessage").replaceAll("%20", " ")) + ".";
+        msg = decodeURI(searchParams.get("errorCode")) + ", " + decodeURI(searchParams.get("errorMessage")) + ".";
     }
     const [rooms, setRooms] = React.useState([]);
 
@@ -46,7 +46,6 @@ export default function Mult() {
     const [roomID, setRoomID] = React.useState(null);
     const [roomCreator, setRoomCreator] = React.useState(null);
     const [destroyer, setDestroyer] = React.useState(generateDestroyerPhrase(ammoutNEAR));
-    const [errorHappend, setErrorHappend] = React.useState(false);
 
     const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase())
     const [processing, setprocessing] = React.useState(true);
@@ -54,6 +53,7 @@ export default function Mult() {
 
     const [accountWon, setAccountWon] = React.useState(null);
     const [sideResult, setSideResult] = React.useState(null);
+    const [amountWon, setAmountWon] = React.useState(null);
 
 
     const roomSetupfromTXS = (txsHashes) => {
@@ -64,23 +64,36 @@ export default function Mult() {
             // console.log(res)
             try {
                 let decodedstr = Buffer.from(res.status.SuccessValue, 'base64').toString("ascii")
-                console.log(decodedstr)
+                // console.log(decodedstr)
                 if (decodedstr === "true") {
                     resetGame();
                     return;
                 }
                 returnedvalues = JSON.parse(decodedstr)
-                if (returnedvalues.accountWon && returnedvalues.result) {
-                    setAccountWon(returnedvalues.accountWon)
-                    setSideResult(returnedvalues.result)
+                console.log(returnedvalues)
+
+                const roomid = returnedvalues.id;
+                const winner = returnedvalues.winner;
+                const result = returnedvalues.result === true ? "heads" : "tails";
+                const creator = returnedvalues.creator;
+                //parse near ammount
+                if (roomid && winner && result && creator && returnedvalues.amount) {
+                    const ammount = convertYocto(returnedvalues.amount.toLocaleString('fullwide', { useGrouping: false }));
+                    setAccountWon(winner)
+                    setSideResult(result)
+                    setRoomID(roomid)
+                    setAmountWon(ammount)
+                    // setRoomCreator(creator)
                     return;
                 } else {
+                    console.log(returnedvalues.entry_price)
                     nearbetstr = convertYocto(returnedvalues.entry_price.toLocaleString('fullwide', { useGrouping: false }))
                 }
             } catch (error) {
                 console.log(error)
                 setErrormsg("Error while decoding the transaction")
-                setErrorHappend(true)
+                setprocessing(false)
+                return;
             }
 
             // check if room exists
@@ -95,7 +108,6 @@ export default function Mult() {
             // console.log("hello: " + processing)
         }).catch(e => {
             console.error(e)
-            setErrorHappend(true)
             setErrormsg("Error while decoding the transaction")
             setprocessing(false)
         })
@@ -118,7 +130,6 @@ export default function Mult() {
                 }).catch(err => {
                     console.log(err);
                     setprocessing(false);
-                    setErrorHappend(true);
                 });
 
 
@@ -133,17 +144,30 @@ export default function Mult() {
 
 
     const closeRoom = (roomId) => {
-        // console.log("room id: ", roomId)
         setprocessing(true);
-        deleteMatch(roomId).then(res => {
+        window.walletConnection.account().functionCall({
+            contractId: contractID.toString(), methodName: 'cancel_match', args: { id: roomId }, gas: "300000000000000"
+        }).then(res => {
             console.log(res)
-            setprocessing(false);
+
+            const ascii = Buffer.from(res.status.SuccessValue, 'base64').toString("ascii")
+            if (ascii === "true") {
+                setShowNotification(true);
+                setprocessing(false);
+                resetGame()
+                return
+            } else {
+                setErrormsg("Error while canceling the match")
+                setprocessing(false);
+                return;
+            }
+
+
         }).catch(err => {
             console.log(err)
             setprocessing(false);
-            setErrorHappend(true);
-            setErrormsg("Error while deleting the room")
-        });
+            setShowNotification(true);
+        })
     }
 
     const resetGame = () => {
@@ -152,14 +176,31 @@ export default function Mult() {
         searchParams.delete("errorMessage")
         navigate(searchParams.toString());
 
-        //refresh the page
-        window.location.reload();
+        setRoomID(null)
+        setRoomCreator(null)
+        setSideBet(null)
+        setBetAmmount(null)
+        setprocessing(true);
+
+        setAccountWon(null)
+        setSideResult(null)
+        setAmountWon(null)
+
+
+        getRooms().then(data => {
+            console.log(data)
+            setRooms(data);
+            setprocessing(false);
+        }).catch(err => {
+            console.log(err);
+            setErrormsg("Error while loading the rooms")
+            setprocessing(false);
+        });
     }
     const processEvents = (events) => {
         // console.log(events);
         events = events.flatMap(processEvent);
         events.reverse();
-
     };
 
 
@@ -187,24 +228,23 @@ export default function Mult() {
 
 
     }
+    /*
     console.log(ammoutNEAR)
-    console.log(roomCreator)
     console.log("f", roomCreator === window.accountId)
-    console.log("fsdad", roomID && ammoutNEAR && sideChoosen !== null)
-    console.log(roomID)
-    console.log(ammoutNEAR)
-    console.log(sideChoosen)
+    console.log(roomID !== null && ammoutNEAR !== null && sideChoosen !== null)
+    console.log(!accountWon || !sideResult)
+    */
     return (
         <>
             {showNotification && <Notification />}
-            {errormsg && <NotificationError err={errormsg.replaceAll("%20", " ")} ismult={true} />}
+            {errormsg && <NotificationError err={decodeURI(errormsg)} ismult={true} />}
             <HeaderButtons />
             <div className='text-center body-wrapper h-100'>
                 <div className='play form-signin'>
                     <div className='maincenter text-center' style={{ maxWidth: "34rem" }}>
-                        {roomID !== null && ammoutNEAR !== null && sideChoosen !== null ?
+                        {!accountWon || !sideResult || !amountWon ?
                             <>
-                                {!accountWon || !sideResult ?
+                                {roomID !== null && ammoutNEAR !== null && sideChoosen !== null ?
                                     <>
                                         {roomCreator === window.accountId ? <>
                                             <div className="textinfoyellow font-weight-normal" style={{ fontSize: "2rem" }}>
@@ -219,7 +259,7 @@ export default function Mult() {
                                                     <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
                                                         <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
                                                             <span className='my-auto'>
-                                                                Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
+                                                                Flip amount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
                                                             </span>
 
                                                             <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
@@ -246,7 +286,7 @@ export default function Mult() {
                                                     onClick={() => {
                                                         closeRoom(roomID)
                                                     }} style={{ marginRight: "1rem" }} >
-                                                    {processing ? <Loading size={"1.5rem"} color={"text-danger"} /> : "CLOSE ROOM"}
+                                                    {processing ? <Loading size={"1.5rem"} color={"text-dark"} /> : "CLOSE ROOM"}
                                                 </button>
 
                                                 <button className="button button-retro is-warning" style={{ width: "20%" }} onClick={() => {
@@ -279,7 +319,7 @@ export default function Mult() {
                                                         <div className='d-flex justify-content-center flex-row borderpixelSMALL'>
                                                             <div className="flip-box-inner d-flex justify-content-center flex-column mx-auto my-auto" style={{ fontWeight: "500", color: "white", fontSize: "1.45rem", width: "70%" }}>
                                                                 <span className='my-auto'>
-                                                                    Flip Ammount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
+                                                                    Flip amount: {Math.round(ammoutNEAR * 1000000) / 1000000} Near
                                                                 </span>
 
                                                                 <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
@@ -313,7 +353,6 @@ export default function Mult() {
                                                             catch (err) {
                                                                 setprocessing(false)
                                                                 console.log(err)
-                                                                setErrorHappend(true)
                                                                 setErrormsg(err.message)
                                                             }
 
@@ -341,157 +380,155 @@ export default function Mult() {
                                         }
                                     </>
                                     :
-                                    <div className='maincenter text-center'>
-                                        <FlipCoinMultiplayer result={sideResult} loading={false} account1={window.accountId} account2={accountWon} width={width} height={height} reset={resetGame} />
-                                    </div>
-                                }
+                                    <>
+                                        <h1 className="textsurprese font-weight-normal" style={{ fontSize: "1.5rem" }}>{surprisePhrase}</h1>
+                                        {
+                                            window.walletConnection.isSignedIn() ?
+                                                <>
+                                                    <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
+                                                        <button className="button button-retro button-retro-small is-success ms-2"
+                                                            disabled={processing}
+                                                            style={{ letterSpacing: "2px", width: "8rem" }}
+                                                            onClick={() => {
+                                                                setprocessing(true)
 
-                            </>
-                            :
-                            <>
-                                <h1 className="textsurprese font-weight-normal" style={{ fontSize: "1.5rem" }}>{surprisePhrase}</h1>
-                                {
-                                    window.walletConnection.isSignedIn() ?
-                                        <>
-                                            <div className='d-flex flex-row-reverse justify-content-center mt-sm-1'>
-                                                <button className="button button-retro button-retro-small is-success ms-2"
-                                                    disabled={processing}
-                                                    style={{ letterSpacing: "2px", width: "8rem" }}
-                                                    onClick={() => {
-                                                        setprocessing(true)
+                                                                getRooms().then(data => {
+                                                                    console.log(data)
+                                                                    setRooms(data);
+                                                                    setprocessing(false);
+                                                                }).catch(err => {
+                                                                    console.log(err);
+                                                                    setprocessing(false);
+                                                                });
+                                                            }}>
+                                                            {processing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
+                                                        </button>
+                                                        <Popup trigger={
+                                                            <button className="button button-retro button-retro-small is-yellow ms-2"
+                                                                style={{ letterSpacing: "2px", width: "8rem" }}>
+                                                                Your Matches
+                                                            </button>
+                                                        } position="center center"
+                                                            modal
+                                                            contentStyle={contentStyle}
+                                                        >
+                                                            <SelfMatches changeToRoom={
+                                                                (roomId, sidebetstr, nearbetstr) => {
+                                                                    setSideBet(sidebetstr)
+                                                                    setBetAmmount(nearbetstr)
+                                                                    setRoomID(roomId)
+                                                                    setRoomCreator(window.accountId)
+                                                                }
+                                                            } />
+                                                        </Popup>
+                                                        <Popup trigger={
+                                                            <button className="button button-retro button-retro-small is-primary ms-2"
+                                                                style={{ letterSpacing: "2px", width: "8rem" }}>
+                                                                Create Room
+                                                            </button>
+                                                        } position="center center"
+                                                            modal
+                                                            contentStyle={contentStyle}
+                                                        >
+                                                            <CreateRoom />
+                                                        </Popup>
 
-                                                        getRooms().then(data => {
-                                                            console.log(data)
-                                                            setRooms(data);
-                                                            setprocessing(false);
-                                                        }).catch(err => {
-                                                            console.log(err);
-                                                            setprocessing(false);
-                                                            setErrorHappend(true);
-                                                        });
-                                                    }}>
-                                                    {processing ? <Loading size={"0.8rem"} color={"text-light"} /> : "Refresh"}
-                                                </button>
-                                                <Popup trigger={
-                                                    <button className="button button-retro button-retro-small is-yellow ms-2"
-                                                        style={{ letterSpacing: "2px", width: "8rem" }}>
-                                                        Your Matches
-                                                    </button>
-                                                } position="center center"
-                                                    modal
-                                                    contentStyle={contentStyle}
-                                                >
-                                                    <SelfMatches changeToRoom={
-                                                        (roomId, sidebetstr, nearbetstr) => {
-                                                            setSideBet(sidebetstr)
-                                                            setBetAmmount(nearbetstr)
-                                                            setRoomID(roomId)
-                                                            setRoomCreator(window.accountId)
-                                                        }
-                                                    } />
-                                                </Popup>
-                                                <Popup trigger={
-                                                    <button className="button button-retro button-retro-small is-primary ms-2"
-                                                        style={{ letterSpacing: "2px", width: "8rem" }}>
-                                                        Create Room
-                                                    </button>
-                                                } position="center center"
-                                                    modal
-                                                    contentStyle={contentStyle}
-                                                >
-                                                    <CreateRoom />
-                                                </Popup>
+                                                        <button className="button button-retro button-retro-small is-error ml-1"
+                                                            style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
+                                                            onClick={event => {
 
-                                                <button className="button button-retro button-retro-small is-error ml-1"
-                                                    style={{ letterSpacing: "2px", width: "8rem", fontSize: "0.7rem" }}
-                                                    onClick={event => {
-
-                                                        //let randomRoom = rooms[Math.floor(Math.random() * rooms.length)];
-                                                        // join a random room from room state exclude room's creator
-                                                        let randomRoom = rooms.filter(room => room.creator !== window.accountId)[Math.floor(Math.random() * rooms.length)];
+                                                                //let randomRoom = rooms[Math.floor(Math.random() * rooms.length)];
+                                                                // join a random room from room state exclude room's creator
+                                                                let randomRoom = rooms.filter(room => room.creator !== window.accountId)[Math.floor(Math.random() * rooms.length)];
 
 
-                                                        const nearBet = convertYocto(randomRoom.entry_price.toLocaleString('fullwide', { useGrouping: false }));
-                                                        setRoomID(randomRoom.id)
-                                                        setBetAmmount(nearBet)
-                                                        setSideBet(randomRoom.face)
-                                                        setRoomCreator(randomRoom.creator)
+                                                                const nearBet = convertYocto(randomRoom.entry_price.toLocaleString('fullwide', { useGrouping: false }));
+                                                                setRoomID(randomRoom.id)
+                                                                setBetAmmount(nearBet)
+                                                                setSideBet(randomRoom.face)
+                                                                setRoomCreator(randomRoom.creator)
 
-                                                        // joinMultiplayer(randomRoom.nearBet, randomRoom.id, window.accountId)
-                                                    }}>
-                                                    Feeling Lucky
-                                                </button>
-                                            </div>
-                                        </>
-                                        : <></>
-                                }
-
-                                <div className='maincenter-multi text-center'>
-
-                                    {!window.walletConnection.isSignedIn() ?
-                                        <>
-                                            <img src={LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240" />
-                                        </> :
-                                        <div className='d-flex flex-column '>
-                                            <div id="game" className="game">
-                                                <h4 className="text-uppercase mt-3 start-mult">
-                                                    Select Player
-                                                </h4>
-                                            </div>
-                                            <hr className="mt-1" />
-                                            {/* display in a grid system the objects in the rooms array */}
-                                            <Container className="d-flex flex-wrap justify-content-center">
-                                                {processing === true ?
-                                                    <div className='d-flex flex-column justify-items-center text-center'>
-                                                        <p style={{ fontSize: "2rem" }}>Connecting</p>
-                                                        <div className='mx-auto'>
-                                                            <Loading size={40} color={"text-light"} />
-                                                        </div>
-                                                        <button className="button button-retro is-warning bordercool d-inline-block text-center mt-2"
-                                                            style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
-                                                            onClick={() => { window.location.reload(false) }}>
-                                                            <p className="mb-0" style={{ color: "#00000" }}>Refresh</p>
-
+                                                                // joinMultiplayer(randomRoom.nearBet, randomRoom.id, window.accountId)
+                                                            }}>
+                                                            Feeling Lucky
                                                         </button>
                                                     </div>
-                                                    : <>
-                                                        {rooms === undefined || rooms.length === 0 ?
-                                                            <div className='d-flex flex-column'>
-                                                                <p>No rooms available.</p>
-                                                                <p>Try to create on for yourself!</p>
+                                                </>
+                                                : <></>
+                                        }
+
+                                        <div className='maincenter-multi text-center'>
+
+                                            {!window.walletConnection.isSignedIn() ?
+                                                <>
+                                                    <img src={LOGOMAIN} className="logo mx-auto" alt="logo" width="240" height="240" />
+                                                </> :
+                                                <div className='d-flex flex-column '>
+                                                    <div id="game" className="game">
+                                                        <h4 className="text-uppercase mt-3 start-mult">
+                                                            Select Player
+                                                        </h4>
+                                                    </div>
+                                                    <hr className="mt-1" />
+                                                    {/* display in a grid system the objects in the rooms array */}
+                                                    <Container className="d-flex flex-wrap justify-content-center">
+                                                        {processing === true ?
+                                                            <div className='d-flex flex-column justify-items-center text-center'>
+                                                                <p style={{ fontSize: "2rem" }}>Connecting</p>
+                                                                <div className='mx-auto'>
+                                                                    <Loading size={40} color={"text-light"} />
+                                                                </div>
+                                                                <button className="button button-retro is-warning bordercool d-inline-block text-center mt-2"
+                                                                    style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
+                                                                    onClick={() => { resetGame() }}>
+                                                                    <p className="mb-0" style={{ color: "#00000" }}>Refresh</p>
+
+                                                                </button>
                                                             </div>
-                                                            :
-                                                            <Row className="justify-content-center align-items-center ">
+                                                            : <>
+                                                                {rooms === undefined || rooms.length === 0 ?
+                                                                    <div className='d-flex flex-column'>
+                                                                        <p>No rooms available.</p>
+                                                                        <p>Try to create on for yourself!</p>
+                                                                    </div>
+                                                                    :
+                                                                    <Row className="justify-content-center align-items-center ">
+                                                                        {rooms.map((room, index) => {
+                                                                            {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
+                                                                            let roomCreator = room.creator;
+                                                                            let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', { useGrouping: false }));
+                                                                            if (roomCreator.length > 18) {
+                                                                                roomCreator = roomCreator.substring(0, 17) + "…";
+                                                                            }
 
-                                                                {rooms.map((room, index) => {
-                                                                    {/* check if the room creator is greater than 25, if so cut the name to 25 characters */ }
-                                                                    let roomCreator = room.creator;
-                                                                    let ammountNEAR = convertYocto(room.entry_price.toLocaleString('fullwide', { useGrouping: false }));
-                                                                    if (roomCreator.length > 18) {
-                                                                        roomCreator = roomCreator.substring(0, 17) + "…";
-                                                                    }
-
-                                                                    return (
-                                                                        <div className='mt-1 col col-sm-10 col-m-5 col-lg-5 col-xl-6'>
-                                                                            <button className="button button-retro is-warning bordercool d-inline-block text-center"
-                                                                                style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
-                                                                                onClick={() => joinRoom(room.id, ammountNEAR, room.creator, room.face)}>
-                                                                                <span style={roomCreator === window.accountId ? { color: "#03558c" } : {}}>{roomCreator} #{room.id}</span>
-                                                                                <p className="mb-0" style={{ color: "#dd403a" }}>{Math.round(ammountNEAR * 10000000) / 10000000} Near</p>
-                                                                            </button>
-                                                                        </div>
-                                                                    )
-                                                                })}
-                                                            </Row>
+                                                                            return (
+                                                                                <div key={index} className='mt-1 col col-sm-10 col-m-5 col-lg-5 col-xl-6'>
+                                                                                    <button className="button button-retro is-warning bordercool d-inline-block text-center"
+                                                                                        style={{ overflow: "hidden", fontSize: "1rem", textOverflow: "ellipsis" }}
+                                                                                        onClick={() => joinRoom(room.id, ammountNEAR, room.creator, room.face)}>
+                                                                                        <span style={roomCreator === window.accountId ? { color: "#1b85cc" } : {}}>{roomCreator} #{room.id}</span>
+                                                                                        <p className="mb-0" style={{ color: "#dd403a" }}>{Math.round(ammountNEAR * 10000000) / 10000000} Near</p>
+                                                                                    </button>
+                                                                                </div>
+                                                                            )
+                                                                        })}
+                                                                    </Row>
+                                                                }
+                                                            </>
                                                         }
-                                                    </>
-                                                }
-                                            </Container>
+                                                    </Container>
+                                                </div>
+                                            }
                                         </div>
-                                    }
-                                </div>
+                                    </>
+                                }
                             </>
+                            :
+                            <div className='maincenter text-center'>
+                                <FlipCoinMultiplayer result={sideResult} quantity={amountWon} loading={false} account1={window.accountId} account2={accountWon} width={width} height={height} reset={resetGame} />
+                            </div>
                         }
+
 
                     </div>
                     {!window.walletConnection.isSignedIn() ? <NotLogged /> : <></>}
