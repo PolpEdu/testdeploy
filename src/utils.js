@@ -370,7 +370,7 @@ export function listenToRoom(processEvents) {
       reconnectTimeout = null;
     }
     reconnectTimeout = setTimeout(() => {
-      listenToRoom(processEvents, ismainmenu);
+      listenToRoom(processEvents);
     }, timeOut);
   };
 
