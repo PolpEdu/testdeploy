@@ -131,7 +131,7 @@ const HeaderButtons = () => {
                                                 <h4 style={{ fontWeight: "bold" }}>USER PROFILE</h4>
                                                 <h6>
                                                     <small style={{ fontWeight: "semibold" }} className="w-30">Currently logged as:
-                                                        <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>!</small>
+                                                        <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId.length > 30 ? window.accountId.substring(0, 25) + "…" : window.accountId}</a>!</small>
                                                 </h6>
                                                 <h6>First Fliperino: </h6>
                                                 <div className="input-group">
@@ -149,7 +149,12 @@ const HeaderButtons = () => {
                         </>
                         }
                     </div>
-                    {window.walletConnection.isSignedIn() && <h6 className="mt-1 balance-text mb-0">{balance === "" ? <Loading /> : balance}</h6>
+                    {window.walletConnection.isSignedIn() &&
+                        <div className='d-flex flex-column'>
+                            <h6 className="mt-1 w-30" style={{ textAlign: "end" }}>
+                                Currently logged as:<a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId.length > 20 ? window.accountId.substring(0, 20) + "…" : window.accountId}</a>!</h6>
+                            <h6 className="balance-text mb-0">{balance === "" ? <Loading /> : balance}</h6>
+                        </div>
                     }
 
                 </div>

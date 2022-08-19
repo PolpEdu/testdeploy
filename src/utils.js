@@ -17,8 +17,8 @@ let near;
 export const fees = 1.035;
 export const feesMultiplayer = 1.0175
 export const minimumAmmount = 0.01;
-export const storageRent = 500000000000000000000;
-export const storageRentNear = 0.0005;
+export const storageRent = 640000000000000000000;
+export const storageRentNear = 0.00064
 
 export const menusayingsmult = [
   "Near Flip Multiplayer!",
@@ -160,7 +160,8 @@ export const menusayingswinMulti = [
   "yay!",
   "LET'S FUCKING GOOOOO",
   "Solid.",
-  "ez clap"
+  "ez clap",
+  "Get out of my level."
 ]
 
 export const menusayingloseMulti = [
@@ -191,39 +192,29 @@ export const menusayingloseMulti = [
 
 export const contractID = process.env.CONTRACT_NAME_MULT || 'multiplayer.flipnear.a3corp.testnet';
 const contractIDSingle = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
+const ws = new WebSocket(`wss://events.near.stream/ws`);
 
 
-export const EVENT_FILTER = [{
-  status: "SUCCESS",
-  event: {
-    standard: "nep171",
-    event: "nft_mint",
-  },
-}, {
-  status: "SUCCESS",
-  event: {
-    standard: "nep171",
-    event: "nft_transfer",
-  },
-}];
-
-const filterTest = {
-  secret: "ohyeahnftsss",
+const filter = {
   filter: [
     {
-      status: "SUCCESS",
       event: {
-        standard: "nep171",
-        event: "nft_mint"
+        standard: "nep297",
+        event: "match_removed"
       }
     },
     {
-      status: "SUCCESS",
       event: {
-        standard: "nep171",
-        event: "nft_transfer"
+        standard: "nep297",
+        event: "match_created"
       }
-    }
+    },
+    {
+      event: {
+        standard: "nep297",
+        event: "match_joined"
+      }
+    },
   ]
 }
 // Initialize contract & set global variables
@@ -372,13 +363,14 @@ export function createMultiplayer(ammoutNEAR, tailsHeads) {
 let reconnectTimeout = null;
 
 export function listenToRoom(processEvents) {
+
   const scheduleReconnect = (timeOut) => {
     if (reconnectTimeout) {
       clearTimeout(reconnectTimeout);
       reconnectTimeout = null;
     }
     reconnectTimeout = setTimeout(() => {
-      listenToRoom(processEvents);
+      listenToRoom(processEvents, ismainmenu);
     }, timeOut);
   };
 
@@ -387,12 +379,11 @@ export function listenToRoom(processEvents) {
     return;
   }
 
-  const ws = new WebSocket(`wss://events.near.stream/ws`);
-
   ws.onopen = () => {
     console.log("Listening to room changes");
+    console.log("filter", filter)
     ws.send(
-      JSON.stringify(filterTest)
+      JSON.stringify(filter)
     );
   };
 
@@ -412,15 +403,9 @@ export function listenToRoom(processEvents) {
   };
 }
 
-export function processEvent(event) {
-  return (event?.event?.data[0]?.token_ids || []).map((tokenId) => ({
-    time: new Date(parseFloat(event.block_timestamp) / 1e6),
-    contractId: event.account_id,
-    ownerId: event.event.data[0].owner_id,
-    tokenId,
-    isTransfer: event.event.event === "nft_transfer",
-  }));
-}
+export const closeConnection = () => {
+  ws.close();
+};
 
 export function startup() {
 

@@ -115,7 +115,7 @@ img, svg {
 }
 a,
 .link {
-  color: #0072CE;
+  color: #138cef;
   text-decoration: none;
 }
 a:hover,
@@ -127,7 +127,7 @@ a:focus-visible,
 }
 a:active,
 .link:active {
-  color: #0072CE;
+  color: #1774bf;
 }
 
 button:active {

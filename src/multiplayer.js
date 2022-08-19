@@ -14,7 +14,7 @@ import { NotLogged, Loading, CreateRoom, SelfMatches, generateDestroyerPhrase } 
 import FooterComponent from './components/FooterComponent'
 import HeaderButtons from './components/HeaderComponents';
 
-import { convertYocto, gettxsRes, menusayingsmult, processEvent, startup, getRooms, getRoomInfoFromTxs, joinMultiplayer, listenToRoom, storageRent, deleteMatch, contractID } from './utils'
+import { convertYocto, gettxsRes, menusayingsmult, processEvent, startup, getRooms, getRoomInfoFromTxs, joinMultiplayer, listenToRoom, storageRent, deleteMatch, contractID, closeConnection } from './utils'
 import LOGOMAIN from './assets/result.svg'
 import LOGOBACK from './assets/nearcoin.svg'
 import FlipCoinMultiplayer from './components/FlipCoinMultiplayer';
@@ -104,7 +104,6 @@ export default function Mult() {
             setBetAmmount(nearbetstr)
             setRoomID(returnedvalues.id)
             setRoomCreator(returnedvalues.creator)
-            listenToRoom(processEvents)
             // console.log("hello: " + processing)
         }).catch(e => {
             console.error(e)
@@ -127,6 +126,7 @@ export default function Mult() {
                     console.log(data)
                     setRooms(data);
                     setprocessing(false);
+                    listenToRoom(processEvents, true)
                 }).catch(err => {
                     console.log(err);
                     setprocessing(false);
@@ -198,15 +198,15 @@ export default function Mult() {
         });
     }
     const processEvents = (events) => {
-        // console.log(events);
-        events = events.flatMap(processEvent);
-        events.reverse();
+        console.log(events);
+
     };
 
 
 
     const joinRoom = async (roomId, ammount, roomCreator, sidetobet) => {
         setprocessing(true)
+        closeConnection();
         const txsHashes = searchParams.get("transactionHashes");
         if (txsHashes) {
             roomSetupfromTXS(txsHashes)
@@ -261,7 +261,7 @@ export default function Mult() {
                                                             </span>
 
                                                             <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                                Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
+                                                                Playing as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
                                                             </span>
 
                                                         </div>
@@ -321,10 +321,10 @@ export default function Mult() {
                                                                 </span>
 
                                                                 <span className='text-center rounded' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                                    Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId}</a>
+                                                                    Logged as: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId.length > 30 ? window.accountId.substring(0, 25) + "…" : window.accountId}</a>
                                                                 </span>
                                                                 <span className='text-center rounded mt-1' style={{ color: "white", fontSize: "0.75rem" }}>
-                                                                    Playing vs: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{roomCreator}</a>
+                                                                    Playing vs: <a href={`${urlPrefix}/${window.accountId}`} target="_blank">{roomCreator.length > 30 ? roomCreator.substring(0, 25) + "…" : roomCreator}</a>
                                                                 </span>
                                                             </div>
                                                         </div>
