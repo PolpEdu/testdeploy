@@ -325,6 +325,12 @@ code {
     margin: auto;
 }
 
+.mainvs {
+    width: 100%;
+    max-width: 30rem;
+    margin: auto;
+}
+
 .menumain{
   width: 69vw;
   max-width: 870px;
@@ -736,8 +742,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
 
   -webkit-animation: mover 0.4s infinite  alternate;
     animation: mover  0.4s infinite  alternate;
-  -webkit-animation: mover  0.4s infinite  alternate;
-    animation: mover  0.4s infinite  alternate;
 }
 .button-retro.is-success {
   color: #fff;
@@ -760,11 +764,14 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7d51d",endCo
   min-height: 1.5rem;
   max-height: 3rem;
 }
-@-webkit-keyframes mover {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-5px); }
+
+.animateUpDown {
+  -webkit-animation: mover 0.4s infinite  alternate;
+    animation: mover  0.4s infinite  alternate;
+
 }
-@keyframes mover {
+
+@-webkit-keyframes mover {
     0% { transform: translateY(0); }
     100% { transform: translateY(-5px); }
 }
@@ -887,6 +894,33 @@ color:rgb(255, 50, 23);
 text-shadow: 1px 1px 0px rgb(100, 38, 19);
 }
 
+.outlineyellowvs {
+  color: #f7d51d;
+  font-size:3rem;
+  /* margin: 2rem; */
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+  animation: 
+}
+
+
+.outlineyellowvsSMALL {
+  color: #f7d51d;
+  font-size: 1.8rem;
+  margin-top: 0.8rem;
+  text-align: center;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
+
+.animateDown {
+  animation: animateDownwards 1s ease-in-out;
+}
+
+.animateUp {
+  animation: animateUpwards 1s ease-in-out;
+}
+
 .wavy
 {
  position:relative;
@@ -899,6 +933,28 @@ text-shadow: 1px 1px 0px rgb(100, 38, 19);
  display: inline-block;
  animation:animateWave 2s ease-in-out infinite;
  animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes animateDownwards {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animateUpwards {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes animateWave {
@@ -1002,7 +1058,7 @@ img {
 
 #cointainer{
   overflow:visible;
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem;
   bottom: 0;
 }
 .coinLine {

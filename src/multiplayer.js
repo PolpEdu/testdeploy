@@ -83,7 +83,7 @@ export default function Mult() {
                     setSideResult(result)
                     setRoomID(roomid)
                     setAmountWon(ammount)
-                    // setRoomCreator(creator)
+                    setRoomCreator(creator)
                     return;
                 } else {
                     console.log(returnedvalues.entry_price)
@@ -213,10 +213,11 @@ export default function Mult() {
             return;
         }
 
+        /*
         console.log("join room: " + roomId)
         console.log("ammount: " + ammount)
         console.log("room creator: " + roomCreator)
-
+        */
 
         setDestroyer(generateDestroyerPhrase(ammount, roomCreator))
         setRoomID(roomId)
@@ -224,9 +225,6 @@ export default function Mult() {
         setBetAmmount(ammount)
         setSideBet(sidetobet)
         setprocessing(false)
-
-
-
     }
     /*
     console.log(ammoutNEAR)
@@ -524,8 +522,8 @@ export default function Mult() {
                                 }
                             </>
                             :
-                            <div className='maincenter text-center'>
-                                <FlipCoinMultiplayer result={sideResult} quantity={amountWon} loading={false} account1={window.accountId} account2={accountWon} width={width} height={height} reset={resetGame} />
+                            <div className='mainvs text-center'>
+                                <FlipCoinMultiplayer result={sideResult} quantity={amountWon} loading={false} joinned={window.accountId?.split(".")[0]} creator={roomCreator?.split(".")[0]} width={width} height={height} reset={resetGame} winner={accountWon} />
                             </div>
                         }
 

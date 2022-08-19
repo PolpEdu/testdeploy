@@ -9,6 +9,8 @@
 /out
 /dist
 
+contract/target/
+
 # keys
 /neardev
 
@@ -30,5 +32,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/target
+/target/
 package-lock.json
+contract/target/.rustc_info.json

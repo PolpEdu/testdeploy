@@ -506,7 +506,6 @@ function get_time_diff(datetime) {
         else if (hours === 1) {
             return hours + " Hour " + minutes + " Minutes "
         }
-
         return hours + " hours ago";
     } else if (days === 1) {
         return days + " day ago";

@@ -282,7 +282,7 @@ export default function App() {
                         /*code doesnt reach here*/
                       }}
                       disabled={buttonDisabled || tailsHeads === "" || ammoutNEAR === ""}
-                    >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Flip!"}</button>
+                    >{processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "FLIP"}</button>
 
                   </div>
                 }

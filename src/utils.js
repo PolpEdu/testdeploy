@@ -156,6 +156,11 @@ export const menusayingswinMulti = [
   "Diamond Flipper since '93",
   "You just got flipped bro",
   "i feel so sad about u man...",
+  "coool greeeeeeen",
+  "yay!",
+  "LET'S FUCKING GOOOOO",
+  "Solid.",
+  "ez clap"
 ]
 
 export const menusayingloseMulti = [
@@ -179,6 +184,9 @@ export const menusayingloseMulti = [
   "fuck you",
   "dude can you give me a refund?",
   ":( not funny man",
+  "fuckin nerd",
+  "shit",
+  "FUCK."
 ]
 
 export const contractID = process.env.CONTRACT_NAME_MULT || 'multiplayer.flipnear.a3corp.testnet';

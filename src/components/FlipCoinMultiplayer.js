@@ -1,4 +1,5 @@
 import React from 'react'
+import Confetti from 'react-confetti'
 import logoH from '../assets/coinreal.mp4'
 import { menusayingloseMulti, menusayingswinMulti } from '../utils'
 import { Loading } from './logged'
@@ -11,22 +12,28 @@ function FlipCoinMultiplayer(props) {
 
         setTimeout(function () {
             setprocessing(false)
-        }, 5000)
+        }, 7000)
     }, [])
 
     const res = () => {
         props.reset()
     }
 
+
     return (
         <>
             <div id="cointainer" className=''>
-                <video autoPlay muted playsInline className="video-container d-flex justify-content-center flex-row borderpixelSMALL" style={{ marginTop: "3rem" }}>
+                <video autoPlay muted playsInline className="video-container d-flex justify-content-center flex-row borderpixelSMALL" style={{ marginTop: "2rem" }}>
                     <source src={props.result === "heads" ? logoH : logoH} type="video/mp4" />
                 </video>
             </div>
+            <div className='d-flex justify-center align-middle w-full'>
+                <span className="font-weight-normal outlineyellowvsSMALL w-50 animateDown">{props.creator}</span>
+                <span className="font-weight-normal outlineyellowvs w-full mx-2 animateUpDown">VS</span>
+                <span className="font-weight-normal outlineyellowvsSMALL w-50 animateUp">{props.joinned}</span>
+            </div>
             <div className={processing === false ? 'fadein' : 'fadein fadeout'}>
-                {props.won === "true" ? <>
+                {props.winner === window.accountId ? <>
                     <Confetti
                         width={props.width - 1}
                         height={props.height - 1}
@@ -48,7 +55,7 @@ function FlipCoinMultiplayer(props) {
                             return <span key={index} style={styles}>{letter}</span>
                         })}
                     </div>
-                    <button className="button button-retro is-primary  mt-2" onClick={res}>
+                    <button className="button button-retro is-primary my-2" onClick={res}>
                         {processing ? <Loading size={"1.5rem"} color={"text-success"} /> : "Play Again"}
                     </button>
                 </>
@@ -70,7 +77,7 @@ function FlipCoinMultiplayer(props) {
                                 return <span key={index} style={styles}>{letter}</span>
                             })}
                         </div>
-                        <button className="button button-retro is-primary mt-2" onClick={res}>
+                        <button className="button button-retro is-primary my-2" onClick={res}>
                             {processing ? <Loading size={"1.5rem"} color={"text-warning"} /> : "Play Again"}
                         </button>
                     </>
