@@ -23,14 +23,21 @@ const HeaderButtons = () => {
     const location = useLocation();
 
     React.useEffect(() => {
-        window.walletConnection.account().getAccountBalance().then(function (balance) {
-            let fullstr = convertYocto(balance.available).split(".");
-            let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
-            setbalance("NEAR: " + str);
-        }).catch(e => {
-            console.log('There has been a problem with getting your balance: ' + e.message);
-            setbalance("Couldn't Fetch Balance");
-        });
+        if (window.walletConnection.isSignedIn()) {
+            window.walletConnection.account().getAccountBalance().then(function (balance) {
+                let fullstr = convertYocto(balance.available).split(".");
+                console.log(fullstr)
+                let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
+                setbalance("NEAR: " + str);
+            }).catch(e => {
+                console.log('There has been a problem with getting your balance: ' + e.message);
+                setbalance("Couldn't Fetch Balance");
+            });
+        }
+        else {
+            setbalance(null);
+        }
+
 
     }, [])
     return (
