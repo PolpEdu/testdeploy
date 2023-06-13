@@ -93,10 +93,12 @@ function generatephrase(ammount, won, account) {
     )
 }
 
-export function generateDestroyerPhrase(ammount, creator) {
+export function generateDestroyerPhrase(ammoutNEAR, creator) {
     if (creator && creator.length > 18) {
         creator = creator.split(".")[0]
     }
+
+    const ammount = Math.round(((ammoutNEAR) * 10000000) / 10000000);
 
     const phrase = [
         "Destroy this idiot",

@@ -1,6 +1,6 @@
 const CONTRACT_NAME = process.env.CONTRACT_NAME_MULT || 'dev-1647796228733-20860901922269'
 function getConfig(env) {
-  console.log(env)
+  console.log("[CONFIG] Development Chain:", env)
   switch (env) {
 
     case 'production':

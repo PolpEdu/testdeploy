@@ -1,24 +1,28 @@
-import { connect, Contract, keyStores, WalletConnection, utils, providers } from 'near-api-js'
-import getConfig from './config'
-import axios from 'axios';
+import {
+  connect,
+  Contract,
+  keyStores,
+  WalletConnection,
+  utils,
+  providers,
+} from "near-api-js";
+import getConfig from "./config";
+import axios from "axios";
 
-
-let node_env = /* process.env.NODE_ENV ||  */'testnet';
-//console.log(node_env)
-const nearConfig = getConfig(node_env)
+const node_env = "mainnet";
+const nearConfig = getConfig("mainnet");
 
 let providerurl = "https://archival-rpc." + node_env + ".near.org";
 //console.log(providerurl)
 //network config (replace testnet with mainnet or betanet)
 const provider = new providers.JsonRpcProvider(providerurl);
 
-
 let near;
 export const fees = 1.035;
-export const feesMultiplayer = 1.0175
+export const feesMultiplayer = 1.0175;
 export const minimumAmmount = 0.01;
 export const storageRent = 640000000000000000000;
-export const storageRentNear = 0.00064
+export const storageRentNear = 0.00064;
 
 export const menusayingsmult = [
   "Near Flip Multiplayer!",
@@ -46,7 +50,7 @@ export const menusayingsmult = [
   "gg heads diff",
   "gg tails diff",
   "+20 flip mmr",
-]
+];
 export const menusayings = [
   "Near Coin Flip!",
   "Want to play a game?",
@@ -69,8 +73,8 @@ export const menusayings = [
   "Fliperino the coinerino",
   "Poggers",
   "Flippin in the moon",
-  "one sec, let me call drake brb"
-]
+  "one sec, let me call drake brb",
+];
 
 export const menusayingslose = [
   "Better luck next time..",
@@ -89,7 +93,7 @@ export const menusayingslose = [
   "Lmao Get Rugged.",
   "Lmao Get Rugged.",
   "*sadge*",
-]
+];
 
 export const menusayingswin = [
   "You won!",
@@ -132,7 +136,7 @@ export const menusayingswin = [
   "Easy Peasy Lemon Squeezy",
   "SOLID.",
   "I'm the best coin-flipping machine!",
-]
+];
 
 export const menusayingswinMulti = [
   "You won!",
@@ -143,7 +147,7 @@ export const menusayingswinMulti = [
   "BO3 Idiot?",
   "Some kids never learn...",
   "Try again?",
-  "brb https://www.yachtworld.co.uk/", //link 
+  "brb https://www.yachtworld.co.uk/", //link
   "WOOOOOOO",
   "BOOK BOOK BOOK",
   "Is that easy?",
@@ -161,8 +165,8 @@ export const menusayingswinMulti = [
   "LET'S FUCKING GOOOOO",
   "Solid.",
   "ez clap",
-  "Get out of my level."
-]
+  "Get out of my level.",
+];
 
 export const menusayingloseMulti = [
   "Better luck next time...",
@@ -187,86 +191,96 @@ export const menusayingloseMulti = [
   ":( not funny man",
   "fuckin nerd",
   "shit",
-  "FUCK."
-]
+  "FUCK.",
+];
 
-export const contractID = process.env.CONTRACT_NAME_MULT || 'multiplayer.flipnear.a3corp.testnet';
-const contractIDSingle = process.env.CONTRACT_NAME_SINGLEPLAYER || 'dev-1645893673006-39236998475304';
-const ws = new WebSocket(`wss://events.near.stream/ws`);
+export const contractID =
+  process.env.CONTRACT_NAME_MULT || "multiplayer.flipnear.a3corp.testnet";
+const contractIDSingle =
+  process.env.CONTRACT_NAME_SINGLEPLAYER || "dev-1645893673006-39236998475304";
 
 
-const filter = {
-  filter: [
-    {
-      event: {
-        standard: "nep297",
-        event: "match_removed"
-      }
-    },
-    {
-      event: {
-        standard: "nep297",
-        event: "match_created"
-      }
-    },
-    {
-      event: {
-        standard: "nep297",
-        event: "match_joined"
-      }
-    },
-  ]
-}
+
+const nftFilterMainRoom = [{
+  status: "SUCCESS",
+  event: {
+    standard: "nep297",
+    event: "match_created",
+  },
+}, {
+  status: "SUCCESS",
+  event: {
+    standard: "nep297",
+    event: "match_removed",
+  },
+}];
+
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
-  near = await connect(Object.assign({ deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } }, nearConfig))
+  near = await connect(
+    Object.assign(
+      { deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } },
+      nearConfig
+    )
+  );
 
   // Initializing Wallet based Account. It can work with NEAR testnet wallet that
   // is hosted at https://wallet.testnet.near.org
-  window.walletConnection = new WalletConnection(near)
+  window.walletConnection = new WalletConnection(near);
 
   // Getting the Account ID. If still unauthorized, it's just empty string
-  window.accountId = window.walletConnection.getAccountId()
+  window.accountId = window.walletConnection.getAccountId();
 
   // Initializing our contract APIs by contract name and configuration
-  window.contractMULT = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
-    // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['view_all_matches', 'join_match', 'view_match_from'],
-    // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['create_match', 'cancel_match'],
-    // Sender is the account ID to initialize transactions. It can be omitted if you want to send
-    sender: window.walletConnection.account(), // account object to initialize and sign transactions.
-  })
+  window.contractMULT = await new Contract(
+    window.walletConnection.account(),
+    nearConfig.contractName,
+    {
+      // View methods are read only. They don't modify the state, but usually return some value.
+      viewMethods: ["view_all_matches", "join_match", "view_match_from"],
+      // Change methods can modify the state. But you don't receive the returned value when called.
+      changeMethods: ["create_match", "cancel_match"],
+      // Sender is the account ID to initialize transactions. It can be omitted if you want to send
+      sender: window.walletConnection.account(), // account object to initialize and sign transactions.
+    }
+  );
 
   // Initializing our contract APIs by contract name and configuration
-  window.contractSINGLE = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
-    // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['coin_flip'],
-    // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: [],
-    // Sender is the account ID to initialize transactions. It can be omitted if you want to send
-    sender: window.walletConnection.account(), // account object to initialize and sign transactions.
-  })
-
+  window.contractSINGLE = await new Contract(
+    window.walletConnection.account(),
+    nearConfig.contractName,
+    {
+      // View methods are read only. They don't modify the state, but usually return some value.
+      viewMethods: ["coin_flip"],
+      // Change methods can modify the state. But you don't receive the returned value when called.
+      changeMethods: [],
+      // Sender is the account ID to initialize transactions. It can be omitted if you want to send
+      sender: window.walletConnection.account(), // account object to initialize and sign transactions.
+    }
+  );
 }
 
 export function sendpostwithplay(txHash) {
-
-  axios.post(process.env.DATABASE_URL + '/plays', {
-    txhash: txHash,
-    accountid: window.accountId,
-  }).then(res => {
-    console.log(res)
-  }).catch(e => {
-    console.log("Error Storing flip :((( Don't worry, you still recieve your NEAR!");
-    console.error(e)
-  })
+  axios
+    .post(process.env.DATABASE_URL + "/plays", {
+      txhash: txHash,
+      accountid: window.accountId,
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((e) => {
+      console.log(
+        "Error Storing flip :((( Don't worry, you still recieve your NEAR!"
+      );
+      console.error(e);
+    });
 }
 
 export async function getRooms() {
-  let rooms = await window.contractMULT.view_all_matches()
-  return rooms
+  let rooms = await window.contractMULT.view_all_matches();
+  return rooms;
 }
 
 export function convertYocto(YOCTO) {
@@ -274,14 +288,14 @@ export function convertYocto(YOCTO) {
 }
 
 export async function gettxsRes(txs) {
-  const result = await provider.txStatus(txs, window.accountId)
+  const result = await provider.txStatus(txs, window.accountId);
   return result;
 }
 
 export function logout() {
-  window.walletConnection.signOut()
+  window.walletConnection.signOut();
   // reload page
-  window.location.replace(window.location.origin + window.location.pathname)
+  window.location.replace(window.location.origin + window.location.pathname);
 }
 
 export function login() {
@@ -294,7 +308,7 @@ export function login() {
 }
 
 export async function getRoomInfoFromTxs(txs) {
-  const result = await provider.txStatus(txs, window.accountId)
+  const result = await provider.txStatus(txs, window.accountId);
   return result;
 }
 
@@ -307,13 +321,20 @@ export function flip(args, ammoutNEAR) {
   let total = ammoutNEAR * fees;
   //round with 4 decimal places
   total = Math.round(total * 10000) / 10000;
-  let yoctoNEAR = utils.format.parseNearAmount((total.toString()));
+  let yoctoNEAR = utils.format.parseNearAmount(total.toString());
 
-  window.walletConnection.account().functionCall({
-    contractId: contractIDSingle.toString(), methodName: 'coin_flip', args: { option: args }, gas: "300000000000000", attachedDeposit: yoctoNEAR
-  }).catch(e => {
-    console.log("Could not flip :(", e)
-  });
+  window.walletConnection
+    .account()
+    .functionCall({
+      contractId: contractIDSingle.toString(),
+      methodName: "coin_flip",
+      args: { option: args },
+      gas: "300000000000000",
+      attachedDeposit: yoctoNEAR,
+    })
+    .catch((e) => {
+      console.log("Could not flip :(", e);
+    });
 }
 
 export async function getAllPlayerMathces(accountId) {
@@ -323,54 +344,67 @@ export async function getAllPlayerMathces(accountId) {
 
 export function joinMultiplayer(ammoutNEAR, idroom, roomCreator) {
   // convert to normal number from cientific notation
-  let yoctoNEAR = Number(utils.format.parseNearAmount((ammoutNEAR * feesMultiplayer).toString()));
-  yoctoNEAR = yoctoNEAR.toLocaleString('fullwide', { useGrouping: false })
+  let yoctoNEAR = Number(
+    utils.format.parseNearAmount((ammoutNEAR * feesMultiplayer).toString())
+  );
+  yoctoNEAR = yoctoNEAR.toLocaleString("fullwide", { useGrouping: false });
   console.log("yoctoNEAR: ", yoctoNEAR);
   console.log("idroom: ", idroom);
   console.log("roomCreator: ", roomCreator);
 
-
-  window.walletConnection.account().functionCall({
-    contractId: contractID.toString(),
-    methodName: 'join_match',
-    args: { id: idroom, creator: roomCreator },
-    gas: "300000000000000",
-    attachedDeposit: yoctoNEAR
-  }).catch(e => {
-    console.log("Error Joining Match :(");
-    console.error(e)
-  });
+  window.walletConnection
+    .account()
+    .functionCall({
+      contractId: contractID.toString(),
+      methodName: "join_match",
+      args: { id: idroom, creator: roomCreator },
+      gas: "300000000000000",
+      attachedDeposit: yoctoNEAR,
+    })
+    .catch((e) => {
+      console.log("Error Joining Match :(");
+      console.error(e);
+    });
 }
 
 export function createMultiplayer(ammoutNEAR, tailsHeads) {
   let argside = tailsHeads === "heads";
   let totalammount = ammoutNEAR * feesMultiplayer;
-  let yoctoNEAR = (Number(utils.format.parseNearAmount(totalammount.toString())) + storageRent).toLocaleString('fullwide', { useGrouping: false })
+  let yoctoNEAR = (
+    Number(utils.format.parseNearAmount(totalammount.toString())) + storageRent
+  ).toLocaleString("fullwide", { useGrouping: false });
 
   console.log("yoctoNEAR: ", yoctoNEAR);
   console.log("ammoutNEAR: ", ammoutNEAR);
   console.log("argside: ", argside);
 
-  window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'create_match',
-    args: { face: argside, rent_amount: storageRent.toString() }, gas: "300000000000000", attachedDeposit: yoctoNEAR
-  }).catch(e => {
-    console.log("Error Creating Match :(");
-    console.error(e)
-  });
+  window.walletConnection
+    .account()
+    .functionCall({
+      contractId: contractID.toString(),
+      methodName: "create_match",
+      args: { face: argside, rent_amount: storageRent.toString() },
+      gas: "300000000000000",
+      attachedDeposit: yoctoNEAR,
+    })
+    .catch((e) => {
+      console.log("Error Creating Match :(");
+      console.error(e);
+    });
 }
 
 let reconnectTimeout = null;
 
-export function listenToRoom(processEvents) {
-
+export function listenToRooms(processEvents, mainRooms) {
+  console.log("Listening to rooms");
   const scheduleReconnect = (timeOut) => {
     if (reconnectTimeout) {
       clearTimeout(reconnectTimeout);
       reconnectTimeout = null;
     }
     reconnectTimeout = setTimeout(() => {
-      listenToRoom(processEvents);
+      console.log("Reconnecting to rooms");
+      listenToRooms(processEvents, mainRooms,ws);
     }, timeOut);
   };
 
@@ -378,18 +412,24 @@ export function listenToRoom(processEvents) {
     scheduleReconnect(1000);
     return;
   }
+  const ws = new WebSocket(`wss://events.near.stream/ws`);
+
+  
 
   ws.onopen = () => {
-    console.log("Listening to room changes");
-    console.log("filter", filter)
+    console.log("Listening to live room creations");
+    console.log("filter", nftFilterMainRoom);
     ws.send(
-      JSON.stringify(filter)
+      JSON.stringify({
+        secret: "dsadsadasdas",
+        filter: nftFilterMainRoom,
+        fetch_past_events: 20,
+      })
     );
   };
 
   ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
-    console.log(data)
     processEvents(data.events);
   };
 
@@ -403,210 +443,230 @@ export function listenToRoom(processEvents) {
   };
 }
 
-export const closeConnection = () => {
-  ws.close();
-};
-
 export function startup() {
-
-  document.querySelectorAll('.wallet-adapter-button').forEach(button => {
-
+  document.querySelectorAll(".wallet-adapter-button").forEach((button) => {
     const bounding = button.getBoundingClientRect();
 
-    button.addEventListener('mousemove', e => {
-      let dy = (e.clientY - bounding.top - bounding.height / 2) / -1
-      let dx = (e.clientX - bounding.left - bounding.width / 2) / 10
+    button.addEventListener("mousemove", (e) => {
+      let dy = (e.clientY - bounding.top - bounding.height / 2) / -1;
+      let dx = (e.clientX - bounding.left - bounding.width / 2) / 10;
 
-      dy = dy > 10 ? 10 : (dy < -10 ? -10 : dy);
-      dx = dx > 4 ? 4 : (dx < -4 ? -4 : dx);
+      dy = dy > 10 ? 10 : dy < -10 ? -10 : dy;
+      dx = dx > 4 ? 4 : dx < -4 ? -4 : dx;
 
-      button.style.setProperty('--rx', dy);
-      button.style.setProperty('--ry', dx);
-
+      button.style.setProperty("--rx", dy);
+      button.style.setProperty("--ry", dx);
     });
 
-    button.addEventListener('mouseleave', e => {
-
-      button.style.setProperty('--rx', 0)
-      button.style.setProperty('--ry', 0)
-
+    button.addEventListener("mouseleave", (e) => {
+      button.style.setProperty("--rx", 0);
+      button.style.setProperty("--ry", 0);
     });
 
-    button.addEventListener('click', e => {
-      button.classList.add('success');
+    button.addEventListener("click", (e) => {
+      button.classList.add("success");
       gsap.to(button, {
-        '--icon-x': -3,
-        '--icon-y': 3,
-        '--z-before': 0,
-        duration: .2,
+        "--icon-x": -3,
+        "--icon-y": 3,
+        "--z-before": 0,
+        duration: 0.2,
         onComplete() {
-
           gsap.to(button, {
-            '--icon-x': 0,
-            '--icon-y': 0,
-            '--z-before': -6,
+            "--icon-x": 0,
+            "--icon-y": 0,
+            "--z-before": -6,
             duration: 1,
-            ease: 'elastic.out(1, .5)',
+            ease: "elastic.out(1, .5)",
             onComplete() {
-              button.classList.remove('success');
-            }
+              button.classList.remove("success");
+            },
           });
-        }
+        },
       });
     });
-
   });
 
-  document.querySelectorAll('.logo').forEach(button => {
-
+  document.querySelectorAll(".logo").forEach((button) => {
     const bounding = button.getBoundingClientRect();
 
-    button.addEventListener('mousemove', e => {
+    button.addEventListener("mousemove", (e) => {
+      let dy = (e.clientY - bounding.top - bounding.height / 2) / -1;
+      let dx = (e.clientX - bounding.left - bounding.width / 2) / 10;
 
-      let dy = (e.clientY - bounding.top - bounding.height / 2) / -1
-      let dx = (e.clientX - bounding.left - bounding.width / 2) / 10
+      dy = dy > 10 ? 10 : dy < -10 ? -10 : dy;
+      dx = dx > 4 ? 4 : dx < -4 ? -4 : dx;
 
-      dy = dy > 10 ? 10 : (dy < -10 ? -10 : dy);
-      dx = dx > 4 ? 4 : (dx < -4 ? -4 : dx);
-
-      button.style.setProperty('--rx', dy);
-      button.style.setProperty('--ry', dx);
-
+      button.style.setProperty("--rx", dy);
+      button.style.setProperty("--ry", dx);
     });
 
-    button.addEventListener('mouseleave', e => {
-
-      button.style.setProperty('--rx', 0)
-      button.style.setProperty('--ry', 0)
-
+    button.addEventListener("mouseleave", (e) => {
+      button.style.setProperty("--rx", 0);
+      button.style.setProperty("--ry", 0);
     });
 
-    button.addEventListener('click', e => {
-      button.classList.add('success');
+    button.addEventListener("click", (e) => {
+      button.classList.add("success");
       gsap.to(button, {
-        '--icon-x': -3,
-        '--icon-y': 3,
-        '--z-before': 0,
-        duration: .2,
+        "--icon-x": -3,
+        "--icon-y": 3,
+        "--z-before": 0,
+        duration: 0.2,
         onComplete() {
           gsap.to(button, {
-            '--icon-x': 0,
-            '--icon-y': 0,
-            '--z-before': -6,
+            "--icon-x": 0,
+            "--icon-y": 0,
+            "--z-before": -6,
             duration: 1,
-            ease: 'elastic.out(1, .5)',
+            ease: "elastic.out(1, .5)",
             onComplete() {
-              button.classList.remove('success');
-            }
+              button.classList.remove("success");
+            },
           });
-        }
+        },
       });
     });
-
   });
 
-  const tipButtons = document.querySelectorAll('.tip-button')
+  const tipButtons = document.querySelectorAll(".tip-button");
 
   // Loop through all buttons (allows for multiple buttons on page)
   tipButtons.forEach((button) => {
-    let coin = button.querySelector('.coin')
+    let coin = button.querySelector(".coin");
 
     // The larger the number, the slower the animation
-    coin.maxMoveLoopCount = 90
+    coin.maxMoveLoopCount = 90;
 
-    button.addEventListener('click', () => {
-      if (button.clicked) return
+    button.addEventListener("click", () => {
+      if (button.clicked) return;
 
-      button.classList.add('clicked')
+      button.classList.add("clicked");
 
       // Wait to start flipping the coin because of the button tilt animation
       setTimeout(() => {
         // Randomize the flipping speeds just for fun
-        coin.sideRotationCount = Math.floor(Math.random() * 5) * 90
-        coin.maxFlipAngle = (Math.floor(Math.random() * 4) + 3) * Math.PI
-        button.clicked = true
-        flipCoin()
-      }, 50)
-    })
+        coin.sideRotationCount = Math.floor(Math.random() * 5) * 90;
+        coin.maxFlipAngle = (Math.floor(Math.random() * 4) + 3) * Math.PI;
+        button.clicked = true;
+        flipCoin();
+      }, 50);
+    });
 
     const flipCoin = () => {
-      coin.moveLoopCount = 0
-      flipCoinLoop()
-    }
+      coin.moveLoopCount = 0;
+      flipCoinLoop();
+    };
 
     const resetCoin = () => {
-      coin.style.setProperty('--coin-x-multiplier', 0)
-      coin.style.setProperty('--coin-scale-multiplier', 0)
-      coin.style.setProperty('--coin-rotation-multiplier', 0)
-      coin.style.setProperty('--shine-opacity-multiplier', 0.4)
-      coin.style.setProperty('--shine-bg-multiplier', '50%')
-      coin.style.setProperty('opacity', 1)
+      coin.style.setProperty("--coin-x-multiplier", 0);
+      coin.style.setProperty("--coin-scale-multiplier", 0);
+      coin.style.setProperty("--coin-rotation-multiplier", 0);
+      coin.style.setProperty("--shine-opacity-multiplier", 0.4);
+      coin.style.setProperty("--shine-bg-multiplier", "50%");
+      coin.style.setProperty("opacity", 1);
       // Delay to give the reset animation some time before you can click again
       setTimeout(() => {
-        button.clicked = false
-      }, 300)
-    }
+        button.clicked = false;
+      }, 300);
+    };
 
     const flipCoinLoop = () => {
-      coin.moveLoopCount++
-      let percentageCompleted = coin.moveLoopCount / coin.maxMoveLoopCount
-      coin.angle = -coin.maxFlipAngle * Math.pow((percentageCompleted - 1), 2) + coin.maxFlipAngle
+      coin.moveLoopCount++;
+      let percentageCompleted = coin.moveLoopCount / coin.maxMoveLoopCount;
+      coin.angle =
+        -coin.maxFlipAngle * Math.pow(percentageCompleted - 1, 2) +
+        coin.maxFlipAngle;
 
       // Calculate the scale and position of the coin moving through the air
-      coin.style.setProperty('--coin-y-multiplier', -11 * Math.pow(percentageCompleted * 2 - 1, 4) + 11)
-      coin.style.setProperty('--coin-x-multiplier', percentageCompleted)
-      coin.style.setProperty('--coin-scale-multiplier', percentageCompleted * 0.6)
-      coin.style.setProperty('--coin-rotation-multiplier', percentageCompleted * coin.sideRotationCount)
+      coin.style.setProperty(
+        "--coin-y-multiplier",
+        -11 * Math.pow(percentageCompleted * 2 - 1, 4) + 11
+      );
+      coin.style.setProperty("--coin-x-multiplier", percentageCompleted);
+      coin.style.setProperty(
+        "--coin-scale-multiplier",
+        percentageCompleted * 0.6
+      );
+      coin.style.setProperty(
+        "--coin-rotation-multiplier",
+        percentageCompleted * coin.sideRotationCount
+      );
 
       // Calculate the scale and position values for the different coin faces
       // The math uses sin/cos wave functions to similate the circular motion of 3D spin
-      coin.style.setProperty('--front-scale-multiplier', Math.max(Math.cos(coin.angle), 0))
-      coin.style.setProperty('--front-y-multiplier', Math.sin(coin.angle))
+      coin.style.setProperty(
+        "--front-scale-multiplier",
+        Math.max(Math.cos(coin.angle), 0)
+      );
+      coin.style.setProperty("--front-y-multiplier", Math.sin(coin.angle));
 
-      coin.style.setProperty('--middle-scale-multiplier', Math.abs(Math.cos(coin.angle), 0))
-      coin.style.setProperty('--middle-y-multiplier', Math.cos((coin.angle + Math.PI / 2) % Math.PI))
+      coin.style.setProperty(
+        "--middle-scale-multiplier",
+        Math.abs(Math.cos(coin.angle), 0)
+      );
+      coin.style.setProperty(
+        "--middle-y-multiplier",
+        Math.cos((coin.angle + Math.PI / 2) % Math.PI)
+      );
 
-      coin.style.setProperty('--back-scale-multiplier', Math.max(Math.cos(coin.angle - Math.PI), 0))
-      coin.style.setProperty('--back-y-multiplier', Math.sin(coin.angle - Math.PI))
+      coin.style.setProperty(
+        "--back-scale-multiplier",
+        Math.max(Math.cos(coin.angle - Math.PI), 0)
+      );
+      coin.style.setProperty(
+        "--back-y-multiplier",
+        Math.sin(coin.angle - Math.PI)
+      );
 
-      coin.style.setProperty('--shine-opacity-multiplier', 4 * Math.sin((coin.angle + Math.PI / 2) % Math.PI) - 3.2)
-      coin.style.setProperty('--shine-bg-multiplier', -40 * (Math.cos((coin.angle + Math.PI / 2) % Math.PI) - 0.5) + '%')
+      coin.style.setProperty(
+        "--shine-opacity-multiplier",
+        4 * Math.sin((coin.angle + Math.PI / 2) % Math.PI) - 3.2
+      );
+      coin.style.setProperty(
+        "--shine-bg-multiplier",
+        -40 * (Math.cos((coin.angle + Math.PI / 2) % Math.PI) - 0.5) + "%"
+      );
 
       // Repeat animation loop
       if (coin.moveLoopCount < coin.maxMoveLoopCount) {
-        if (coin.moveLoopCount === coin.maxMoveLoopCount - 6) button.classList.add('shrink-landing')
-        window.requestAnimationFrame(flipCoinLoop)
+        if (coin.moveLoopCount === coin.maxMoveLoopCount - 6)
+          button.classList.add("shrink-landing");
+        window.requestAnimationFrame(flipCoinLoop);
       } else {
-        button.classList.add('coin-landed')
-        coin.style.setProperty('opacity', 0)
+        button.classList.add("coin-landed");
+        coin.style.setProperty("opacity", 0);
         setTimeout(() => {
-          button.classList.remove('clicked', 'shrink-landing', 'coin-landed')
+          button.classList.remove("clicked", "shrink-landing", "coin-landed");
           setTimeout(() => {
-            resetCoin()
-          }, 300)
-        }, 1500)
+            resetCoin();
+          }, 300);
+        }, 1500);
       }
-    }
-  })
-
+    };
+  });
 
   //
   // ---Retro Button---
   //
-  var buttons = document.querySelectorAll('.buttoncool');
+  var buttons = document.querySelectorAll(".buttoncool");
 
   for (var i = 0; i < buttons.length; i++) {
     // Click
-    buttons[i].addEventListener('mousedown', function () {
-      this.classList.add('btn-active');
+    buttons[i].addEventListener("mousedown", function () {
+      this.classList.add("btn-active");
     });
-    buttons[i].addEventListener('mouseup', function () {
-      this.classList.remove('btn-active');
+    buttons[i].addEventListener("mouseup", function () {
+      this.classList.remove("btn-active");
     });
 
     // Hover
-    buttons[i].addEventListener('mouseleave', function () {
-      this.classList.remove('btn-center', 'btn-right', 'btn-left', 'btn-active');
+    buttons[i].addEventListener("mouseleave", function () {
+      this.classList.remove(
+        "btn-center",
+        "btn-right",
+        "btn-left",
+        "btn-active"
+      );
     });
 
     buttons[i].addEventListener("mousemove", function (e) {
@@ -615,21 +675,22 @@ export function startup() {
       var myPosX = e.pageX;
       var newClass = "";
       // if on left 1/3 width of btn
-      if (myPosX < (leftOffset + .3 * btnWidth)) {
-        newClass = 'btn-left'
+      if (myPosX < leftOffset + 0.3 * btnWidth) {
+        newClass = "btn-left";
       } else {
         // if on right 1/3 width of btn
-        if (myPosX > (leftOffset + .65 * btnWidth)) {
-          newClass = 'btn-right';
+        if (myPosX > leftOffset + 0.65 * btnWidth) {
+          newClass = "btn-right";
         } else {
-          newClass = 'btn-center';
+          newClass = "btn-center";
         }
       }
-      var clearedClassList = this.className.replace(/btn-center|btn-right|btn-left/gi, "").trim();
+      var clearedClassList = this.className
+        .replace(/btn-center|btn-right|btn-left/gi, "")
+        .trim();
       this.className = clearedClassList + " " + newClass;
     });
   }
-
 
   //
   // ---Retro Submit Button---
@@ -644,7 +705,6 @@ export function startup() {
     this.classList.remove('btn-active');
   });*/
 
-
   function classReg(className) {
     return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
   }
@@ -653,7 +713,7 @@ export function startup() {
   // altho to be fair, the api sucks because it won't accept multiple classes at once
   var hasClass, addClass, removeClass;
 
-  if ('classList' in document.documentElement) {
+  if ("classList" in document.documentElement) {
     hasClass = function (elem, c) {
       return elem.classList.contains(c);
     };
@@ -663,18 +723,17 @@ export function startup() {
     removeClass = function (elem, c) {
       elem.classList.remove(c);
     };
-  }
-  else {
+  } else {
     hasClass = function (elem, c) {
       return classReg(c).test(elem.className);
     };
     addClass = function (elem, c) {
       if (!hasClass(elem, c)) {
-        elem.className = elem.className + ' ' + c;
+        elem.className = elem.className + " " + c;
       }
     };
     removeClass = function (elem, c) {
-      elem.className = elem.className.replace(classReg(c), ' ');
+      elem.className = elem.className.replace(classReg(c), " ");
     };
   }
 
@@ -693,18 +752,17 @@ export function startup() {
     has: hasClass,
     add: addClass,
     remove: removeClass,
-    toggle: toggleClass
+    toggle: toggleClass,
   };
 
   // transport
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === "function" && define.amd) {
     // AMD
     define(classie);
   } else {
     // browser global
     window.classie = classie;
   }
-
 
   // Loader Progress Functionality
 

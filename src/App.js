@@ -31,7 +31,7 @@ import getConfig from "./config";
 import logoH from "./assets/Coin Animation.mp4";
 //import logoT from './assets/Coin Animation2.mp4'
 
-const { networkId } = getConfig(process.env.NODE_ENV || "testnet");
+const { networkId } = getConfig("mainnet");
 const doggochance = 0.05;
 export const urlPrefix = "https://explorer." + networkId + ".near.org/accounts";
 
@@ -198,7 +198,6 @@ export default function App() {
       setTailsHeads("heads");
     }
   };
-  console.log(localStorage.getItem("winstreak"));
   return (
     <>
       {showNotification && <Notification />}

@@ -29,11 +29,10 @@ import {
   getRooms,
   getRoomInfoFromTxs,
   joinMultiplayer,
-  listenToRoom,
+  listenToRooms,
   storageRent,
   deleteMatch,
   contractID,
-  closeConnection,
 } from "./utils";
 import LOGOMAIN from "./assets/result.svg";
 import LOGOBACK from "./assets/nearcoin.svg";
@@ -46,6 +45,9 @@ const contentStyle = {
   maxWidth: "35rem",
   width: "90%",
 };
+
+let globalIndex = 0;
+
 export default function Mult() {
   startup();
   const { width, height } = useWindowSize();
@@ -66,7 +68,7 @@ export default function Mult() {
   const [errormsg, setErrormsg] = React.useState(msg);
   const [sideChoosen, setSideBet] = React.useState(null);
   const [ammoutNEAR, setBetAmmount] = React.useState(null);
-  const [roomID, setRoomID] = React.useState(null);
+  const [roomID, setRoomID] = React.useState(searchParams.get("room"));
   const [roomCreator, setRoomCreator] = React.useState(null);
   const [destroyer, setDestroyer] = React.useState(
     generateDestroyerPhrase(ammoutNEAR, roomCreator)
@@ -125,7 +127,7 @@ export default function Mult() {
         }
 
         // check if room exists
-        console.log(returnedvalues.entry_price);
+        // console.log(returnedvalues.entry_price);
         nearbetstr = convertYocto(
           returnedvalues.entry_price.toLocaleString("fullwide", {
             useGrouping: false,
@@ -147,6 +149,23 @@ export default function Mult() {
   };
 
   React.useEffect(() => {
+    const processEvents = (events) => {
+      // console.log(events);
+      events = events.flatMap(processEvent);
+      events.reverse();
+      setRooms((prevState) => {
+        const newRooms = [
+          ...events.filter(
+            (event) =>
+              prevState.length === 0 ||
+              event.time.getTime() > prevState[0].time.getTime()
+          ),
+          ...prevState,
+        ];
+        return newRooms.slice(0, 100);
+      });
+    };
+
     // in this case, we only care to query the contract when signed in
     if (window.walletConnection.isSignedIn()) {
       const txsHashes = searchParams.get("transactionHashes");
@@ -158,10 +177,21 @@ export default function Mult() {
       // wait 250 ms
       getRooms()
         .then((data) => {
-          console.log(data);
+          console.log("rooms from fetch", data);
           setRooms(data);
           setprocessing(false);
-          listenToRoom(processEvents, true);
+
+          const roomId = searchParams.get("room");
+          // console.log(roomId);
+
+          // get the room with the id
+          const room = data.find((room) => room.id === roomId);
+          if (roomId) {
+            joinRoom(roomId, room.creator, room.entry_price, room.face);
+            return;
+          }
+
+          listenToRooms(processEvents,true);
         })
         .catch((err) => {
           console.log(err);
@@ -212,6 +242,7 @@ export default function Mult() {
     searchParams.delete("transactionHashes");
     searchParams.delete("errorCode");
     searchParams.delete("errorMessage");
+    searchParams.delete("room");
     navigate(searchParams.toString());
 
     setRoomID(null);
@@ -238,23 +269,26 @@ export default function Mult() {
   };
 
   const processEvents = (events) => {
-    console.log(events);
+    console.log("events:", events);
+    return (event?.event?.data[0]?.token_ids || []).map((tokenId) => ({
+      time: new Date(parseFloat(event.block_timestamp) / 1e6),
+      contractId: event.account_id,
+      ownerId: event.event.data[0].owner_id,
+      tokenId,
+      isTransfer: event.event.event === "nft_transfer",
+      index: globalIndex++,
+    }));
   };
 
-  const joinRoom = async (roomId, ammount, roomCreator, sidetobet) => {
+  const joinRoom = (roomId, ammount, roomCreator, sidetobet) => {
     setprocessing(true);
-    closeConnection();
+
     const txsHashes = searchParams.get("transactionHashes");
     if (txsHashes) {
       roomSetupfromTXS(txsHashes);
       return;
     }
-
-    /*
-        console.log("join room: " + roomId)
-        console.log("ammount: " + ammount)
-        console.log("room creator: " + roomCreator)
-        */
+    // set Param to the url with roomID
 
     setDestroyer(generateDestroyerPhrase(ammount, roomCreator));
     setRoomID(roomId);
@@ -262,6 +296,8 @@ export default function Mult() {
     setRoomCreator(roomCreator);
     setBetAmmount(ammount);
     setSideBet(sidetobet);
+    searchParams.set("room", roomId);
+    navigate(searchParams.toString());
     setprocessing(false);
   };
   /*
@@ -745,7 +781,12 @@ export default function Mult() {
                                         /* check if the room creator is greater than 25, if so cut the name to 25 characters */
                                       }
                                       const p = room.entry_price;
-                                      let roomCreator = room.creator;
+                                      // remove testnet from the string
+                                      let roomCreator = room.creator.replace(
+                                        ".testnet",
+                                        ""
+                                      );
+
                                       let ammountNEAR = convertYocto(
                                         p.toLocaleString("fullwide", {
                                           useGrouping: false,
@@ -759,7 +800,7 @@ export default function Mult() {
                                       return (
                                         <div
                                           key={index}
-                                          className="mt-1 col col-sm-10 col-m-5 col-lg-5 col-xl-5"
+                                          className="mt-1 col col-sm-10 col-m-5 col-lg-12 col-xl-12"
                                         >
                                           <button
                                             className="button button-retro is-warning bordercool d-inline-block text-center"
@@ -779,7 +820,11 @@ export default function Mult() {
                                           >
                                             <span
                                               style={
-                                                roomCreator === window.accountId
+                                                roomCreator ===
+                                                window.accountId.replace(
+                                                  ".testnet",
+                                                  ""
+                                                )
                                                   ? { color: "#1b85cc" }
                                                   : {}
                                               }

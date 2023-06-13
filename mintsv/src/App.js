@@ -35,7 +35,7 @@ const publicdate = "2020-06-01";
 
 
 import getConfig from './config'
-const { networkId } = getConfig(process.env.NODE_ENV || 'testnet')
+const { networkId } = getConfig(process.env.NODE_ENV || 'mainnet')
 
 export default function App() {
 
