@@ -4,15 +4,6 @@ import ParasLogoW from '../assets/paras-white.svg';
 import { Twitter, Discord } from 'react-bootstrap-icons';
 
 function FooterComponent() {
-    const [darkMode, setDarkMode] = React.useState("dark")
-
-    const toogleDarkMode = () => {
-        let newmode = darkMode === "light" ? "dark" : "light"
-        setDarkMode(newmode)
-    }
-
-
-
     return (
         <> <div className="social-icons-bottom-right">
             <div className="d-flex flex-row flex-sm-column justify-content-start align-items-center h-100"><div className="mt-3 d-flex flex-column shortcut-row">

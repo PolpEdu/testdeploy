@@ -26,7 +26,6 @@ const HeaderButtons = () => {
         if (window.walletConnection.isSignedIn()) {
             window.walletConnection.account().getAccountBalance().then(function (balance) {
                 let fullstr = convertYocto(balance.available).split(".");
-                console.log(fullstr)
                 let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
                 setbalance("NEAR: " + str);
             }).catch(e => {
@@ -41,7 +40,7 @@ const HeaderButtons = () => {
 
     }, [])
     return (
-        <div className='social-icons'>
+        <header className='social-icons'>
             <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
                 <div className='mt-3 d-flex flex-column shortcut-row'>
                     <div className='d-flex flex-sm-row ustify-content-center flex-column mb-2 toolbar mx-auto'>
@@ -166,7 +165,7 @@ const HeaderButtons = () => {
 
                 </div>
             </div>
-        </div>
+        </header>
     )
 }
 

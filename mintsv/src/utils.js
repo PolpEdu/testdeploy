@@ -2,7 +2,7 @@ import { connect, Contract, keyStores, WalletConnection, utils, providers } from
 import getConfig from './config'
 
 const mintammount = "1";
-const nearConfig = getConfig(process.env.NODE_ENV || 'development')
+const nearConfig = getConfig(process.env.NODE_ENV || 'mainnet')
 
 // Initialize contract & set global variables
 export async function initContract() {

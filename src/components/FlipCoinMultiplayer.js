@@ -22,12 +22,12 @@ function FlipCoinMultiplayer(props) {
 
     return (
         <>
-            <div id="cointainer" className=''>
+            <div id="cointainerMult" className=''>
                 <video autoPlay muted playsInline className="video-container d-flex justify-content-center flex-row borderpixelSMALL" style={{ marginTop: "2rem" }}>
                     <source src={props.result === "heads" ? logoH : logoH} type="video/mp4" />
                 </video>
             </div>
-            <div className='d-flex justify-center align-middle w-full'>
+            <div className='d-flex justify-center align-middle w-100'>
                 <span className="font-weight-normal outlineyellowvsSMALL w-50 animateDown">{props.creator}</span>
                 <span className="font-weight-normal outlineyellowvs w-full mx-2 animateUpDown">VS</span>
                 <span className="font-weight-normal outlineyellowvsSMALL w-50 animateUp">{props.joinned}</span>

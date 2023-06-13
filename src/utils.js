@@ -3,7 +3,7 @@ import getConfig from './config'
 import axios from 'axios';
 
 
-let node_env = process.env.NODE_ENV || 'testnet';
+let node_env = /* process.env.NODE_ENV ||  */'testnet';
 //console.log(node_env)
 const nearConfig = getConfig(node_env)
 
