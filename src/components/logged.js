@@ -93,7 +93,7 @@ function generatephrase(ammount, won, account) {
     )
 }
 
-export function generateDestroyerPhrase(ammoutNEAR, creator) {
+export function generateDestroyerPhrase(creator) {
     if (creator && creator.length > 18) {
         creator = creator.split(".")[0]
     }
@@ -106,9 +106,9 @@ export function generateDestroyerPhrase(ammoutNEAR, creator) {
         creator + "'s Room",
         creator + "'s Room",
         creator + "'s Room",
+        creator + "'s Room",
         "Kick some ass",
         "This Room will be Heads",
-        "!TRADE OFFER! I GET: " + ammount + " NEAR, you get 0",
         "Best of 3?",
         "What a kind donation :)",
         "Prepare to be rekt",

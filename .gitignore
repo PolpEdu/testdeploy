@@ -38,3 +38,4 @@ contract/target/.rustc_info.json
 .env
 contract/target/.rustc_info.json
 mintsv/package-lock.json
+contract/target/.rustc_info.json

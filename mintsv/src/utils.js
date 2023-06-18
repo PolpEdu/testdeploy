@@ -44,7 +44,7 @@ export function mintmeup() {
   let yoctoNEAR = utils.format.parseNearAmount(mintammount);
   let contractID = process.env.CONTRACT_MINT || 'dev-1646526212589-74798020278785';
   const result = window.walletConnection.account().functionCall({
-    contractId: contractID.toString(), methodName: 'nft_mint', gas: "300000000000000", attachedDeposit: yoctoNEAR
+    contractId: contractID.toString(), methodName: 'nft_mint', gas: "200000000000000", attachedDeposit: yoctoNEAR
   })
 
 }

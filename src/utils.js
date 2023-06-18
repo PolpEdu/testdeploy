@@ -329,7 +329,7 @@ export function flip(args, ammoutNEAR) {
       contractId: contractIDSingle.toString(),
       methodName: "coin_flip",
       args: { option: args },
-      gas: "300000000000000",
+      gas: "20000000000000",
       attachedDeposit: yoctoNEAR,
     })
     .catch((e) => {
@@ -358,7 +358,7 @@ export function joinMultiplayer(ammoutNEAR, idroom, roomCreator) {
       contractId: contractID.toString(),
       methodName: "join_match",
       args: { id: idroom, creator: roomCreator },
-      gas: "300000000000000",
+      gas: "50000000000000",
       attachedDeposit: yoctoNEAR,
     })
     .catch((e) => {
@@ -384,7 +384,7 @@ export function createMultiplayer(ammoutNEAR, tailsHeads) {
       contractId: contractID.toString(),
       methodName: "create_match",
       args: { face: argside, rent_amount: storageRent.toString() },
-      gas: "300000000000000",
+      gas: "20000000000000",
       attachedDeposit: yoctoNEAR,
     })
     .catch((e) => {

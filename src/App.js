@@ -53,6 +53,7 @@ export default function App() {
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [b, setBalance] = React.useState("");
 
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
 
@@ -160,6 +161,19 @@ export default function App() {
       });
   };
 
+  const updateBal = async () => {
+    setBalance("");
+    try {
+      const balance = await window.walletConnection.account().getAccountBalance()
+      let fullstr = convertYocto(balance.available).split(".");
+      let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
+      setBalance("NEAR: " + str)
+    } catch (e) {
+      console.log('There has been a problem with getting your balance: ' + e.message);
+      setBalance("Couldn't Fetch Balance");
+    }
+  };
+
   React.useEffect(
     () => {
       checkifdoggo();
@@ -174,15 +188,11 @@ export default function App() {
         searchParams.delete("errorMessage");
         navigate(searchParams.toString());
 
+        updateBal();
+
         getTxsResult(txsHashes);
       }
-    },
-
-    //! The second argument to useEffect tells React when to re-run the effect
-    //! Use an empty array to specify "only run on first render"
-    //! This works because signing into NEAR Wallet reloads the page
-    []
-  );
+    },[]);
 
   const checkifdoggo = () => {
     let random = Math.random();
@@ -204,7 +214,7 @@ export default function App() {
       {errormsg && (
         <NotificationError err={decodeURI(errormsg)} ismult={false} />
       )}
-      <HeaderButtons />
+      <HeaderButtons balance={b} />
 
       <div className="text-center body-wrapper">
         <div className="play form-signin">

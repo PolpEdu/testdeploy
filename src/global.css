@@ -946,15 +946,14 @@ li {
   /* margin: 2rem; */
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: black;
-  animation: ;
 }
 
 .outlineyellowvsSMALL {
   color: #f7d51d;
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   margin-top: 0.8rem;
   text-align: center;
-  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: black;
 }
 

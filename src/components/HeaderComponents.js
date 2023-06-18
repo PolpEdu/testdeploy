@@ -13,32 +13,15 @@ const contentStyle = {
     maxWidth: "660px",
     width: "90%"
 }
-const HeaderButtons = () => {
+const HeaderButtons = ({balance}) => {
     //popup
     const [show, setShow] = React.useState(false)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
-    const [balance, setbalance] = React.useState("")
     const location = useLocation();
 
-    React.useEffect(() => {
-        if (window.walletConnection.isSignedIn()) {
-            window.walletConnection.account().getAccountBalance().then(function (balance) {
-                let fullstr = convertYocto(balance.available).split(".");
-                let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
-                setbalance("NEAR: " + str);
-            }).catch(e => {
-                console.log('There has been a problem with getting your balance: ' + e.message);
-                setbalance("Couldn't Fetch Balance");
-            });
-        }
-        else {
-            setbalance(null);
-        }
 
-
-    }, [])
     return (
         <header className='social-icons'>
             <div className='d-flex flex-sm-column justify-content-start align-items-center h-100 mt-auto'>
@@ -159,7 +142,7 @@ const HeaderButtons = () => {
                         <div className='d-flex flex-column'>
                             <h6 className="mt-1 w-30" style={{ textAlign: "end" }}>
                                 Currently logged as:<a href={`${urlPrefix}/${window.accountId}`} target="_blank">{window.accountId.length > 20 ? window.accountId.substring(0, 20) + "…" : window.accountId}</a>!</h6>
-                            <h6 className="balance-text mb-0">{balance === "" ? <Loading /> : balance}</h6>
+                            <h6 className="balance-text mb-0">{balance === ""  ? <Loading /> : balance}</h6>
                         </div>
                     }
 

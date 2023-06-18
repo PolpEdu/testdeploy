@@ -55,6 +55,8 @@ export default function Mult() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showNotification, setShowNotification] = React.useState(false);
+  const [b, setBalance] = React.useState("");
+
   let msg = "";
   if (searchParams.get("errorCode")) {
     msg =
@@ -71,7 +73,7 @@ export default function Mult() {
   const [roomID, setRoomID] = React.useState(searchParams.get("room"));
   const [roomCreator, setRoomCreator] = React.useState(null);
   const [destroyer, setDestroyer] = React.useState(
-    generateDestroyerPhrase(ammoutNEAR, roomCreator)
+    generateDestroyerPhrase(roomCreator?.replace(".near", "").replace(".testnet", ""))
   );
 
   const [surprisePhrase, setSurprisePhrase] = React.useState(genrandomphrase());
@@ -166,6 +168,9 @@ export default function Mult() {
       });
     };
 
+
+
+
     // in this case, we only care to query the contract when signed in
     if (window.walletConnection.isSignedIn()) {
       const txsHashes = searchParams.get("transactionHashes");
@@ -173,6 +178,8 @@ export default function Mult() {
         roomSetupfromTXS(txsHashes);
         return;
       }
+
+      updateBal()
 
       // wait 250 ms
       getRooms()
@@ -191,7 +198,7 @@ export default function Mult() {
             return;
           }
 
-          listenToRooms(processEvents,true);
+          listenToRooms(processEvents, true);
         })
         .catch((err) => {
           console.log(err);
@@ -212,7 +219,7 @@ export default function Mult() {
         contractId: contractID.toString(),
         methodName: "cancel_match",
         args: { id: roomId },
-        gas: "300000000000000",
+        gas: "20000000000000",
       })
       .then((res) => {
         console.log(res);
@@ -222,20 +229,32 @@ export default function Mult() {
         );
         if (ascii === "true") {
           setShowNotification(true);
-          setprocessing(false);
           resetGame();
-          return;
         } else {
           setErrormsg("Error while canceling the match");
-          setprocessing(false);
-          return;
         }
+        
+        setprocessing(false);
+        updateBal();
       })
       .catch((err) => {
         console.log(err);
         setprocessing(false);
         setShowNotification(true);
       });
+  };
+
+  const updateBal = async () => {
+    setBalance("");
+    try {
+      const balance = await window.walletConnection.account().getAccountBalance()
+      let fullstr = convertYocto(balance.available).split(".");
+      let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
+      setBalance("NEAR: " + str)
+    } catch (e) {
+      console.log('There has been a problem with getting your balance: ' + e.message);
+      setBalance("Couldn't Fetch Balance");
+    }
   };
 
   const resetGame = () => {
@@ -290,7 +309,7 @@ export default function Mult() {
     }
     // set Param to the url with roomID
 
-    setDestroyer(generateDestroyerPhrase(ammount, roomCreator));
+    setDestroyer(generateDestroyerPhrase(ammount));
     setRoomID(roomId);
 
     setRoomCreator(roomCreator);
@@ -312,15 +331,15 @@ export default function Mult() {
       {errormsg && (
         <NotificationError err={decodeURI(errormsg)} ismult={true} />
       )}
-      <HeaderButtons />
+      <HeaderButtons balance={b} />
       <div className="text-center body-wrapper">
         <div className="play form-signin">
           <div className="maincenter text-center" style={{ maxWidth: "34rem" }}>
             {!accountWon || !sideResult || !amountWon ? (
               <>
                 {roomID !== null &&
-                ammoutNEAR !== null &&
-                sideChoosen !== null ? (
+                  ammoutNEAR !== null &&
+                  sideChoosen !== null ? (
                   <>
                     {roomCreator === window.accountId ? (
                       <>
@@ -821,10 +840,10 @@ export default function Mult() {
                                             <span
                                               style={
                                                 roomCreator ===
-                                                window.accountId.replace(
-                                                  ".testnet",
-                                                  ""
-                                                )
+                                                  window.accountId.replace(
+                                                    ".testnet",
+                                                    ""
+                                                  )
                                                   ? { color: "#1b85cc" }
                                                   : {}
                                               }

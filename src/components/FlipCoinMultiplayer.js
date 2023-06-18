@@ -28,9 +28,9 @@ function FlipCoinMultiplayer(props) {
                 </video>
             </div>
             <div className='d-flex justify-center align-middle w-100'>
-                <span className="font-weight-normal outlineyellowvsSMALL w-50 animateDown">{props.creator}</span>
-                <span className="font-weight-normal outlineyellowvs w-full mx-2 animateUpDown">VS</span>
-                <span className="font-weight-normal outlineyellowvsSMALL w-50 animateUp">{props.joinned}</span>
+                <span className="font-weight-bold outlineyellowvsSMALL  w-50 animateDown">{props.creator}</span>
+                <span className="font-weight-bold outlineyellowvs w-full mx-2 animateUpDown">VS</span>
+                <span className="font-weight-bold outlineyellowvsSMALL w-50 animateUp">{props.joinned}</span>
             </div>
             <div className={processing === false ? 'fadein' : 'fadein fadeout'}>
                 {props.winner === window.accountId ? <>
