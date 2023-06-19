@@ -199,21 +199,9 @@ export const contractID =
 const contractIDSingle =
   process.env.CONTRACT_NAME_SINGLEPLAYER || "dev-1645893673006-39236998475304";
 
-
-
-const nftFilterMainRoom = [{
-  status: "SUCCESS",
-  event: {
-    standard: "nep297",
-    event: "match_created",
-  },
-}, {
-  status: "SUCCESS",
-  event: {
-    standard: "nep297",
-    event: "match_removed",
-  },
-}];
+export function genrandomphrase() {
+  return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
+}
 
 // Initialize contract & set global variables
 export async function initContract() {
@@ -412,20 +400,10 @@ export function listenToRooms(processEvents, mainRooms) {
     scheduleReconnect(1000);
     return;
   }
-  const ws = new WebSocket(`wss://events.near.stream/ws`);
-
-  
+  const ws = new WebSocket(`ws://localhost:5000`);
 
   ws.onopen = () => {
     console.log("Listening to live room creations");
-    console.log("filter", nftFilterMainRoom);
-    ws.send(
-      JSON.stringify({
-        secret: "dsadsadasdas",
-        filter: nftFilterMainRoom,
-        fetch_past_events: 20,
-      })
-    );
   };
 
   ws.onmessage = (e) => {

@@ -98,8 +98,6 @@ export function generateDestroyerPhrase(creator) {
         creator = creator.split(".")[0]
     }
 
-    const ammount = Math.round(((ammoutNEAR) * 10000000) / 10000000);
-
     const phrase = [
         "Destroy this idiot",
         creator + "'s Room",
@@ -340,7 +338,7 @@ export function RecentPlays() {
     const [errormsg, setErrormsg] = React.useState("");
 
     React.useEffect(() => {
-
+        console.log(process.env.DATABASE_URL + "/plays")
         axios.get(process.env.DATABASE_URL + "/plays")
             .then(res => {
                 setPlays(res.data.plays);

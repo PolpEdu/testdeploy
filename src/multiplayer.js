@@ -32,15 +32,13 @@ import {
   listenToRooms,
   storageRent,
   deleteMatch,
+  genrandomphrase,
   contractID,
 } from "./utils";
 import LOGOMAIN from "./assets/result.svg";
 import LOGOBACK from "./assets/nearcoin.svg";
 import FlipCoinMultiplayer from "./components/FlipCoinMultiplayer";
 
-function genrandomphrase() {
-  return menusayingsmult[Math.floor(Math.random() * menusayingsmult.length)];
-}
 const contentStyle = {
   maxWidth: "35rem",
   width: "90%",
@@ -152,7 +150,7 @@ export default function Mult() {
 
   React.useEffect(() => {
     const processEvents = (events) => {
-      // console.log(events);
+      console.log(events);
       events = events.flatMap(processEvent);
       events.reverse();
       setRooms((prevState) => {
@@ -244,17 +242,26 @@ export default function Mult() {
       });
   };
 
-  const updateBal = async () => {
+  const updateBal = () => {
     setBalance("");
-    try {
-      const balance = await window.walletConnection.account().getAccountBalance()
+    window.walletConnection.account().getAccountBalance().then((balance) => {
       let fullstr = convertYocto(balance.available).split(".");
       let str = fullstr[0] + "." + fullstr[1].substring(0, 4);
       setBalance("NEAR: " + str)
-    } catch (e) {
+    }).catch((e) => {
       console.log('There has been a problem with getting your balance: ' + e.message);
       setBalance("Couldn't Fetch Balance");
-    }
+    }).finally(() => {
+      // check if balance is null if so call updateBal again
+      // console.log(b === "");
+      if (b === null|| b === "Couldn't Fetch Balance") {
+        // wait 250 ms 
+        setTimeout(() => {
+          updateBal()
+        }, 250);
+      }
+    });
+
   };
 
   const resetGame = () => {

@@ -2,9 +2,8 @@ const express = require("express")
 const mongoose = require("mongoose")
 const app = express()
 const gameLogic = require("./sockets/game-logic")
-const http = require('http').Server(app)
+const httpServer = require("http").createServer();
 require("dotenv").config();
-
 
 
 const bodyParser = require("body-parser")
@@ -18,10 +17,9 @@ const corsOptions = {
 }
 
 
-
-let io = require("socket.io")(http, {
+const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "https://localhost:1234", // <- url from frontend
+    origin: process.env.FRONT_END_URL, // <- url from frontend
     methods: ["GET", "POST"],
 
     credentials: true
@@ -31,7 +29,6 @@ gameLogic.init();
 
 io.on('connection', function (client) {
   console.log('New client connected (id=' + client.id + ').')
-
 
   gameLogic.initializeGame(io, client)
 })
@@ -61,11 +58,9 @@ app.all('*', function (req, res, next) {
 
 app.set('port', process.env.PORT || 5000)
 
-
-http.listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'))
+httpServer.listen(app.get('port')).on('listening', () => {
+  console.log('\nSocket & Express 🚀 are live on ' + app.get('port'))
 })
-
 
 app.use((err, req, res, next) => {
   const status = err.status || 500
