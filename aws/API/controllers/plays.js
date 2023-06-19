@@ -140,7 +140,6 @@ exports.postPlay = (req, res, next) => {
 };
 
 exports.getRecentPlays = (req, res, next) => {
-
     /* Get the 12 recent plays */
     Play.find().sort({
         _id: -1

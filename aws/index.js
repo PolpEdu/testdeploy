@@ -59,7 +59,11 @@ app.all('*', function (req, res, next) {
 app.set('port', process.env.PORT || 5000)
 
 httpServer.listen(app.get('port')).on('listening', () => {
-  console.log('\nSocket & Express 🚀 are live on ' + app.get('port'))
+  console.log('\nSocket 🚀 are live on ' + app.get('port'))
+})
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000")
 })
 
 app.use((err, req, res, next) => {

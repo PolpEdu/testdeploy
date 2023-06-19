@@ -296,7 +296,7 @@ export function TopPlays() {
     return (
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelf" style={{ backgroundColor: "#DD403A" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🔥 On Fire 🔥</h4>
-            {(plays === undefined || plays === [] || plays.length === 0) ?
+            {(plays === undefined || plays.length === 0) ?
                 <div style={{ marginLeft: "50%" }} >
                     <Loading size={25} color={"text-light"} />
                 </div> :
@@ -304,8 +304,9 @@ export function TopPlays() {
                     <ul className="list-group">
 
                         {plays.map((play, i) => {
-                            //console.log(i)
-                            const url = `https://explorer.${process.env.NODE_ENV}.near.org/accounts/` + play._id;
+                            console.log(play)
+                            const env = play._id.split('.')[1] === "testnet" ? "testnet" : "mainnet";
+                            const url = `https://explorer.${env}.near.org/accounts/` + play._id;
                             return (
                                 <a href={url} key={i} className="text-decoration-none" target='_blank'>
                                     <li className='list-group-item d-flex cursor-pointer rounded-2'>
@@ -345,7 +346,6 @@ export function RecentPlays() {
             }).catch(error => {
                 setErrormsg("Couldn't get the latest plays :(");
                 console.error("Error fetching Plays: ", error)
-
             });
 
     }, []);
@@ -355,14 +355,15 @@ export function RecentPlays() {
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelP" style={{ backgroundColor: "#829922" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>🎮 Who's Playin? 🎮</h4>
 
-            {(plays === undefined || plays === [] || plays.length === 0) ? <div style={{ marginLeft: "50%" }} >
+            {(plays === undefined || plays.length === 0) ? <div style={{ marginLeft: "50%" }} >
                 <Loading size={25} color={"text-light"} />
             </div> :
                 errormsg !== "" ? <div className='textsurprese font-weight-normal' style={{ fontSize: "1.2rem" }}> Error fetching players :/ </div> :
                     <ul className="list-group">
                         {plays.map((play, i) => {
-                            //console.log(i)
-                            const url = `https://explorer.${process.env.NODE_ENV}.near.org/transactions/` + play.tx;
+                        console.log(play)
+                            const env = play.walletaccount.split('.')[1] === "testnet" ? "testnet" : "mainnet";
+                            const url = `https://explorer.${env}.near.org/accounts/` + play.walletaccount;
                             return (
                                 <a href={url} key={i} className="text-decoration-none" target='_blank'>
                                     <li className='list-group-item d-flex cursor-pointer rounded-2'>
@@ -415,7 +416,7 @@ export function TopPlayers() {
 
         <div className="form-signin2 text-start mx-auto rounded-2 borderpixelm" style={{ backgroundColor: "#33b5e5" }}>
             <h4 className='text-center p-1 rounded' style={{ fontWeight: "800", color: "white" }}>💵 MVPs 💵</h4>
-            {(players === undefined || players === [] || players.length === 0) ?
+            {(players === undefined || players.length === 0) ?
                 <div style={{ marginLeft: "50%" }} >
                     <Loading size={25} color={"text-light"} />
                 </div> :
@@ -423,9 +424,8 @@ export function TopPlayers() {
                     <ul className="list-group">
 
                         {players.map((play, i) => {
-                            //console.log(i)
-                            console.log(play)
-                            const url = `https://explorer.${process.env.NODE_ENV}.near.org/account/` + play.wlt;
+                            const env = play._id.split('.')[1] === "testnet" ? "testnet" : "mainnet";
+                            const url = `https://explorer.${env}.near.org/accounts/` + play._id;
                             return (
                                 <a href={url} key={i} className="text-decoration-none" target='_blank'>
                                     <li className='list-group-item d-flex cursor-pointer rounded-2'>
