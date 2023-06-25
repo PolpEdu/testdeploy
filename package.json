@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "npm run build:web",
-    "build:web": "npx parcel build src/index.html --public-url ./",
+    "build:web": "npx react-scripts build",
     "dev:deploy:contract": "near dev-deploy",
     "deploy:contract": "near deploy",
     "deploy:pages": "gh-pages -d dist/",
