@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
-import { initContract } from './utils'
+import App from '../src/App'
+import { initContract } from '../src/utils'
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,8 +10,8 @@ import {
   Link,
 } from "react-router-dom";
 
-import Mult from './multiplayer.js';
-import Room from './room.js';
+import Mult from '../src/multiplayer.js';
+import Room from '../src/room.js';
 
 window.nearInitPromise = initContract()
   .then(() => {
