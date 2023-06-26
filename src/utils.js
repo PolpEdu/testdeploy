@@ -392,7 +392,7 @@ export function listenToRooms(processEvents, mainRooms) {
     }
     reconnectTimeout = setTimeout(() => {
       console.log("Reconnecting to rooms");
-      // listenToRooms(processEvents, mainRooms,ws);
+      listenToRooms(processEvents, mainRooms,ws);
     }, timeOut);
   };
 
@@ -400,7 +400,7 @@ export function listenToRooms(processEvents, mainRooms) {
     scheduleReconnect(1000);
     return;
   }
-  const ws = new WebSocket("ws://localhost:5000");
+  const ws = new WebSocket(`ws://localhost:5000`);
 
   ws.onopen = () => {
     console.log("Listening to live room creations");
